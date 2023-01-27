@@ -16,13 +16,13 @@
     <div class="container">
 		<h1>Medical Institution Registration Form</h1>
 		<hr>
-		<form method="POST">
+		<form  th:object="${organization}" th:action="@{/registerOrg}"method="POST">
 			<div class="row">
                 <div class="col-sm-2">
                   <label for="organization">Organization:</label>
                 </div>
                 <div class="col-sm-6">
-                  <input type="text" class="form-control" id="organization" name="organization">
+                  <input type="text" th:field="*{name}" class="form-control" id="organization" name="organization">
                 </div>
               </div>
               <br/>
@@ -31,7 +31,7 @@
                   <label for="uen">UEN:</label>
                 </div>
                 <div class="col-sm-6">
-                  <input type="text" class="form-control" id="uen" name="uen">
+                  <input type="text" th:field="*{UEN}" class="form-control" id="uen" name="uen">
                 </div>
               </div>
               <br/>
@@ -40,7 +40,7 @@
                   <label for="hci">HCI:</label>
                 </div>
                 <div class="col-sm-6">
-                  <input type="text" class="form-control" id="hci" name="hci">
+                  <input type="text" th:field="*{HCI}"class="form-control" id="hci" name="hci">
                 </div>
               </div>
               <br/>
@@ -49,7 +49,7 @@
                   <label for="address">Address:</label>
                 </div>
                 <div class="col-sm-6">
-                  <input type="text" class="form-control" id="address" name="address">
+                  <input type="text" th:field="*{address}"class="form-control" id="address" name="address">
                 </div>
               </div>
               <br/>
@@ -58,7 +58,7 @@
                   <label for="address">Contact:</label>
                 </div>
                 <div class="col-sm-6">
-                  <input type="text" class="form-control" id="contact" name="contact">
+                  <input type="text" th:field="*{contact}"class="form-control" id="contact" name="contact">
                 </div>
               </div>
               <br/>
