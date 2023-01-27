@@ -8,7 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,8 +23,8 @@ public class Organization {
 
 	private String UEN;
 
-	@OneToOne(mappedBy = "organization")
-	private User user;
+	@OneToMany(mappedBy = "organization")
+	private List<User> users;
 
 	@OneToMany(mappedBy = "organization")
 	private List<Clinic> clinics = new ArrayList<>();
