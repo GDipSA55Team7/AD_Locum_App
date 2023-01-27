@@ -25,8 +25,10 @@ public class JobPostServiceImpl implements JobPostService {
 	public JobPost createJobPost(JobPostForm jobPostForm) {
 		JobPost newJobPost = new JobPost();
 		newJobPost.setDescription(jobPostForm.getDescription());
-		newJobPost.setStartDateTime(jobPostForm.getStartDateTime());
-		newJobPost.setEndDateTime(jobPostForm.getEndDateTime());
+		newJobPost.setStartDate(jobPostForm.getStartDate());
+		newJobPost.setEndDate(jobPostForm.getEndDate());
+		newJobPost.setStartTime(jobPostForm.getStartTime());
+		newJobPost.setEndTime(jobPostForm.getEndTime());
 		newJobPost.setRatePerHour(jobPostForm.getRatePerHour());
 		newJobPost.setTotalRate(jobPostForm.getTotalRate());
 		newJobPost.setClinic(clinicRepo.findById(jobPostForm.getClinicId()).get());

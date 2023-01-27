@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.AD_Locum_Doctors;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -48,16 +49,20 @@ public class AdLocumDoctorsApplication {
 			JobPost jp1 = new JobPost();
 			jp1.setClinic(c1);
 			jp1.setDescription("Looking for locum doctor for Punggol Family clinic");
-			jp1.setStartDateTime(LocalDateTime.of(2023, 01, 11, 8, 0));
-			jp1.setEndDateTime(LocalDateTime.of(2023, 02, 28, 18, 0));
+			jp1.setStartDate(LocalDate.of(2023, 01, 11));
+			jp1.setEndDate(LocalDate.of(2023, 02, 28));
+			jp1.setStartTime(LocalTime.of(8, 30));
+			jp1.setEndTime(LocalTime.of(18, 30));
 			jp1.setRatePerHour(100);
 			jobPostRepo.saveAndFlush(jp1);
 
 			JobPost jp2 = new JobPost();
 			jp2.setClinic(c2);
 			jp2.setDescription("Looking for locum physiotherapist");
-			jp2.setStartDateTime(LocalDateTime.of(2023, 02, 1, 15, 0));
-			jp2.setEndDateTime(LocalDateTime.of(2023, 03, 30, 23, 30));
+			jp2.setStartDate(LocalDate.of(2023, 02, 1));
+			jp2.setEndDate(LocalDate.of(2023, 03, 30));
+			jp2.setStartTime(LocalTime.of(15, 30));
+			jp2.setEndTime(LocalTime.of(23, 30));
 			jp2.setStatus("PENDING");
 			jp2.setRatePerHour(88.8);
 			jobPostRepo.saveAndFlush(jp2);
