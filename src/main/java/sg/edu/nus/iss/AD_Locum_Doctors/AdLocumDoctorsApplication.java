@@ -9,5 +9,4 @@ public class AdLocumDoctorsApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AdLocumDoctorsApplication.class, args);
 	}
-
 }
