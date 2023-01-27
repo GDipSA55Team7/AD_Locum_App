@@ -15,11 +15,11 @@ public class JobPostForm {
 	private String description;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
 	private LocalDateTime startDateTime;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
 	private LocalDateTime endDateTime;
 
 	private double ratePerHour;

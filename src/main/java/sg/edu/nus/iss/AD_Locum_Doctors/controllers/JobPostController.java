@@ -25,7 +25,7 @@ public class JobPostController {
 
 	@GetMapping("/list")
 	public String jobPostListPage(Model model) {
-		model.addAttribute("jobPostList", jobPostService.findAll());
+		model.addAttribute("jobPosts", jobPostService.findAll());
 		return "jobpost-list";
 	}
 

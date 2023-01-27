@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+	layout:decorate="~{fragments/layout}">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>View Job Posts</title>
+	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/css/site.css" />
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css"
+		crossorigin="anonymous">
+</head>
+
+<body>
+	<div class="container">
+		<div class="row">
+			<main class="col-md-12 ms-sm-auto col-lg-12 px-md-4">
+				<div
+					class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+					<h1>View Job Posts</h1>
+					<form th:action="@{/jobpost/create}">
+						<button type="submit" class="btn btn-info">Add Job Post</button>
+					</form>
+					<hr>
+				</div>
+				<div class="table-responsive">
+					<table id="table_id" class="display">
+						<thead>
+							<tr>
+								<th>S/N</th>
+								<th>Job Description</th>
+								<th>Clinic Location</th>
+								<th>Status</th>
+								<th>Date/Time</th>
+								<th>Fees</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="jp : ${jobPosts}" class="listRecord">
+								<td th:text="${jp.id}">Job Post Id</td>
+								<td th:text="${jp.description}">Job Description</td>
+								<td th:text="${jp.clinic.name}">Clinic Location</td>
+								<td th:text="${jp.status}">Status</td>
+								<td th:text="${jp.startDateTime + ' - ' + jp.endDateTime}">Date/Time</td>
+								<td th:text="${jp.getRatePerHourString()}">Fees</td>
+								<!-- <td>
+								<div th:if="${staff.isActive}">
+									<a value="${staff.isActive}"
+										th:href="@{/admin/staff/deactivate/}+${staff.staffId}">Deactivate</a>
+								</div>
+								<div th:unless="${staff.isActive}">
+									<a th:href="@{/admin/staff/activate/}+${staff.staffId}">Activate</a>
+								</div>
+							</td> -->
+							</tr>
+						</tbody>
+					</table>
+				</div>
+		</div>
+		</main>
+	</div>
+	</div>
+</body>
+
+</html>
