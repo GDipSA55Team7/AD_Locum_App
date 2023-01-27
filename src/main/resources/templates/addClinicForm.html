@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+    layout:decorate="~{fragments/layout}">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Locum Application</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/site.css" />
+    <!-- Bootstrap CSS -->
+    <style>
+</style>
+</head>
+<body>
+    <br/>
+    <div class="container">
+		<h1>Add Clinic Form</h1>
+		<hr>
+		<form  th:object="${clinic}" th:action="@{/saveClinic}"method="POST">
+              <div class="row">
+                <div class="col-sm-2">
+                  <label for="organization">Organization:</label>
+                </div>
+                <div class="col-sm-6">
+                    <select name="organization" th:field="*{organization.id}" class="form-control mb-5 col-5">
+                        <option th:each="organization : ${organizationList}" th:value="${organization.id}"
+                            th:text="${organization.name}"></option>
+                    </select>
+                </div>
+              </div>
+			<div class="row">
+                <div class="col-sm-2">
+                  <label for="clinic">Clinic Name:</label>
+                </div>
+                <div class="col-sm-6">
+                  <input type="text" th:field="*{name}" class="form-control" id="clinic" name="clinic">
+                </div>
+              </div>
+              <br/>
+              <div class="row">
+                <div class="col-sm-2">
+                  <label for="address">Address:</label>
+                </div>
+                <div class="col-sm-6">
+                  <input type="text" th:field="*{address}" class="form-control" id="address" name="address">
+                </div>
+              </div>
+              <br/>
+              <div class="row">
+                <div class="col-sm-2">
+                  <label for="hciCode">HCICode:</label>
+                </div>
+                <div class="col-sm-6">
+                  <input type="text" th:field="*{HCICode}"class="form-control" id="hciCode" name="hciCode">
+                </div>
+              </div>
+              <br/>
+              <div class="row">
+                <div class="col-sm-2">
+                  <label for="postalCode">PostalCode:</label>
+                </div>
+                <div class="col-sm-6">
+                  <input type="text" th:field="*{postalCode}"class="form-control" id="postalCode" name="postalCode">
+                </div>
+              </div>
+              <br/>
+              <div class="row">
+                <div class="col-sm-2">
+                  <label for="address">Contact:</label>
+                </div>
+                <div class="col-sm-6">
+                  <input type="text" th:field="*{contact}"class="form-control" id="contact" name="contact">
+                </div>
+              </div>
+              <br/>
+              <div class="row">
+                <div class="col-sm-2">
+                    <label for="address"></label>
+                  </div>
+                  <div class="col-sm-6">
+			<button type="submit" class="btn btn-info col-2">Save</button>
+        </div>
+        </div>
+		</form>
+
+		<hr>
+
+	</div>
+<br/>
+    <footer b-8i4qlzt809 class="border-top footer text-muted">
+        <div b-8i4qlzt809 class="container">
+            &copy; 2023 - Locum Application
+        </div>
+    </footer>
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+</html>
