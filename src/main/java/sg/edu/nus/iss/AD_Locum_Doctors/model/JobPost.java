@@ -1,7 +1,6 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.model;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,6 +21,8 @@ public class JobPost {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	private String description;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
