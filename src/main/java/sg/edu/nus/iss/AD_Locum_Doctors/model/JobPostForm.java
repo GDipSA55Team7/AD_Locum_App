@@ -4,24 +4,14 @@ import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
 @NoArgsConstructor
-public class JobPost {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
+public class JobPostForm {
 	private String description;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -36,14 +26,7 @@ public class JobPost {
 
 	private double totalRate;
 
-	private String status = "OPEN";
+	private Long clinicUserId;
 
-	@ManyToOne
-	private User clinicUser;
-
-	@ManyToOne
-	private User freelancer;
-
-	@ManyToOne
-	private Clinic clinic;
+	private Long clinicId;
 }
