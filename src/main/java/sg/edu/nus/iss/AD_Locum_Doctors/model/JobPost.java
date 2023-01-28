@@ -3,6 +3,7 @@ package sg.edu.nus.iss.AD_Locum_Doctors.model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.aspectj.lang.annotation.Before;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Entity;
@@ -58,5 +59,25 @@ public class JobPost {
 
 	public String getRatePerHourString() {
 		return "$" + String.format("%.2f", ratePerHour) + "/h";
+	}
+
+	public String getStartTimeString() {
+		String appendAMPM = "";
+		if (startTime.isBefore(LocalTime.of(12, 0))) {
+			appendAMPM = " AM";
+		} else {
+			appendAMPM = " PM";
+		}
+		return startTime + appendAMPM;
+	}
+
+	public String getEndTimeString() {
+		String appendAMPM = "";
+		if (endTime.isBefore(LocalTime.of(12, 0))) {
+			appendAMPM = " AM";
+		} else {
+			appendAMPM = " PM";
+		}
+		return endTime + appendAMPM;
 	}
 }
