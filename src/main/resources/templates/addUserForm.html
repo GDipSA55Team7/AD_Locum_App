@@ -15,12 +15,12 @@
 				<div class="container-fluid">
 					<div class="row mb-2">
 						<div class="col-sm-6">
-							<h1 class="m-0">Create New Clinic</h1>
+							<h1 class="m-0">Create New User</h1>
 						</div><!-- /.col -->
 						<div class="col-sm-6">
 							<ol class="breadcrumb float-sm-right">
 								<li class="breadcrumb-item"><a href="#">Home</a></li>
-								<li class="breadcrumb-item"><a th:href="@{/cliniclist}">Clinic</a></li>
+								<li class="breadcrumb-item"><a th:href="@{/UserList}">User</a></li>
 								<li class="breadcrumb-item active">Create</li>
 							</ol>
 						</div>
@@ -36,7 +36,7 @@
 						<div class="col-12">
 							<div class="card">
 								<div class="card-body">
-									<form action="#" th:action="@{'/saveClinic'}" th:object="${clinic}"
+									<form action="#" th:action="@{'/saveUser'}" th:object="${user}"
 										method="post">
 										<div class="mb-3 form-group">
 											<label class="form-label">Organization</label>
@@ -47,25 +47,25 @@
 										</div>
 										<div class="row">
 											<div class="mb-3 col">
-												<label class="form-label">Clinic Name</label>
-												<input th:field="*{name}" type="text" class="form-control">
+												<label class="form-label">User Name</label>
+												<input th:field="*{username}" type="text" class="form-control">
 											</div>
 											<div class="mb-3 col">
-												<label class="form-label">Contact</label>
-												<input th:field="*{contact}" type="text" class="form-control">
+												<label class="form-label">Name</label>
+												<input th:field="*{name}" type="text" class="form-control">
 											</div>
 										</div>
 										<div class="mb-3 form-group">
-											<label class="form-label">HCI Code</label>
-											<input th:field="*{HCICode}" type="text" class="form-control">
+											<label class="form-label">Email</label>
+											<input th:field="*{email}" type="email" class="form-control">
 										</div>
 										<div class="mb-3 form-group">
-											<label class="form-label">Postal Code</label>
-											<input th:field="*{postalCode}" type="text" class="form-control">
+											<label class="form-label">Contact</label>
+											<input th:field="*{contact}" type="text" class="form-control">
 										</div>
 										<div class="mb-3 form-group">
-											<label class="form-label">Address</label>
-											<input th:field="*{address}" type="text" class="form-control">
+											<label class="form-label">Medical License No</label>
+											<input th:field="*{medicalLicenseNo}" type="text" class="form-control">
 										</div>
 										<button type="submit" class="btn btn-info">Create</button>
 									</form>

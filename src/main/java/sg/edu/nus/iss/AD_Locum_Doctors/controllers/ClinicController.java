@@ -1,5 +1,7 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.validation.Valid;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
@@ -22,6 +25,13 @@ public class ClinicController {
     @Autowired
     ClinicService cService;
 
+    @GetMapping("/cliniclist")
+    public String clinicListPage(Model model){
+        List<Clinic> clinics = cService.findAll();
+        model.addAttribute("clinicList", clinics);
+        return "clinic-list";
+    }
+
     @GetMapping("/addClinicForm")
     public String addClinicForm(Model model){
         Clinic clinic = new Clinic();
@@ -29,11 +39,11 @@ public class ClinicController {
         model.addAttribute("organizationList", oService.getAllOrganizations());
         return "addClinicForm";
     }
-
+    
     @PostMapping("/saveClinic")
     public String saveClinic(@ModelAttribute("clinic") @Valid Clinic clinic, BindingResult result,
    Model model){
     cService.saveClinic(clinic);
-    return "";
+    return "redirect:/cliniclist";
    }
 }
