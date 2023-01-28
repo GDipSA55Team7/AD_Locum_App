@@ -63,4 +63,9 @@ public class JobPost {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
 		return startDateTime.format(formatter);
 	}
+
+	public String getEndDateTimeString() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
+		return endDateTime.format(formatter);
+	}
 }

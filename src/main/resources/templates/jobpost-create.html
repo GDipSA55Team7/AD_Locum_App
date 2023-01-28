@@ -40,16 +40,22 @@
 										method="post">
 										<div class="mb-3 form-group">
 											<label class="form-label">Description</label>
-											<input th:field="*{description}" type="text" class="form-control">
+											<input th:field="*{description}" type="text" class="form-control" required>
 										</div>
 										<div class="row">
 											<div class="mb-3 col">
 												<label class="form-label">Start Date & Time</label>
-												<input th:field="*{startDateTime}" type="datetime-local" class="form-control">
+												<input th:field="*{startDateTime}" type="datetime-local"
+													class="form-control" onchange="validateFields()" required />
+												<div id="startDateTime-feedback" class="invalid-feedback d-block">
+												</div>
 											</div>
 											<div class="mb-3 col">
-												<label class="form-label">End Date & Time</label>
-												<input th:field="*{endDateTime}" type="datetime-local" class="form-control">
+												<label for="*{endDateTime}" class="form-label">End Date & Time</label>
+												<input th:field="*{endDateTime}" type="datetime-local"
+													class="form-control" onchange="validateFields()" required />
+												<div id="endDateTime-feedback" class="invalid-feedback d-block">
+												</div>
 											</div>
 										</div>
 										<div class="mb-3 form-group">
@@ -60,25 +66,27 @@
 													Clinics</option>
 											</select>
 										</div>
-										<div class="mb-3 form-group">
-											<label class="form-label">Rate/hour</label>
-											<div class="input-group">
-												<div class="input-group-prepend">
-													<span class="input-group-text">$</span>
-												</div>
-												<div class="input-group-append">
-													<input th:field="*{ratePerHour}" type="text" class="form-control">
+										<div class="row">
+											<div class="mb-3 form-group col-auto">
+												<label class="form-label">Rate/hour</label>
+												<div class="input-group">
+													<div class="input-group-prepend">
+														<span class="input-group-text">$</span>
+													</div>
+													<input th:field="*{ratePerHour}" type="number" min="0" step="0.01"
+														class="form-control" onkeyup="validateFields()" required />
+													<div id="ratePerHour-feedback" class="invalid-feedback d-block">
+													</div>
 												</div>
 											</div>
-										</div>
-										<div class="mb-3 form-group">
-											<label class="form-label">Total Rate</label>
-											<div class="input-group">
-												<div class="input-group-prepend">
-													<span class="input-group-text">$</span>
-												</div>
-												<div class="input-group-append">
-													<input th:field="*{totalRate}" type="text" class="form-control">
+											<div class="mb-3 form-group col-auto">
+												<label class="form-label">Total Rate</label>
+												<div class="input-group">
+													<div class="input-group-prepend">
+														<span class="input-group-text">$</span>
+													</div>
+													<input th:field="*{totalRate}" type="text" class="form-control"
+														readonly />
 												</div>
 											</div>
 										</div>
@@ -89,16 +97,84 @@
 						</div>
 						<!-- /.col -->
 					</div>
-
-
 				</div><!-- /.container-fluid -->
 			</div>
 			<!-- /.content -->
 		</div>
 		<div th:replace="fragments/layout.html :: footer" />
 		<div th:replace="fragments/layout.html :: script" />
-
 	</div>
 </body>
+<script>
+	function validateFields() {
+		var startElem = document.getElementById("startDateTime");
+		var endElem = document.getElementById("endDateTime");
+		var rateElem = document.getElementById("ratePerHour");
+		var startDateTime = new Date(startElem.value);
+		var endDateTime = new Date(endElem.value);
+
+		var startFeedbackElem = document.getElementById("startDateTime-feedback");
+		if (startElem.value == "") {
+			startFeedbackElem.innerHTML = "Please enter start date and time.";
+			startElem.classList.add("is-invalid");
+			resetTotalRate();
+		} else {
+			startElem.classList.remove("is-invalid");
+			startFeedbackElem.innerHTML = "";
+		}
+
+		var endFeedbackElem = document.getElementById("endDateTime-feedback");
+		if (endElem.value == "") {
+			endFeedbackElem.innerHTML = "Please enter end date and time.";
+			endElem.classList.add("is-invalid");
+			resetTotalRate();
+		} else {
+			var diff = endDateTime.getTime() - startDateTime.getTime();
+			if (diff <= 0) {
+				endElem.classList.add("is-invalid");
+				endFeedbackElem.innerHTML = "End date cannot be earlier than start date.";
+				resetTotalRate();
+			} else {
+				endElem.classList.remove("is-invalid");
+				endFeedbackElem.innerHTML = "";
+			}
+		}
+
+		var rateFeedbackElem = document.getElementById("ratePerHour-feedback");
+		if (isNaN(rateElem.valueAsNumber)) {
+			rateElem.classList.add("is-invalid");
+			rateFeedbackElem.innerHTML = "Please enter a valid number";
+			resetTotalRate();
+			return;
+		} else {
+			rateElem.classList.remove("is-invalid");
+			rateFeedbackElem.innerHTML = "";
+		}
+		calculateTotalRate(diff, rateElem.valueAsNumber);
+	}
+
+	function resetTotalRate() {
+		document.getElementById("totalRate").value = "-";
+	}
+
+	function calculateTotalRate(duration, rate) {
+		if (duration <= 0 || isNaN(rate) || isNaN(duration)) {
+			document.getElementById("totalRate").value = "-";
+			return;
+		}
+		var msec = duration;
+		var hh = Math.floor(msec / 1000 / 60 / 60);
+		msec -= hh * 1000 * 60 * 60;
+		var mm = Math.floor(msec / 1000 / 60);
+		msec -= mm * 1000 * 60;
+		var ss = Math.floor(msec / 1000);
+		msec -= ss * 1000;
+		var totalRate = rate * hh;
+		if (mm > 0) {
+			totalRate += rate;
+		}
+		document.getElementById("totalRate").value = (Math.round(totalRate * 100) / 100).toFixed(2);
+	}
+</script>
 
 </html>
