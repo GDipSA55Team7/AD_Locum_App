@@ -24,7 +24,7 @@ public class JobPost {
 	private Long id;
 
 	private String description;
-
+	
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	private LocalDate startDate;
@@ -44,7 +44,7 @@ public class JobPost {
 	private double ratePerHour;
 
 	private double totalRate;
-
+	
 	private String status = "OPEN";
 
 	@ManyToOne
@@ -55,6 +55,12 @@ public class JobPost {
 
 	@ManyToOne
 	private Clinic clinic;
+	
+	private String paymentReferenceNumber;
+	
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	private LocalDate paymentDate;
 
 	public String getRatePerHourString() {
 		return "$" + String.format("%.2f", ratePerHour) + "/h";

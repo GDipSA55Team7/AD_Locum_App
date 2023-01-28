@@ -15,7 +15,7 @@
 			<div class="container-fluid">
 				<div class="row mb-2">
 					<div class="col-sm-6">
-						<h1 class="m-0">View Job Posts</h1>
+						<h1 class="m-0">Outstanding Payments</h1>
 					</div><!-- /.col -->
 					<div class="col-sm-6">
 						<ol class="breadcrumb float-sm-right">
@@ -45,42 +45,45 @@
 						</div>
 						<div class="card">
 							<div class="card-body">
-
 								<div class="table-responsive">
 									<table id="example1" class="table table-bordered table-hover">
 										<thead>
 										<tr>
 											<th>S/N</th>
+											<th>Job ID</th>
 											<th>Job Description</th>
 											<th>Clinic Location</th>
 											<th>Status</th>
-											<th>Date/Time</th>
+											<th>Completed Date/Time</th>
+											<th>Doctor Name</th>
 											<th>Fees</th>
 											<th>Actions</th>
 										</tr>
 										</thead>
 										<tbody>
-										<tr th:each="jp : ${jobPosts}" class="listRecord">
-											<td th:text="${jp.id}">Job Post Id</td>
-											<td th:text="${jp.description}">Job Description</td>
-											<td th:text="${jp.clinic.name}">Clinic Location</td>
-											<td>
-												<span class="right badge badge-success" th:if="${jp.status == 'OPEN'}" th:text="${jp.status}">New</span>
-												<span class="right badge badge-warning" th:if="${jp.status == 'PENDING'}" th:text="${jp.status}">New</span>
-											</td>
-											<td>
-												<span th:text="${jp.startDate + ' to ' + jp.endDate}"></span><br>
-												<span th:text="${jp.startTime + ' to ' + jp.endTime}"></span>
-											</td>
-											<td th:text="${jp.getRatePerHourString()}">Fees</td>
-											<td align="center">
-												<div th:switch="${#strings.toString(jp.status)}">
-													<a th:case="'OPEN'" th:href="@{/jobpost/}+${jp.id}+@{/delete}">Delete</a>
-													<a th:case="'PENDING'" th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel</a>
-												</div>
-												<div><a th:href="@{/jobpost/}+${jp.id}">View</a></div>
-											</td>
-										</tr>
+										<!-- Fill in table items here -->
+											<tr th:each="jp, iStat : ${jobPosts}" class="listRecord">
+												<td th:text="${iStat.index + 1}">S/N</td>
+												<td th:text="${jp.id}">Job Post Id</td>
+												<td th:text="${jp.description}">Job Description</td>
+												<td th:text="${jp.clinic.name}">Clinic Location</td>
+												<td>
+													<p th:if="${jp.status == 'Completed_Pending_Payment'}">Completed (Pending Payment)</p>
+												</td>
+												<td>
+													<span th:text="${jp.startDate + ' to ' + jp.endDate}"></span><br>
+													<span th:text="${jp.startTime + ' to ' + jp.endTime}"></span>
+												</td>
+												<td th:text="${'Dr ' + jp.getFreelancer().getName()}">Fees</td>
+												<td th:text="${jp.getRatePerHourString()}">Fees</td>
+												<td align="center">
+													<div th:switch="${#strings.toString(jp.status)}">
+														<a th:case="'OPEN'" th:href="@{/jobpost/}+${jp.id}+@{/delete}">Delete</a>
+														<a th:case="'PENDING'" th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel</a>
+													</div>
+													<div><a th:href="@{/jobpost/}+${jp.id}">View</a></div>
+												</td>
+											</tr>
 										</tbody>
 									</table>
 								</div>
