@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
-import sg.edu.nus.iss.AD_Locum_Doctors.repository.ClinicRepository;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 
 @Controller
@@ -21,7 +21,7 @@ public class JobPostController {
 	private JobPostService jobPostService;
 
 	@Autowired
-	private ClinicRepository clinicRepo;
+	private ClinicService clinicService;
 
 	@GetMapping("/list")
 	public String jobPostListPage(Model model) {
@@ -32,7 +32,7 @@ public class JobPostController {
 	@GetMapping("/create")
 	public String createJobPostPage(Model model) {
 		// still working on it
-		List<Clinic> clinics = clinicRepo.findAll();
+		List<Clinic> clinics = clinicService.findAll();
 		model.addAttribute("clinics", clinics);
 		model.addAttribute("jobPostForm", new JobPostForm());
 		return "jobpost-create";
