@@ -10,4 +10,5 @@ public class UserController {
     public String List(){
         return "UserList";
     }
+    
 }
