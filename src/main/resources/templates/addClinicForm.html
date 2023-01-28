@@ -14,33 +14,26 @@
 <body>
     <br/>
     <div class="container">
-		<h1>Medical Institution Registration Form</h1>
+		<h1>Add Clinic Form</h1>
 		<hr>
-		<form  th:object="${organization}" th:action="@{/registerOrg}"method="POST">
-			<div class="row">
+		<form  th:object="${clinic}" th:action="@{/saveClinic}"method="POST">
+              <div class="row">
                 <div class="col-sm-2">
                   <label for="organization">Organization:</label>
                 </div>
                 <div class="col-sm-6">
-                  <input type="text" th:field="*{name}" class="form-control" id="organization" name="organization">
+                    <select name="organization" th:field="*{organization.id}" class="form-control mb-5 col-5">
+                        <option th:each="organization : ${organizationList}" th:value="${organization.id}"
+                            th:text="${organization.name}"></option>
+                    </select>
                 </div>
               </div>
-              <br/>
-              <div class="row">
+			<div class="row">
                 <div class="col-sm-2">
-                  <label for="uen">UEN:</label>
+                  <label for="clinic">Clinic Name:</label>
                 </div>
                 <div class="col-sm-6">
-                  <input type="text" th:field="*{UEN}" class="form-control" id="uen" name="uen">
-                </div>
-              </div>
-              <br/>
-              <div class="row">
-                <div class="col-sm-2">
-                  <label for="hci">HCI:</label>
-                </div>
-                <div class="col-sm-6">
-                  <input type="text" th:field="*{HCI}"class="form-control" id="hci" name="hci">
+                  <input type="text" th:field="*{name}" class="form-control" id="clinic" name="clinic">
                 </div>
               </div>
               <br/>
@@ -49,7 +42,25 @@
                   <label for="address">Address:</label>
                 </div>
                 <div class="col-sm-6">
-                  <input type="text" th:field="*{address}"class="form-control" id="address" name="address">
+                  <input type="text" th:field="*{address}" class="form-control" id="address" name="address">
+                </div>
+              </div>
+              <br/>
+              <div class="row">
+                <div class="col-sm-2">
+                  <label for="hciCode">HCICode:</label>
+                </div>
+                <div class="col-sm-6">
+                  <input type="text" th:field="*{HCICode}"class="form-control" id="hciCode" name="hciCode">
+                </div>
+              </div>
+              <br/>
+              <div class="row">
+                <div class="col-sm-2">
+                  <label for="postalCode">PostalCode:</label>
+                </div>
+                <div class="col-sm-6">
+                  <input type="text" th:field="*{postalCode}"class="form-control" id="postalCode" name="postalCode">
                 </div>
               </div>
               <br/>
@@ -67,7 +78,7 @@
                     <label for="address"></label>
                   </div>
                   <div class="col-sm-6">
-			<button type="submit" class="btn btn-info col-2">Register</button>
+			<button type="submit" class="btn btn-info col-2">Save</button>
         </div>
         </div>
 		</form>
