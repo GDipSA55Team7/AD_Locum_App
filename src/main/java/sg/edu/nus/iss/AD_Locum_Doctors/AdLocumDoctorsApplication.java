@@ -109,7 +109,7 @@ public class AdLocumDoctorsApplication {
 			jp1.setEndTime(LocalTime.of(18, 30));
 			jp1.setRatePerHour(100);
 			jp1.setFreelancer(testUser1);
-			jp1.setStatus("Completed_Pending_Payment");
+			jp1.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jobPostRepo.saveAndFlush(jp1);
 
 			JobPost jp2 = new JobPost();
@@ -132,6 +132,7 @@ public class AdLocumDoctorsApplication {
 			jp3.setStartTime(LocalTime.of(15, 30));
 			jp3.setEndTime(LocalTime.of(23, 30));
 			jp3.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
+			jp3.setFreelancer(testUser1);
 			jp3.setRatePerHour(88.8);
 
 			
@@ -145,16 +146,16 @@ public class AdLocumDoctorsApplication {
 			testUser2.setRole(r1);
 			userRepo.saveAndFlush(testUser2);
 			
-			JobPost jp3 = new JobPost();
-			jp3.setClinic(c3);
-			jp3.setDescription("Raffles Medical Group looking for locum urgently!");
-			jp3.setStartDate(LocalDate.of(2023, 01, 11));
-			jp3.setEndDate(LocalDate.of(2023, 01, 11));
-			jp3.setStartTime(LocalTime.of(18, 30));
-			jp3.setEndTime(LocalTime.of(20, 30));
-			jp3.setRatePerHour(100);
-			jp3.setFreelancer(testUser2);
-			jp3.setStatus("Completed_Pending_Payment");
+			JobPost jp4 = new JobPost();
+			jp4.setClinic(c3);
+			jp4.setDescription("Raffles Medical Group looking for locum urgently!");
+			jp4.setStartDate(LocalDate.of(2023, 01, 11));
+			jp4.setEndDate(LocalDate.of(2023, 01, 11));
+			jp4.setStartTime(LocalTime.of(18, 30));
+			jp4.setEndTime(LocalTime.of(20, 30));
+			jp4.setRatePerHour(100);
+			jp4.setFreelancer(testUser2);
+			jp4.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jobPostRepo.saveAndFlush(jp3);
 		};
 	}

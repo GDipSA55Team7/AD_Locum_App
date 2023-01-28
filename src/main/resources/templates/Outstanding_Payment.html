@@ -68,7 +68,7 @@
 												<td th:text="${jp.description}">Job Description</td>
 												<td th:text="${jp.clinic.name}">Clinic Location</td>
 												<td>
-													<p th:if="${jp.status == 'Completed_Pending_Payment'}">Completed (Pending Payment)</p>
+													<p th:if="${jp.status.name() == 'COMPLETED_PENDING_PAYMENT'}">Completed (Pending Payment)</p>
 												</td>
 												<td>
 													<span th:text="${jp.startDate + ' to ' + jp.endDate}"></span><br>
