@@ -1,5 +1,7 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,11 @@ public class ClinicServiceImpl implements ClinicService{
     @Override
     public void saveClinic(Clinic clinic) {
        clinicRepository.saveAndFlush(clinic);
+    }
+
+    @Override
+    public List<Clinic> findAll() {
+        return clinicRepository.findAll();
     }
     
 }
