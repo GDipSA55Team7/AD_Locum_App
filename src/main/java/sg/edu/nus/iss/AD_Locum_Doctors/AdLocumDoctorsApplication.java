@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.AverageCompensationRateRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.ClinicRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobPostRepository;
@@ -63,9 +64,20 @@ public class AdLocumDoctorsApplication {
 			jp2.setEndDate(LocalDate.of(2023, 03, 30));
 			jp2.setStartTime(LocalTime.of(15, 30));
 			jp2.setEndTime(LocalTime.of(23, 30));
-			jp2.setStatus("PENDING");
+			jp2.setStatus(JobStatus.PENDING_ACCEPTANCE);
 			jp2.setRatePerHour(88.8);
 			jobPostRepo.saveAndFlush(jp2);
+
+			JobPost jp3 = new JobPost();
+			jp3.setClinic(c2);
+			jp3.setDescription("Looking for locum occupational therapist");
+			jp3.setStartDate(LocalDate.of(2023, 02, 1));
+			jp3.setEndDate(LocalDate.of(2023, 03, 30));
+			jp3.setStartTime(LocalTime.of(15, 30));
+			jp3.setEndTime(LocalTime.of(23, 30));
+			jp3.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
+			jp3.setRatePerHour(88.8);
+			jobPostRepo.saveAndFlush(jp3);
 		};
 	}
 }
