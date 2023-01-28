@@ -124,7 +124,9 @@ public class AdLocumDoctorsApplication {
 			jp3.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
 			jp3.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
 			jp3.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
+			jp3.setFreelancer(testUser1);
 			jp3.setRatePerHour(88.8);
+			jobPostRepo.saveAndFlush(jp3);
 
 			User testUser2 = new User();
 			testUser2.setName("Mary Tan");

@@ -28,6 +28,8 @@ public class Clinic {
 
 	private String HCICode;
 
+	private String contact;
+
 	@ManyToOne
 	private Organization organization;
 

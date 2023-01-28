@@ -11,7 +11,7 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
 @Repository
 public interface JobPostRepository extends JpaRepository<JobPost, Long> {
 	
-	@Query("Select j from JobPost j where j.status = 'Completed_Pending_Payment'")
+	@Query("Select j from JobPost j where j.status = 3")
 	List<JobPost> findJobPostsWithOutstandingPayment();
 
 }
