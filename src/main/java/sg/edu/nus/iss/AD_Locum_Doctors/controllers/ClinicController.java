@@ -44,6 +44,6 @@ public class ClinicController {
     public String saveClinic(@ModelAttribute("clinic") @Valid Clinic clinic, BindingResult result,
    Model model){
     cService.saveClinic(clinic);
-    return "";
+    return "redirect:/cliniclist";
    }
 }

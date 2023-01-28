@@ -1,97 +1,89 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
-    layout:decorate="~{fragments/layout}">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Locum Application</title>
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/css/site.css" />
-    <!-- Bootstrap CSS -->
-    <style>
-</style>
-</head>
-<body>
-    <br/>
-    <div class="container">
-		<h1>Add Clinic Form</h1>
-		<hr>
-		<form  th:object="${clinic}" th:action="@{/saveClinic}"method="POST">
-              <div class="row">
-                <div class="col-sm-2">
-                  <label for="organization">Organization:</label>
-                </div>
-                <div class="col-sm-6">
-                    <select name="organization" th:field="*{organization.id}" class="form-control mb-5 col-5">
+	layout:decorate="~{fragments/layout}">
+
+<head th:replace="fragments/layout.html :: html_head" />
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+		<div th:replace="fragments/layout.html :: nav_menu" />
+		<div th:replace="fragments/layout.html :: sidebar" />
+
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<div class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1 class="m-0">Create New Clinic</h1>
+						</div><!-- /.col -->
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<li class="breadcrumb-item"><a href="#">Home</a></li>
+								<li class="breadcrumb-item"><a th:href="@{/cliniclist}">Clinic</a></li>
+								<li class="breadcrumb-item active">Create</li>
+							</ol>
+						</div>
+					</div><!-- /.row -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content-header -->
+
+			<!-- Main content -->
+			<div class="content">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-12">
+							<div class="card">
+								<div class="card-body">
+									<form action="#" th:action="@{'/saveClinic'}" th:object="${clinic}"
+										method="post">
+										<div class="mb-3 form-group">
+											<label class="form-label">Organization</label>
+                      <select name="organization" th:field="*{organization.id}" class="form-control">
                         <option th:each="organization : ${organizationList}" th:value="${organization.id}"
                             th:text="${organization.name}"></option>
                     </select>
-                </div>
-              </div>
-			<div class="row">
-                <div class="col-sm-2">
-                  <label for="clinic">Clinic Name:</label>
-                </div>
-                <div class="col-sm-6">
-                  <input type="text" th:field="*{name}" class="form-control" id="clinic" name="clinic">
-                </div>
-              </div>
-              <br/>
-              <div class="row">
-                <div class="col-sm-2">
-                  <label for="address">Address:</label>
-                </div>
-                <div class="col-sm-6">
-                  <input type="text" th:field="*{address}" class="form-control" id="address" name="address">
-                </div>
-              </div>
-              <br/>
-              <div class="row">
-                <div class="col-sm-2">
-                  <label for="hciCode">HCICode:</label>
-                </div>
-                <div class="col-sm-6">
-                  <input type="text" th:field="*{HCICode}"class="form-control" id="hciCode" name="hciCode">
-                </div>
-              </div>
-              <br/>
-              <div class="row">
-                <div class="col-sm-2">
-                  <label for="postalCode">PostalCode:</label>
-                </div>
-                <div class="col-sm-6">
-                  <input type="text" th:field="*{postalCode}"class="form-control" id="postalCode" name="postalCode">
-                </div>
-              </div>
-              <br/>
-              <div class="row">
-                <div class="col-sm-2">
-                  <label for="address">Contact:</label>
-                </div>
-                <div class="col-sm-6">
-                  <input type="text" th:field="*{contact}"class="form-control" id="contact" name="contact">
-                </div>
-              </div>
-              <br/>
-              <div class="row">
-                <div class="col-sm-2">
-                    <label for="address"></label>
-                  </div>
-                  <div class="col-sm-6">
-			<button type="submit" class="btn btn-info col-2">Save</button>
-      <a href="/cliniclist" class="btn btn-info col-2">Back to List</a>
-        </div>
-        </div>
-		</form>
+										</div>
+										<div class="row">
+											<div class="mb-3 col">
+												<label class="form-label">Clinic Name</label>
+												<input th:field="*{name}" type="text" class="form-control">
+											</div>
+											<div class="mb-3 col">
+												<label class="form-label">Contact</label>
+												<input th:field="*{contact}" type="text" class="form-control">
+											</div>
+										</div>
+										<div class="mb-3 form-group">
+											<label class="form-label">HCI Code</label>
+											<input th:field="*{HCICode}" type="text" class="form-control">
+										</div>
+										<div class="mb-3 form-group">
+											<label class="form-label">Postal Code</label>
+											<input th:field="*{postalCode}" type="text" class="form-control">
+										</div>
+										<div class="mb-3 form-group">
+											<label class="form-label">Address</label>
+											<input th:field="*{address}" type="text" class="form-control">
+										</div>
+										<button type="submit" class="btn btn-info">Create</button>
+									</form>
+								</div>
+							</div>
+						</div>
+						<!-- /.col -->
+					</div>
 
-		<hr>
+
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content -->
+		</div>
+		<div th:replace="fragments/layout.html :: footer" />
+		<div th:replace="fragments/layout.html :: script" />
 
 	</div>
-<br/>
-    <footer b-8i4qlzt809 class="border-top footer text-muted">
-        <div b-8i4qlzt809 class="container">
-            &copy; 2023 - Locum Application
-        </div>
-    </footer>
-    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+
 </html>
