@@ -21,6 +21,10 @@ public class JobPostServiceImpl implements JobPostService {
 	public List<JobPost> findAll() {
 		return jobPostRepo.findAll();
 	}
+	
+	public List<JobPost> findJobPostsWithOutstandingPayment(){
+		return jobPostRepo.findJobPostsWithOutstandingPayment();
+	}
 
 	public JobPost createJobPost(JobPostForm jobPostForm) {
 		JobPost newJobPost = new JobPost();
