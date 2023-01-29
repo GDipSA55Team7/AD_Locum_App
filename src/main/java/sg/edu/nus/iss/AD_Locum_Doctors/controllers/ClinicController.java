@@ -50,7 +50,8 @@ public class ClinicController {
 
    @GetMapping("/viewclinic/{id}")
    public String viewClinic(Model model,@PathVariable(value = "id") Long id){
-    model.addAttribute("clinic", cService.findById(id));
+    Clinic clinic = cService.findById(id);
+    model.addAttribute("clinic",clinic);
     model.addAttribute("organizationList", oService.getAllOrganizations());
     return "editClinicForm";
    }
@@ -61,4 +62,11 @@ public class ClinicController {
     cService.saveClinic(clinic);
     return "redirect:/cliniclist";
    }
+
+   @GetMapping("/deleteclinic/{id}")
+    public String deleteClinic(Model model, @PathVariable(value = "id") Long id){
+        Clinic clinic = cService.findById(id);
+        cService.deleteClinic(clinic);
+        return "redirect:/cliniclist";
+    }
 }
