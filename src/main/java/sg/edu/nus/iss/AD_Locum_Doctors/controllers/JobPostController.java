@@ -51,6 +51,13 @@ public class JobPostController {
 		return "redirect:/jobpost/list";
 	}
 
+	@GetMapping("/{id}")
+	public String viewJobPost(@PathVariable String id, Model model) {
+		JobPost jobPost = jobPostService.findJobPostById(id);
+		model.addAttribute("jobPost", jobPost);
+		return "jobpost-view";
+	}
+
 	@GetMapping("/{id}/cancel")
 	public String cancelJobPost(@PathVariable String id) {
 		JobPost jobPost = jobPostService.findJobPostById(id);
