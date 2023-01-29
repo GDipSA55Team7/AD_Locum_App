@@ -1,7 +1,8 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.model;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,27 +27,19 @@ public class JobPost {
 
 	private String description;
 
-	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "dd-MM-yyyy")
-	private LocalDate startDate;
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+	private LocalDateTime startDateTime;
 
-	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "dd-MM-yyyy")
-	private LocalDate endDate;
-
-	@Temporal(TemporalType.TIME)
-	@DateTimeFormat(pattern = "HH:mm")
-	private LocalTime startTime;
-
-	@Temporal(TemporalType.TIME)
-	@DateTimeFormat(pattern = "HH:mm")
-	private LocalTime endTime;
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+	private LocalDateTime endDateTime;
 
 	private double ratePerHour;
 
 	private double totalRate;
 
-	private String status = "OPEN";
+	private JobStatus status = JobStatus.OPEN;
 
 	@JsonIgnore
 	@ManyToOne
@@ -60,7 +53,23 @@ public class JobPost {
 	@ManyToOne
 	private Clinic clinic;
 
+	private String paymentReferenceNumber;
+
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	private LocalDate paymentDate;
+
 	public String getRatePerHourString() {
 		return "$" + String.format("%.2f", ratePerHour) + "/h";
+	}
+
+	public String getStartDateTimeString() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
+		return startDateTime.format(formatter);
+	}
+
+	public String getEndDateTimeString() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
+		return endDateTime.format(formatter);
 	}
 }

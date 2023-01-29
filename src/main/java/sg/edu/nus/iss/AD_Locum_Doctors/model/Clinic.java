@@ -29,6 +29,8 @@ public class Clinic {
 
 	private String HCICode;
 
+	private String contact;
+
 	@JsonIgnore
 	@ManyToOne
 	private Organization organization;

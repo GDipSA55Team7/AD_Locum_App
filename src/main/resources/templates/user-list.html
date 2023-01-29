@@ -15,12 +15,12 @@
 				<div class="container-fluid">
 					<div class="row mb-2">
 						<div class="col-sm-6">
-							<h1 class="m-0">View Job Posts</h1>
+							<h1 class="m-0">View Users</h1>
 						</div><!-- /.col -->
 						<div class="col-sm-6">
 							<ol class="breadcrumb float-sm-right">
 								<li class="breadcrumb-item"><a href="#">Home</a></li>
-								<li class="breadcrumb-item active">Job Post</li>
+								<li class="breadcrumb-item active">User</li>
 							</ol>
 						</div>
 					</div><!-- /.row -->
@@ -39,8 +39,8 @@
 
 								</div>
 								<div class="p-2">
-									<form th:action="@{/jobpost/create}">
-										<button type="submit" class="btn btn-info">Add Job Post</button>
+									<form th:action="@{/addUserForm}">
+										<button type="submit" class="btn btn-info">Add User</button>
 									</form>
 								</div>
 							</div>
@@ -50,40 +50,24 @@
 										<table id="example1" class="table table-bordered table-hover">
 											<thead>
 												<tr>
-													<th>S/N</th>
-													<th>Job Description</th>
-													<th>Clinic Location</th>
-													<th>Status</th>
-													<th>Date/Time</th>
-													<th>Fees</th>
+													<th>Username</th>
+													<th>Name</th>
+													<th>Email</th>
+													<th>Contact</th>
+													<th>Medical License No.</th>
 													<th>Actions</th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr th:each="jp : ${jobPosts}" class="listRecord">
-													<td th:text="${jp.id}">Job Post Id</td>
-													<td th:text="${jp.description}">Job Description</td>
-													<td th:text="${jp.clinic.name}">Clinic Location</td>
-
-													<td>
-														<span th:text="${jp.status.value}"></span>
-													</td>
-													<td>
-														<span
-															th:text="${jp.getStartDateTimeString()}"></span> to<br>
-															<span
-															th:text="${jp.getEndDateTimeString()}"></span>
-															
-													</td>
-													<td th:text="${jp.getRatePerHourString}">Fees</td>
+												<tr th:each="user : ${userList}" class="listRecord">
+													<td th:text="${user.username}">Name</td>
+													<td th:text="${user.name}">HCI Code</td>
+													<td th:text="${user.email}">Postal Code</td>
+													<td th:text="${user.contact}">Contact</td>
+													<td th:text="${user.medicalLicenseNo}">Medical License No.</td>
 													<td align="center">
-														<div th:switch="${#strings.toString(jp.status.name)}">
-															<a th:case="'OPEN'"
-																th:href="@{/jobpost/}+${jp.id}+@{/delete}">Delete</a>
-															<a th:case="'PENDING_ACCEPTANCE'"
-																th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel</a>
-														</div>
-														<div><a th:href="@{/jobpost/}+${jp.id}">View</a></div>
+														<div><a th:href="@{/deleteuser/}+${user.id}">Delete</a></div>
+														<div><a th:href="@{/viewUser/}+${user.id}">View</a></div>
 													</td>
 												</tr>
 											</tbody>

@@ -1,25 +1,56 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
-import org.hibernate.query.NativeQuery.ReturnableResultNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.FreeLancerDTO;
+import java.util.List;
+
+import jakarta.transaction.Transactional;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.UserRepository;
 
 @Service
-public class UserServiceImpl implements UserService{
-	
-	@Autowired
-	UserRepository uRepo;
+@Transactional
+public class UserServiceImpl implements UserService {
+
+    @Autowired
+    UserRepository userRepo;
+
+    @Override
+    public void saveUser(User user) {
+        userRepo.saveAndFlush(user);
+
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepo.findAll();
+    }
+
+    @Override
+    public User findById(Long id) {
+        return userRepo.findById(id).get();
+    }
+
+    @Transactional
+    @Override
+    public User authenticate(String username, String pwd) {
+        return userRepo.findAll().stream().filter(u -> u.getPassword().equals(pwd) && u.getUsername().equals(username))
+                .findFirst().orElse(null);
+    }
+
+    @Override
+    public void deleteUser(User user) {
+       userRepo.delete(user);
+    }
 
 	@Override
 	public FreeLancerDTO createFreeLancer(FreeLancerDTO freeLancerDTO) {
 		//username,email,medicalLicenseNo must be unique
-		//get all registered users 
-		String errorsFieldString ="";  
-		for(User currentUser : uRepo.findAll()) {
+		//get all registered users
+		String errorsFieldString ="";
+		for(User currentUser : userRepo.findAll()) {
 			  if(currentUser.getUsername().equalsIgnoreCase(freeLancerDTO.getUsername())) {
 				  errorsFieldString += "username";
 			  }
@@ -31,14 +62,14 @@ public class UserServiceImpl implements UserService{
 				  errorsFieldString += "medical";
 			  }
 		  }
-		
+
 		System.out.println("errors = " + errorsFieldString);
 		//not unique username,email,medicalLicense
 		if(!errorsFieldString.isEmpty()) {
 			freeLancerDTO.setErrorsFieldString(errorsFieldString);
 			return freeLancerDTO;
 		}
-		
+
 		User newFreeLancer = new User();
 		newFreeLancer.setName(freeLancerDTO.getName());
 		newFreeLancer.setUsername(freeLancerDTO.getUsername());
@@ -48,7 +79,7 @@ public class UserServiceImpl implements UserService{
 		newFreeLancer.setMedicalLicenseNo(freeLancerDTO.getMedicalLicenseNo());
 		//set role
 		System.out.println("before" + freeLancerDTO);
-		uRepo.saveAndFlush(newFreeLancer);
+		userRepo.saveAndFlush(newFreeLancer);
 		freeLancerDTO.setId(newFreeLancer.getId().toString());
 		System.out.println("after" + freeLancerDTO);
 		return freeLancerDTO;
@@ -56,8 +87,9 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public FreeLancerDTO loginFreeLancer(FreeLancerDTO freeLancerDTO) {
-		User existingUser = uRepo.findUserByUsernameAndPassword(freeLancerDTO.getUsername(), freeLancerDTO.getPassword());
-		
+		User existingUser = userRepo.findUserByUsernameAndPassword(freeLancerDTO.getUsername(),
+				freeLancerDTO.getPassword());
+
 		FreeLancerDTO existingFreeLancerDTO = new FreeLancerDTO();
 		if(existingUser != null) {
 			existingFreeLancerDTO.setId(existingUser.getId().toString());
@@ -75,7 +107,7 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public Boolean updateFreeLancer(FreeLancerDTO freeLancerDTO) {
-		User existingUser = uRepo.findById(Long.valueOf(freeLancerDTO.getId())).orElse(null);
+		User existingUser = userRepo.findById(Long.valueOf(freeLancerDTO.getId())).orElse(null);
 		if(existingUser != null) {
 			if(!freeLancerDTO.getContact().equals(existingUser.getContact())) {
 				existingUser.setContact(freeLancerDTO.getContact());
@@ -95,12 +127,12 @@ public class UserServiceImpl implements UserService{
 			if(!freeLancerDTO.getPassword().equals(existingUser.getPassword())) {
                 existingUser.setPassword(freeLancerDTO.getPassword());
             }
-			uRepo.saveAndFlush(existingUser);
+			userRepo.saveAndFlush(existingUser);
 			return true;
 		}
 		return false;
 	}
-	
-	
+
+
 
 }

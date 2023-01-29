@@ -4,6 +4,7 @@ import java.util.List;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 
 public interface JobPostService {
 	List<JobPost> findAll();
@@ -11,4 +12,11 @@ public interface JobPostService {
 	List<JobPost> findAllOpen();
 
 	JobPost createJobPost(JobPostForm jobPostForm);
+	JobPost findJobPostById(String id);
+
+	JobPost createJobPost(JobPostForm jobPostForm, User user);
+
+	void cancel(JobPost jobPost);
+
+	List<JobPost> findJobPostsWithOutstandingPayment();
 }

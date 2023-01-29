@@ -3,6 +3,7 @@ package sg.edu.nus.iss.AD_Locum_Doctors.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,9 +24,16 @@ public class Organization {
 
 	private String UEN;
 
+	private String HCI;
+
+	private String address;
+
+	private String contact;
+
 	@OneToMany(mappedBy = "organization")
 	private List<User> users;
 
-	@OneToMany(mappedBy = "organization")
+	@OneToMany(mappedBy = "organization", cascade=CascadeType.PERSIST)
 	private List<Clinic> clinics = new ArrayList<>();
+
 }

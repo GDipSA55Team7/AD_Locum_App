@@ -1,104 +1,180 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
-	  layout:decorate="~{fragments/layout}">
+	layout:decorate="~{fragments/layout}">
 
 <head th:replace="fragments/layout.html :: html_head" />
 
 <body class="hold-transition sidebar-mini">
-<div class="wrapper">
-	<div th:replace="fragments/layout.html :: nav_menu" />
-	<div th:replace="fragments/layout.html :: sidebar" />
+	<div class="wrapper">
+		<div th:replace="fragments/layout.html :: nav_menu" />
+		<div th:replace="fragments/layout.html :: sidebar" />
 
-	<div class="content-wrapper">
-		<!-- Content Header (Page header) -->
-		<div class="content-header">
-			<div class="container-fluid">
-				<div class="row mb-2">
-					<div class="col-sm-6">
-						<h1 class="m-0">Create New Job Posting</h1>
-					</div><!-- /.col -->
-					<div class="col-sm-6">
-						<ol class="breadcrumb float-sm-right">
-							<li class="breadcrumb-item"><a href="#">Home</a></li>
-							<li class="breadcrumb-item"><a th:href="@{/jobpost/list}">Job Posts</a></li>
-							<li class="breadcrumb-item active">Create</li>
-						</ol>
-					</div>
-				</div><!-- /.row -->
-			</div><!-- /.container-fluid -->
-		</div>
-		<!-- /.content-header -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<div class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1 class="m-0">Create New Job Posting</h1>
+						</div><!-- /.col -->
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<li class="breadcrumb-item"><a href="#">Home</a></li>
+								<li class="breadcrumb-item"><a th:href="@{/jobpost/list}">Job Posts</a></li>
+								<li class="breadcrumb-item active">Create</li>
+							</ol>
+						</div>
+					</div><!-- /.row -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content-header -->
 
-		<!-- Main content -->
-		<div class="content">
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-12">
-						<div class="card">
-							<div class="card-body">
-								<form action="#" th:action="@{'/jobpost/create'}" th:object="${jobPostForm}" method="post">
-							<div class="mb-3 form-group">
-								<label class="form-label">Description</label>
-								<input th:field="*{description}" type="text" class="form-control">
-							</div>
-							<div class="row">
-								<div class="mb-3 col">
-									<label class="form-label">Start Date</label>
-									<input th:field="*{startDate}" type="date" class="form-control">
+			<!-- Main content -->
+			<div class="content">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-12">
+							<div class="card">
+								<div class="card-body">
+									<form action="#" th:action="@{'/jobpost/create'}" th:object="${jobPostForm}"
+										method="post">
+										<div class="mb-3 form-group">
+											<label class="form-label">Description</label>
+											<input th:field="*{description}" type="text" class="form-control" required>
+										</div>
+										<div class="row">
+											<div class="mb-3 col">
+												<label class="form-label">Start Date & Time</label>
+												<input th:field="*{startDateTime}" type="datetime-local"
+													class="form-control" onchange="validateFields()" required />
+												<div id="startDateTime-feedback" class="invalid-feedback d-block">
+												</div>
+											</div>
+											<div class="mb-3 col">
+												<label for="*{endDateTime}" class="form-label">End Date & Time</label>
+												<input th:field="*{endDateTime}" type="datetime-local"
+													class="form-control" onchange="validateFields()" required />
+												<div id="endDateTime-feedback" class="invalid-feedback d-block">
+												</div>
+											</div>
+										</div>
+										<div class="mb-3 form-group">
+											<label class="form-label">Clinic</label>
+											<select th:field="*{clinicId}" class="form-control" required>
+												<option value="" selected hidden>Please select a clinic</option>
+												<option th:each="c : ${clinics}" th:value="${c.id}" th:text="${c.name}">
+													Clinics</option>
+											</select>
+										</div>
+										<div class="row">
+											<div class="mb-3 form-group col-auto">
+												<label class="form-label">Rate/hour</label>
+												<div class="input-group">
+													<div class="input-group-prepend">
+														<span class="input-group-text">$</span>
+													</div>
+													<input th:field="*{ratePerHour}" type="number" min="0" step="0.01"
+														class="form-control" onkeyup="validateFields()" required />
+													<div id="ratePerHour-feedback" class="invalid-feedback d-block">
+													</div>
+												</div>
+											</div>
+											<div class="mb-3 form-group col-auto">
+												<label class="form-label">Total Rate</label>
+												<div class="input-group">
+													<div class="input-group-prepend">
+														<span class="input-group-text">$</span>
+													</div>
+													<input th:field="*{totalRate}" type="text" class="form-control"
+														readonly />
+												</div>
+											</div>
+										</div>
+										<button type="submit" class="btn btn-info">Create</button>
+									</form>
 								</div>
-								<div class="mb-3 col">
-									<label class="form-label">End Date</label>
-									<input th:field="*{endDate}" type="date" class="form-control">
-								</div>
-							</div>
-							<div class="row">
-								<div class="mb-3 col">
-									<label class="form-label">Start Time</label>
-									<input th:field="*{startTime}" type="time" class="form-control">
-								</div>
-								<div class="mb-3 col">
-									<label class="form-label">End Time</label>
-									<input th:field="*{endTime}" type="time" class="form-control">
-								</div>
-							</div>
-							<div class="mb-3 form-group">
-								<label class="form-label">Clinic</label>
-								<select th:field="*{clinicId}" class="form-select" required>
-									<option value="" selected hidden>Please select a clinic</option>
-									<option th:each="c : ${clinics}" th:value="${c.id}" th:text="${c.name}">Clinics</option>
-								</select>
-							</div>
-							<div class="mb-3 form-group">
-								<label class="form-label">Rate/hour</label>
-								<div class="input-group">
-									<span class="input-group-text">$</span>
-									<input th:field="*{ratePerHour}" type="text" class="form-control">
-								</div>
-							</div>
-							<div class="mb-3 form-group">
-								<label class="form-label">Total Rate</label>
-								<div class="input-group">
-									<span class="input-group-text">$</span>
-									<input th:field="*{totalRate}" type="text" class="form-control">
-								</div>
-							</div>
-							<button type="submit" class="btn btn-info">Create</button>
-						</form>
 							</div>
 						</div>
+						<!-- /.col -->
 					</div>
-					<!-- /.col -->
-				</div>
-
-
-			</div><!-- /.container-fluid -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content -->
 		</div>
-		<!-- /.content -->
+		<div th:replace="fragments/layout.html :: footer" />
+		<div th:replace="fragments/layout.html :: script" />
 	</div>
-	<div th:replace="fragments/layout.html :: footer" />
-	 <div th:replace="fragments/layout.html :: script" />
-
-</div>
 </body>
+<script>
+	function validateFields() {
+		var startElem = document.getElementById("startDateTime");
+		var endElem = document.getElementById("endDateTime");
+		var rateElem = document.getElementById("ratePerHour");
+		var startDateTime = new Date(startElem.value);
+		var endDateTime = new Date(endElem.value);
+
+		var startFeedbackElem = document.getElementById("startDateTime-feedback");
+		if (startElem.value == "") {
+			startFeedbackElem.innerHTML = "Please enter start date and time.";
+			startElem.classList.add("is-invalid");
+			resetTotalRate();
+		} else {
+			startElem.classList.remove("is-invalid");
+			startFeedbackElem.innerHTML = "";
+		}
+
+		var endFeedbackElem = document.getElementById("endDateTime-feedback");
+		if (endElem.value == "") {
+			endFeedbackElem.innerHTML = "Please enter end date and time.";
+			endElem.classList.add("is-invalid");
+			resetTotalRate();
+		} else {
+			var diff = endDateTime.getTime() - startDateTime.getTime();
+			if (diff <= 0) {
+				endElem.classList.add("is-invalid");
+				endFeedbackElem.innerHTML = "End date cannot be earlier than start date.";
+				resetTotalRate();
+			} else {
+				endElem.classList.remove("is-invalid");
+				endFeedbackElem.innerHTML = "";
+			}
+		}
+
+		var rateFeedbackElem = document.getElementById("ratePerHour-feedback");
+		if (isNaN(rateElem.valueAsNumber)) {
+			rateElem.classList.add("is-invalid");
+			rateFeedbackElem.innerHTML = "Please enter a valid number";
+			resetTotalRate();
+			return;
+		} else {
+			rateElem.classList.remove("is-invalid");
+			rateFeedbackElem.innerHTML = "";
+		}
+		calculateTotalRate(diff, rateElem.valueAsNumber);
+	}
+
+	function resetTotalRate() {
+		document.getElementById("totalRate").value = "-";
+	}
+
+	function calculateTotalRate(duration, rate) {
+		if (duration <= 0 || isNaN(rate) || isNaN(duration)) {
+			document.getElementById("totalRate").value = "-";
+			return;
+		}
+		var msec = duration;
+		var hh = Math.floor(msec / 1000 / 60 / 60);
+		msec -= hh * 1000 * 60 * 60;
+		var mm = Math.floor(msec / 1000 / 60);
+		msec -= mm * 1000 * 60;
+		var ss = Math.floor(msec / 1000);
+		msec -= ss * 1000;
+		var totalRate = rate * hh;
+		if (mm > 0) {
+			totalRate += rate;
+		}
+		document.getElementById("totalRate").value = (Math.round(totalRate * 100) / 100).toFixed(2);
+	}
+</script>
 
 </html>
