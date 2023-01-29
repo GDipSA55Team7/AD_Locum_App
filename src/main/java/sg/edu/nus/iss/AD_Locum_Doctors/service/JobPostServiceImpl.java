@@ -44,8 +44,12 @@ public class JobPostServiceImpl implements JobPostService {
 		return jobPostRepo.saveAndFlush(newJobPost);
 	}
 
-	public void cancel(JobPost jobpost) {
-		jobpost.setStatus(JobStatus.CANCELLED);
-		jobPostRepo.save(jobpost);
+	public void cancel(JobPost jobPost) {
+		jobPost.setStatus(JobStatus.CANCELLED);
+		jobPostRepo.save(jobPost);
+	}
+
+	public void delete(JobPost jobPost) {
+		jobPostRepo.delete(jobPost);
 	}
 }

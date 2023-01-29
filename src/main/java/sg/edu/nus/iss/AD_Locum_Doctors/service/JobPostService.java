@@ -14,6 +14,8 @@ public interface JobPostService {
 	JobPost createJobPost(JobPostForm jobPostForm, User user);
 
 	void cancel(JobPost jobPost);
+	
+	void delete(JobPost jobPost);
 
 	List<JobPost> findJobPostsWithOutstandingPayment();
 }
