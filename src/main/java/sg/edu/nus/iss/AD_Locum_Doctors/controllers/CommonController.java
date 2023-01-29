@@ -37,6 +37,8 @@ public class CommonController {
 				return "redirect:/";
 			} else if (u.getRole().getName().equals("Clinic_User")) {
 				return "redirect:/";
+			} else if (u.getRole().getName().equals("System_Admin")) {
+				return "redirect:/sysadmin";
 			}
 		}
 		return "";
@@ -46,5 +48,10 @@ public class CommonController {
 	public String logout(HttpSession session) {
 		session.invalidate();
 		return "redirect:/login";
+	}
+
+	@GetMapping("/sysadmin")
+	public String systemAdminPage() {
+		return "home-sysadmin";
 	}
 }

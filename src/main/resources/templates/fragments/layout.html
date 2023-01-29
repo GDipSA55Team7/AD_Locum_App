@@ -127,7 +127,8 @@
                         <img src="/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Tin</a>
+                        <a href="#" class="d-block" th:text="${session.user != null} ? ${session.user['name']} : 'null!'"></a>
+                        <span class="nav-header small" th:text="${session.user != null} ? ${session.user.role.name} : 'null!'"></span>
                     </div>
                 </div>
 
@@ -165,7 +166,7 @@
                         </li>
                         <li class="nav-item">
                             <a th:href="@{/cliniclist}" class="nav-link">
-                                <i class="nav-icon fas fa-home"></i>
+                                <i class="nav-icon fas fa-clinic-medical"></i>
                                 <p>
                                     Manage Clinic
                                 </p>

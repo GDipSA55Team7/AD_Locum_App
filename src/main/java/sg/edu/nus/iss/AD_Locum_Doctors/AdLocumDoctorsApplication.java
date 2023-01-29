@@ -51,6 +51,10 @@ public class AdLocumDoctorsApplication {
 			r3.setName("Clinic_User");
 			roleRepo.saveAndFlush(r3);
 
+			Role r4 = new Role();
+			r4.setName("System_Admin");
+			roleRepo.saveAndFlush(r4);
+
 			Clinic c1 = new Clinic();
 			c1.setName("Punggol Family Clinic");
 			c1.setAddress("Punggol");
@@ -146,6 +150,15 @@ public class AdLocumDoctorsApplication {
 			testUser3.setContact("91119111");
 			testUser3.setRole(r2);
 			userRepo.saveAndFlush(testUser3);
+
+			User testUser4 = new User();
+			testUser4.setName("Ann");
+			testUser4.setEmail("ann@rmg.com.sg");
+			testUser4.setUsername("ann");
+			testUser4.setPassword("password123");
+			testUser4.setContact("92229222");
+			testUser4.setRole(r4);
+			userRepo.saveAndFlush(testUser4);
 
 			JobPost jp4 = new JobPost();
 			jp4.setClinic(c3);
