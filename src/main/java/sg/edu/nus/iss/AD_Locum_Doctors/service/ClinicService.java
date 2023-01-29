@@ -14,4 +14,6 @@ public interface ClinicService {
     List<Clinic> findAll();
 
     Clinic findById(Long id);
+
+    void deleteClinic(Clinic clinic);
 }

@@ -31,5 +31,10 @@ public class ClinicServiceImpl implements ClinicService{
     public Clinic findById(Long id) {
         return clinicRepository.findById(id).get();
     }
+
+    @Override
+    public void deleteClinic(Clinic clinic) {
+      clinicRepository.delete(clinic); 
+    }
     
 }

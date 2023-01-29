@@ -18,47 +18,54 @@ import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
 @Controller
 public class UserController {
-    
-    @Autowired
-    UserService uService;
 
     @Autowired
-    OrganizationService oService;
+    UserService userService;
+
+    @Autowired
+    OrganizationService organizationService;
 
     @GetMapping("/UserList")
-    public String userListPage(Model model){
-        List<User> users = uService.findAll();
+    public String userListPage(Model model) {
+        List<User> users = userService.findAll();
         model.addAttribute("userList", users);
         return "user-list";
     }
 
     @GetMapping("/addUserForm")
-    public String addUserForm(Model model){
+    public String addUserForm(Model model) {
         User user = new User();
         model.addAttribute("user", user);
-        model.addAttribute("organizationList", oService.getAllOrganizations());
+        model.addAttribute("organizationList", organizationService.getAllOrganizations());
         return "addUserForm";
     }
 
     @PostMapping("/saveUser")
     public String saveClinic(@ModelAttribute("user") @Valid User user, BindingResult result,
-   Model model){
-    uService.saveUser(user);
-    return "redirect:/UserList";
-   }
+            Model model) {
+        userService.saveUser(user);
+        return "redirect:/UserList";
+    }
 
-   @GetMapping("/viewUser/{id}")
-   public String viewClinic(Model model,@PathVariable(value = "id") Long id){
-    model.addAttribute("user", uService.findById(id));
-    model.addAttribute("organizationList", oService.getAllOrganizations());
-    return "editUserForm";
-   }
+    @GetMapping("/viewUser/{id}")
+    public String viewClinic(Model model, @PathVariable(value = "id") Long id) {
+        model.addAttribute("user", userService.findById(id));
+        model.addAttribute("organizationList", organizationService.getAllOrganizations());
+        return "editUserForm";
+    }
 
-   @PostMapping("/editUser")
-   public String editUser(@ModelAttribute("user") @Valid User user, BindingResult result,
-   Model model){
-    uService.saveUser(user);
-    return "redirect:/UserList";
-   }
+    @PostMapping("/editUser")
+    public String editUser(@ModelAttribute("user") @Valid User user, BindingResult result,
+            Model model) {
+        userService.saveUser(user);
+        return "redirect:/UserList";
+    }
+
+    @GetMapping("/deleteuser/{id}")
+    public String deleteClinic(Model model, @PathVariable(value = "id") Long id) {
+        User user = userService.findById(id);
+        userService.deleteUser(user);
+        return "redirect:/UserList";
+    }
 
 }

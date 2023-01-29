@@ -39,4 +39,8 @@ public class UserServiceImpl implements UserService {
                 .findFirst().orElse(null);
     }
 
+    @Override
+    public void deleteUser(User user) {
+       userRepo.delete(user);
+    }
 }
