@@ -12,4 +12,6 @@ public interface ClinicService {
     void saveClinic(Clinic clinic);
 
     List<Clinic> findAll();
+
+    Clinic findById(Long id);
 }

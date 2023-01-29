@@ -26,5 +26,10 @@ public class ClinicServiceImpl implements ClinicService{
     public List<Clinic> findAll() {
         return clinicRepository.findAll();
     }
+
+    @Override
+    public Clinic findById(Long id) {
+        return clinicRepository.findById(id).get();
+    }
     
 }

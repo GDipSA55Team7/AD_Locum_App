@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -42,6 +43,20 @@ public class ClinicController {
     
     @PostMapping("/saveClinic")
     public String saveClinic(@ModelAttribute("clinic") @Valid Clinic clinic, BindingResult result,
+   Model model){
+    cService.saveClinic(clinic);
+    return "redirect:/cliniclist";
+   }
+
+   @GetMapping("/viewclinic/{id}")
+   public String viewClinic(Model model,@PathVariable(value = "id") Long id){
+    model.addAttribute("clinic", cService.findById(id));
+    model.addAttribute("organizationList", oService.getAllOrganizations());
+    return "editClinicForm";
+   }
+
+   @PostMapping("/editClinic")
+   public String editClinic(@ModelAttribute("clinic") @Valid Clinic clinic, BindingResult result,
    Model model){
     cService.saveClinic(clinic);
     return "redirect:/cliniclist";
