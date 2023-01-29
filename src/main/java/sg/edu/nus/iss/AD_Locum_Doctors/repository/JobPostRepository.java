@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
 
 
 @Repository
 public interface JobPostRepository extends JpaRepository<JobPost, Long> {
-    List<JobPost> findByStatus(String status);
+List<JobPost> findByStatus(JobStatus status);
 
 @Query("Select j from JobPost j where j.status = 3")
 List<JobPost> findJobPostsWithOutstandingPayment();

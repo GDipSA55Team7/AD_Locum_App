@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,16 +16,16 @@ public class JobPostApiDTO {
     private long id;
 
     private String description;
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private LocalDate startDate;
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private LocalDate endDate;
+    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+    private LocalDateTime startDateTime;
+    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+    private LocalDateTime endDateTime;
 
     private double ratePerHour;
 
     private double totalRate;
 
-    private String status;
+    private JobStatus status;
 
     private User clinicUser;
 

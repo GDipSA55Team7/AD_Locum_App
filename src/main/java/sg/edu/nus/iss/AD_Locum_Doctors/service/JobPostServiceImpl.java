@@ -26,13 +26,19 @@ public class JobPostServiceImpl implements JobPostService {
 
 	@Override
 	public List<JobPost> findAllOpen() {
-		return jobPostRepo.findByStatus("OPEN");
+		return jobPostRepo.findByStatus(JobStatus.OPEN);
 	}
 
+	@Override
 	public JobPost createJobPost(JobPostForm jobPostForm) {
+		return null;
+	}
+
+	//	public JobPost createJobPost(JobPostForm jobPostForm) { }
 	public JobPost findJobPostById(String id) {
 		return jobPostRepo.findById(Long.parseLong(id)).orElse(null);
 	}
+
 
 	public List<JobPost> findJobPostsWithOutstandingPayment() {
 		return jobPostRepo.findJobPostsWithOutstandingPayment();

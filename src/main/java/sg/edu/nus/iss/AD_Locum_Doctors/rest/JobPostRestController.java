@@ -37,8 +37,8 @@ public class JobPostRestController {
                 JobPostApiDTO jobPostDTO = new JobPostApiDTO();
                 jobPostDTO.setId(jobPost.getId());
                 jobPostDTO.setDescription(jobPost.getDescription());
-                jobPostDTO.setStartDate(jobPost.getStartDate());
-                jobPostDTO.setEndDate(jobPost.getEndDate());
+                jobPostDTO.setStartDateTime(jobPost.getStartDateTime());
+                jobPostDTO.setEndDateTime(jobPost.getEndDateTime());
                 jobPostDTO.setClinic(jobPost.getClinic());
                 jobPostDTO.setStatus(jobPost.getStatus());
                 jobPostDTO.setTotalRate(jobPost.getTotalRate());
