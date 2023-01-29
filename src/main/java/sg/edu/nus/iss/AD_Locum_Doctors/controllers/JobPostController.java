@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpSession;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
@@ -46,6 +48,13 @@ public class JobPostController {
 			return "redirect:/login";
 		}
 		jobPostService.createJobPost(jobPostForm, user);
+		return "redirect:/jobpost/list";
+	}
+
+	@GetMapping("/{id}/cancel")
+	public String cancelJobPost(@PathVariable String id) {
+		JobPost jobPost = jobPostService.findJobPostById(id);
+		jobPostService.cancel(jobPost);
 		return "redirect:/jobpost/list";
 	}
 }

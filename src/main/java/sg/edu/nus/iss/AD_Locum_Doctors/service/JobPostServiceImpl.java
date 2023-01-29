@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.ClinicRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobPostRepository;
@@ -23,6 +24,10 @@ public class JobPostServiceImpl implements JobPostService {
 		return jobPostRepo.findAll();
 	}
 
+	public JobPost findJobPostById(String id) {
+		return jobPostRepo.findById(Long.parseLong(id)).orElse(null);
+	}
+
 	public List<JobPost> findJobPostsWithOutstandingPayment() {
 		return jobPostRepo.findJobPostsWithOutstandingPayment();
 	}
@@ -37,5 +42,10 @@ public class JobPostServiceImpl implements JobPostService {
 		newJobPost.setTotalRate(jobPostForm.getTotalRate());
 		newJobPost.setClinic(clinicRepo.findById(jobPostForm.getClinicId()).get());
 		return jobPostRepo.saveAndFlush(newJobPost);
+	}
+
+	public void cancel(JobPost jobpost) {
+		jobpost.setStatus(JobStatus.CANCELLED);
+		jobPostRepo.save(jobpost);
 	}
 }
