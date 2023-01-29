@@ -16,10 +16,10 @@ public class JobPostApiDTO {
     private long id;
 
     private String description;
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
-    private LocalDateTime startDateTime;
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
-    private LocalDateTime endDateTime;
+
+    private String startDateTime;
+
+    private String endDateTime;
 
     private double ratePerHour;
 
