@@ -20,14 +20,14 @@ import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 public class UserController {
     
     @Autowired
-    UserService uService;
+    UserService userService;
 
     @Autowired
-    OrganizationService oService;
+    OrganizationService organizationService;
 
     @GetMapping("/UserList")
     public String userListPage(Model model){
-        List<User> users = uService.findAll();
+        List<User> users = userService.findAll();
         model.addAttribute("userList", users);
         return "user-list";
     }
@@ -36,29 +36,36 @@ public class UserController {
     public String addUserForm(Model model){
         User user = new User();
         model.addAttribute("user", user);
-        model.addAttribute("organizationList", oService.getAllOrganizations());
+        model.addAttribute("organizationList", organizationService.getAllOrganizations());
         return "addUserForm";
     }
 
     @PostMapping("/saveUser")
     public String saveClinic(@ModelAttribute("user") @Valid User user, BindingResult result,
    Model model){
-    uService.saveUser(user);
+    userService.saveUser(user);
     return "redirect:/UserList";
    }
 
    @GetMapping("/viewUser/{id}")
    public String viewClinic(Model model,@PathVariable(value = "id") Long id){
-    model.addAttribute("user", uService.findById(id));
-    model.addAttribute("organizationList", oService.getAllOrganizations());
+    model.addAttribute("user", userService.findById(id));
+    model.addAttribute("organizationList", organizationService.getAllOrganizations());
     return "editUserForm";
    }
 
    @PostMapping("/editUser")
    public String editUser(@ModelAttribute("user") @Valid User user, BindingResult result,
    Model model){
-    uService.saveUser(user);
+    userService.saveUser(user);
     return "redirect:/UserList";
    }
+
+   @GetMapping("/deleteuser/{id}")
+    public String deleteClinic(Model model, @PathVariable(value = "id") Long id){
+        User user = userService.findById(id);
+        userService.deleteUser(user);
+        return "redirect:/UserList";
+    }
 
 }
