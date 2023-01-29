@@ -3,6 +3,7 @@ package sg.edu.nus.iss.AD_Locum_Doctors.model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Entity;
@@ -47,12 +48,15 @@ public class JobPost {
 
 	private String status = "OPEN";
 
+	@JsonIgnore
 	@ManyToOne
 	private User clinicUser;
 
+	@JsonIgnore
 	@ManyToOne
 	private User freelancer;
 
+	@JsonIgnore
 	@ManyToOne
 	private Clinic clinic;
 

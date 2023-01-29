@@ -22,6 +22,11 @@ public class JobPostServiceImpl implements JobPostService {
 		return jobPostRepo.findAll();
 	}
 
+	@Override
+	public List<JobPost> findAllOpen() {
+		return jobPostRepo.findByStatus("OPEN");
+	}
+
 	public JobPost createJobPost(JobPostForm jobPostForm) {
 		JobPost newJobPost = new JobPost();
 		newJobPost.setDescription(jobPostForm.getDescription());

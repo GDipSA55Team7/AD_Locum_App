@@ -1,4 +1,4 @@
-package sg.edu.nus.iss.AD_Locum_Doctors.controllers;
+package sg.edu.nus.iss.AD_Locum_Doctors.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.reactor.DebugAgentEnvironmentPostProcessor;
@@ -25,7 +25,7 @@ public class FreeLancerRestController {
 		try {
 			FreeLancerDTO existingFreeLancer = userService.loginFreeLancer(freeLancerDTO);
 			if(existingFreeLancer == null) {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 			return new ResponseEntity<>(existingFreeLancer,HttpStatus.OK);
 		} catch (Exception e) {
