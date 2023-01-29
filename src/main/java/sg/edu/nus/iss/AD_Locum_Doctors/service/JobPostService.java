@@ -11,4 +11,8 @@ public interface JobPostService {
 	JobPost createJobPost(JobPostForm jobPostForm);
 	
 	List<JobPost> findJobPostsWithOutstandingPayment();
+	
+	List<JobPost> findPaidJobPosts();
+	
+	List<JobPost> findPaidandUnpaidJobPosts();
 }

@@ -3,6 +3,7 @@ package sg.edu.nus.iss.AD_Locum_Doctors.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,7 +29,7 @@ public class Clinic {
 
 	private String HCICode;
 
-	@ManyToOne
+	@ManyToOne (cascade=CascadeType.PERSIST)
 	private Organization organization;
 
 	@OneToMany(mappedBy = "clinic")

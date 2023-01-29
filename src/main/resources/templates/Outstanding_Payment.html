@@ -5,134 +5,171 @@
 <head th:replace="fragments/layout.html :: html_head" />
 
 <body class="hold-transition sidebar-mini">
-<div class="wrapper">
-	<div th:replace="fragments/layout.html :: nav_menu" />
-	<div th:replace="fragments/layout.html :: sidebar" />
+	<div class="wrapper">
+		<div th:replace="fragments/layout.html :: nav_menu" />
+		<div th:replace="fragments/layout.html :: sidebar" />
 
-	<div class="content-wrapper">
-		<!-- Content Header (Page header) -->
-		<div class="content-header">
-			<div class="container-fluid">
-				<div class="row mb-2">
-					<div class="col-sm-6">
-						<h1 class="m-0">Outstanding Payments</h1>
-					</div><!-- /.col -->
-					<div class="col-sm-6">
-						<ol class="breadcrumb float-sm-right">
-							<li class="breadcrumb-item"><a href="#">Home</a></li>
-							<li class="breadcrumb-item active">Job Post</li>
-						</ol>
-					</div>
-				</div><!-- /.row -->
-			</div><!-- /.container-fluid -->
-		</div>
-		<!-- /.content-header -->
-
-		<!-- Main content -->
-		<div class="content">
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-12">
-						<div class="d-flex flex-row mb-3 justify-content-between  align-items-center pt-3 pb-2 border-bottom">
-							<div class="p-2">
-
-							</div>
-							<div class="p-2">
-								<form th:action="@{/jobpost/create}">
-									<button type="submit" class="btn btn-info">Add Job Post</button>
-								</form>
-							</div>
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<div class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1 class="m-0">Payments (Summary) </h1>
+						</div><!-- /.col -->
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<li class="breadcrumb-item"><a href="#">Home</a></li>
+								<li class="breadcrumb-item active">Job Post</li>
+							</ol>
 						</div>
-						<div class="card">
-							<div class="card-body">
-								<div class="table-responsive">
-									<table id="example1" class="table table-bordered table-hover">
-										<thead>
-										<tr>
-											<th>S/N</th>
-											<th>Job ID</th>
-											<th>Job Description</th>
-											<th>Clinic Location</th>
-											<th>Status</th>
-											<th>Completed Date/Time</th>
-											<th>Doctor Name</th>
-											<th>Fees</th>
-											<th>Actions</th>
-										</tr>
-										</thead>
-										<tbody>
-										<!-- Fill in table items here -->
-											<tr th:each="jp, iStat : ${jobPosts}" class="listRecord">
-												<td th:text="${iStat.index + 1}">S/N</td>
-												<td th:text="${jp.id}">Job Post Id</td>
-												<td th:text="${jp.description}">Job Description</td>
-												<td th:text="${jp.clinic.name}">Clinic Location</td>
-												<td>
-													<p th:if="${jp.status.name() == 'COMPLETED_PENDING_PAYMENT'}">Completed (Pending Payment)</p>
-												</td>
-												<td>
-													<span th:text="${jp.startDate + ' to ' + jp.endDate}"></span><br>
-													<span th:text="${jp.startTime + ' to ' + jp.endTime}"></span>
-												</td>
-												<td th:text="${'Dr ' + jp.getFreelancer().getName()}">Fees</td>
-												<td th:text="${jp.getRatePerHourString()}">Fees</td>
-												<td align="center">
-													<div th:switch="${#strings.toString(jp.status)}">
-														<a th:case="'OPEN'" th:href="@{/jobpost/}+${jp.id}+@{/delete}">Delete</a>
-														<a th:case="'PENDING'" th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel</a>
-													</div>
-													<div><a th:href="@{/jobpost/}+${jp.id}">View</a></div>
-												</td>
-											</tr>
-										</tbody>
-									</table>
+					</div><!-- /.row -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content-header -->
+
+			<!-- Main content -->
+			<div class="content">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-12">
+							<div
+								class="d-flex flex-row mb-3 justify-content-between  align-items-center pt-3 pb-2 border-bottom">
+								<div class="p-2">
+									<form th:action="@{/paymentSummary/}" method="get">
+										<select name="paymentStatus" id="selection">
+											<option value="Unpaid">Pending Payment</option>
+											<option value="Paid">Paid</option>
+											<option value="All">All</option>
+										</select>
+									</form>
+								</div>
+								<div class="p-2">
+									<form th:action="@{/jobpost/create}">
+										<button type="submit" class="btn btn-info">Add Job Post</button>
+									</form>
 								</div>
 							</div>
-							<!-- /.card-body -->
+							<div class="card">
+								<div class="card-body">
+									<div class="table-responsive" id="replace_div">
+										<table id="example1" class="table table-bordered table-hover">
+											<thead>
+												<tr>
+													<th>S/N</th>
+													<th>Job ID</th>
+													<th>Job Description</th>
+													<th>Clinic Location</th>
+													<th>Status</th>
+													<th>Completed Date/Time</th>
+													<th>Doctor Name</th>
+													<th>Fees</th>
+													<th>Actions</th>
+												</tr>
+											</thead>
+											<tbody>
+												<!-- Fill in table items here -->
+												<tr th:each="jp, iStat : ${jobPosts}" class="listRecord">
+													<td th:text="${iStat.index + 1}">S/N</td>
+													<td th:text="${jp.id}">Job Post Id</td>
+													<td th:text="${jp.description}">Job Description</td>
+													<td th:text="${jp.clinic.name}">Clinic Location</td>
+													<td>
+														<p th:if="${jp.status.name() == 'COMPLETED_PENDING_PAYMENT'}">
+															Completed (Pending Payment)</p>
+														<p
+															th:unless="${jp.status.name() == 'COMPLETED_PENDING_PAYMENT'}">
+															Completed (Paid)</p>
+													</td>
+													<td>
+														<span
+															th:text="${jp.startDate + ' to ' + jp.endDate}"></span><br>
+														<span th:text="${jp.startTime + ' to ' + jp.endTime}"></span>
+													</td>
+													<td th:text="${'Dr ' + jp.getFreelancer().getName()}">Fees</td>
+													<td th:text="${jp.getRatePerHourString()}">Fees</td>
+													<td align="center">
+														<div th:switch="${#strings.toString(jp.status)}">
+															<a th:case="'OPEN'"
+																th:href="@{/jobpost/}+${jp.id}+@{/delete}">Delete</a>
+															<a th:case="'PENDING'"
+																th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel</a>
+														</div>
+														<div><a th:href="@{/jobpost/}+${jp.id}">View</a></div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!-- /.card-body -->
+							</div>
+							<!-- /.card -->
 						</div>
-						<!-- /.card -->
+						<!-- /.col -->
 					</div>
-					<!-- /.col -->
-				</div>
-
-
-			</div><!-- /.container-fluid -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content -->
 		</div>
-		<!-- /.content -->
+		<div th:replace="fragments/layout.html :: footer" />
+		<!--	<div th:replace="fragments/layout.html :: script" />-->
+		<!-- jQuery -->
+		<script src="/plugins/jquery/jquery.min.js"></script>
+		<!-- Bootstrap 4 -->
+		<script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+		<!-- DataTables  & Plugins -->
+		<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+		<script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+		<script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+		<script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+		<script src="/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+		<script src="/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+		<script src="/plugins/jszip/jszip.min.js"></script>
+		<script src="/plugins/pdfmake/pdfmake.min.js"></script>
+		<script src="/plugins/pdfmake/vfs_fonts.js"></script>
+		<script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+		<script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+		<script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+		<!-- AdminLTE App -->
+		<script src="/dist/js/adminlte.min.js"></script>
+		<!-- AdminLTE for demo purposes -->
+		<!--	<script src="/dist/js/demo.js"></script>-->
+		<!-- Page specific script -->
+		<script>
+			$(document).ready(function () {
+				$(function () {
+					$("#example1").DataTable({
+						"responsive": true, "lengthChange": false, "autoWidth": false,
+						"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+					}).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+				});
+
+				//set on change listener
+				$('#selection').change(test);
+
+				function test() {
+
+					var url = "/paymentSummary";
+					if ($('#selection').val() === "Unpaid") {
+						url = url + "/outstandingPayments"
+						alert("Unpaid")
+
+					} else if ($('#selection').val() === "Paid") {
+						url = url + "/PaidJobs"
+						alert("Paid")
+					}
+					else {
+						url = url + "/AllCompletedJobs"
+						alert("All")
+					}
+
+					//load fragment and replace content
+					$('#replace_div').load(url);
+				}
+			})		
+		</script>
 	</div>
-	<div th:replace="fragments/layout.html :: footer" />
-<!--	<div th:replace="fragments/layout.html :: script" />-->
-	<!-- jQuery -->
-	<script src="/plugins/jquery/jquery.min.js"></script>
-	<!-- Bootstrap 4 -->
-	<script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-	<!-- DataTables  & Plugins -->
-	<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
-	<script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-	<script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-	<script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-	<script src="/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-	<script src="/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-	<script src="/plugins/jszip/jszip.min.js"></script>
-	<script src="/plugins/pdfmake/pdfmake.min.js"></script>
-	<script src="/plugins/pdfmake/vfs_fonts.js"></script>
-	<script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-	<script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
-	<script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-	<!-- AdminLTE App -->
-	<script src="/dist/js/adminlte.min.js"></script>
-	<!-- AdminLTE for demo purposes -->
-<!--	<script src="/dist/js/demo.js"></script>-->
-	<!-- Page specific script -->
-	<script>
-		$(function () {
-			$("#example1").DataTable({
-				"responsive": true, "lengthChange": false, "autoWidth": false,
-				"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-			}).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-		});
-	</script>
-</div>
 </body>
 
 </html>

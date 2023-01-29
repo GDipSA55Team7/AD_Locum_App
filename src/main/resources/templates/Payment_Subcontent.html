@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+</head>
+
+<body>
+	<table id="example1" class="table table-bordered table-hover" th:fragment="content1">
+		<thead>
+			<tr>
+				<th>S/N</th>
+				<th>Job ID</th>
+				<th>Job Description</th>
+				<th>Clinic Location</th>
+				<th>Status</th>
+				<th>Completed Date/Time</th>
+				<th>Doctor Name</th>
+				<th>Fees</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- Fill in table items here -->
+			<tr th:each="jp, iStat : ${jobPosts}" class="listRecord">
+				<td th:text="${iStat.index + 1}">S/N</td>
+				<td th:text="${jp.id}">Job Post Id</td>
+				<td th:text="${jp.description}">Job Description</td>
+				<td th:text="${jp.clinic.name}">Clinic Location</td>
+				<td>
+					<p th:if="${jp.status.name() == 'COMPLETED_PENDING_PAYMENT'}">
+						Completed (Pending Payment)</p>
+					<p th:unless="${jp.status.name() == 'COMPLETED_PENDING_PAYMENT'}">
+						Completed (Paid)</p>
+				</td>
+				<td>
+					<span th:text="${jp.startDate + ' to ' + jp.endDate}"></span><br>
+					<span th:text="${jp.startTime + ' to ' + jp.endTime}"></span>
+				</td>
+				<td th:text="${'Dr ' + jp.getFreelancer().getName()}">Fees</td>
+				<td th:text="${jp.getRatePerHourString()}">Fees</td>
+				<td align="center">
+					<div th:switch="${#strings.toString(jp.status)}">
+						<a th:case="'OPEN'" th:href="@{/jobpost/}+${jp.id}+@{/delete}">Delete</a>
+						<a th:case="'PENDING'" th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel</a>
+					</div>
+					<div><a th:href="@{/jobpost/}+${jp.id}">View</a></div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+
+</html>
