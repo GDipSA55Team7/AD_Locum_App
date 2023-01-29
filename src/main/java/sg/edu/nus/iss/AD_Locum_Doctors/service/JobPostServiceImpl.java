@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.ClinicRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobPostRepository;
 
@@ -21,13 +22,14 @@ public class JobPostServiceImpl implements JobPostService {
 	public List<JobPost> findAll() {
 		return jobPostRepo.findAll();
 	}
-	
-	public List<JobPost> findJobPostsWithOutstandingPayment(){
+
+	public List<JobPost> findJobPostsWithOutstandingPayment() {
 		return jobPostRepo.findJobPostsWithOutstandingPayment();
 	}
 
-	public JobPost createJobPost(JobPostForm jobPostForm) {
+	public JobPost createJobPost(JobPostForm jobPostForm, User user) {
 		JobPost newJobPost = new JobPost();
+		newJobPost.setClinicUser(user);
 		newJobPost.setDescription(jobPostForm.getDescription());
 		newJobPost.setStartDateTime(jobPostForm.getStartDateTime());
 		newJobPost.setEndDateTime(jobPostForm.getEndDateTime());

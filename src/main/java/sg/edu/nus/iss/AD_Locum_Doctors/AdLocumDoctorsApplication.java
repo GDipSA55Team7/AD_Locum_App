@@ -138,6 +138,15 @@ public class AdLocumDoctorsApplication {
 			testUser2.setRole(r1);
 			userRepo.saveAndFlush(testUser2);
 
+			User testUser3 = new User();
+			testUser3.setName("Jon Ng");
+			testUser3.setEmail("JonNg@rmg.com.sg");
+			testUser3.setUsername("jon");
+			testUser3.setPassword("password123");
+			testUser3.setContact("91119111");
+			testUser3.setRole(r2);
+			userRepo.saveAndFlush(testUser3);
+
 			JobPost jp4 = new JobPost();
 			jp4.setClinic(c3);
 			jp4.setDescription("Raffles Medical Group looking for locum urgently!");

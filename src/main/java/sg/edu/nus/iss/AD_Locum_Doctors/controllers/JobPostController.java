@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jakarta.servlet.http.HttpSession;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 
@@ -30,8 +32,7 @@ public class JobPostController {
 	}
 
 	@GetMapping("/create")
-	public String createJobPostPage(Model model) {
-		// still working on it
+	public String createJobPostPage(Model model, HttpSession session) {
 		List<Clinic> clinics = clinicService.findAll();
 		model.addAttribute("clinics", clinics);
 		model.addAttribute("jobPostForm", new JobPostForm());
@@ -39,9 +40,12 @@ public class JobPostController {
 	}
 
 	@PostMapping("/create")
-	public String createJobPost(JobPostForm jobPostForm, Model model) {
-		// still working on it
-		jobPostService.createJobPost(jobPostForm);
+	public String createJobPost(JobPostForm jobPostForm, Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if (user == null) {
+			return "redirect:/login";
+		}
+		jobPostService.createJobPost(jobPostForm, user);
 		return "redirect:/jobpost/list";
 	}
 }

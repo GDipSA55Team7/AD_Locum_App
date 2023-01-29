@@ -14,5 +14,6 @@ public interface UserService {
     List<User> findAll();
 
     User findById(Long id);
-    
+
+    User authenticate(String username, String pwd);
 }

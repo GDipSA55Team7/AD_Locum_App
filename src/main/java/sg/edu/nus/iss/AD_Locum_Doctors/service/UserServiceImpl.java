@@ -11,7 +11,7 @@ import sg.edu.nus.iss.AD_Locum_Doctors.repository.UserRepository;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepo;
@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public void saveUser(User user) {
         userRepo.saveAndFlush(user);
-        
+
     }
 
     @Override
@@ -30,6 +30,13 @@ public class UserServiceImpl implements UserService{
     @Override
     public User findById(Long id) {
         return userRepo.findById(id).get();
+    }
+
+    @Transactional
+    @Override
+    public User authenticate(String username, String pwd) {
+        return userRepo.findAll().stream().filter(u -> u.getPassword().equals(pwd) && u.getUsername().equals(username))
+                .findFirst().orElse(null);
     }
 
 }
