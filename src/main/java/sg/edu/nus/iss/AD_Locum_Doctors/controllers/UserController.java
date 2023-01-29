@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import jakarta.validation.Valid;
@@ -46,5 +47,18 @@ public class UserController {
     return "redirect:/UserList";
    }
 
-    
+   @GetMapping("/viewUser/{id}")
+   public String viewClinic(Model model,@PathVariable(value = "id") Long id){
+    model.addAttribute("user", uService.findById(id));
+    model.addAttribute("organizationList", oService.getAllOrganizations());
+    return "editUserForm";
+   }
+
+   @PostMapping("/editUser")
+   public String editUser(@ModelAttribute("user") @Valid User user, BindingResult result,
+   Model model){
+    uService.saveUser(user);
+    return "redirect:/UserList";
+   }
+
 }

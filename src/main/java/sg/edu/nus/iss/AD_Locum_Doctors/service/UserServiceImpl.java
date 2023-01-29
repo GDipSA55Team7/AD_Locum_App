@@ -14,19 +14,22 @@ import sg.edu.nus.iss.AD_Locum_Doctors.repository.UserRepository;
 public class UserServiceImpl implements UserService{
 
     @Autowired
-    UserRepository uRepo;
+    UserRepository userRepo;
 
     @Override
     public void saveUser(User user) {
-        uRepo.saveAndFlush(user);
+        userRepo.saveAndFlush(user);
         
     }
 
     @Override
     public List<User> findAll() {
-        return uRepo.findAll();
+        return userRepo.findAll();
     }
 
+    @Override
+    public User findById(Long id) {
+        return userRepo.findById(id).get();
+    }
 
-    
 }
