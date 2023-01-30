@@ -54,6 +54,14 @@ public class JobPostController {
 	public String viewJobPost(@PathVariable String id, Model model) {
 		JobPost jobPost = jobPostService.findJobPostById(id);
 		model.addAttribute("jobPost", jobPost);
+		model.addAttribute("statusList", List.of(
+				JobStatus.OPEN,
+				JobStatus.PENDING_ACCEPTANCE,
+				JobStatus.ACCEPTED,
+				JobStatus.COMPLETED_PENDING_PAYMENT,
+				JobStatus.COMPLETED_PAYMENT_PROCESSED,
+				JobStatus.CANCELLED,
+				JobStatus.DELETED));
 
 		AdditionalFeeDetailsForm additional = new AdditionalFeeDetailsForm();
 		additional.setJobPostId(Long.parseLong(id));
@@ -75,9 +83,10 @@ public class JobPostController {
 		toUpdateJobPost.setActualStartDateTime(jobPost.getActualStartDateTime());
 		toUpdateJobPost.setActualEndDateTime(jobPost.getActualEndDateTime());
 		toUpdateJobPost.setAdditionalRemarks(jobPost.getAdditionalRemarks());
+		toUpdateJobPost.setStatus(jobPost.getStatus());
 		jobPostService.saveJobPost(toUpdateJobPost);
 
-		return "redirect:/jobpost/list";
+		return "redirect:/jobpost/"+jobPost.getId();
 	}
 
 	@PostMapping("/additional")

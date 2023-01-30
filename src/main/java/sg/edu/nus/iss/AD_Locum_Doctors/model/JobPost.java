@@ -41,7 +41,7 @@ public class JobPost {
 
 	private double ratePerHour;
 
-	//private double totalRate;
+	private double totalRate;
 
 	private JobStatus status = JobStatus.OPEN;
 
