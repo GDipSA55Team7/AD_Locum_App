@@ -70,9 +70,10 @@
 													</td>
 													<td>
 														<span
-															th:text="${jp.startDate + ' to ' + jp.endDate}"></span><br>
-														<span
-															th:text="${jp.getStartTimeString + ' to ' + jp.getEndTimeString}"></span>
+															th:text="${jp.getStartDateTimeString()}"></span> to<br>
+															<span
+															th:text="${jp.getEndDateTimeString()}"></span>
+															
 													</td>
 													<td th:text="${jp.getRatePerHourString}">Fees</td>
 													<td align="center">

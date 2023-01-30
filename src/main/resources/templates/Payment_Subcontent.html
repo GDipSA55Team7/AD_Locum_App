@@ -17,8 +17,8 @@
 							<th>Clinic Location</th>
 							<th>Status</th>
 							<th>Completed Date/Time</th>
-							<th>Doctor Name</th>
-							<th>Fees</th>
+							<th>Doctor Name/Medical License No</th>
+							<th>Total Fees</th>
 							<th>Actions</th>
 						</tr>
 					</thead>
@@ -36,11 +36,12 @@
 									Completed (Paid)</p>
 							</td>
 							<td>
-								<span th:text="${jp.startDate + ' to ' + jp.endDate}"></span><br>
-								<span th:text="${jp.startTime + ' to ' + jp.endTime}"></span>
+								<span th:text="${jp.getStartDateTimeString()}"></span>
+								to<br>
+								<span th:text="${jp.getEndDateTimeString()}"></span>
 							</td>
-							<td th:text="${'Dr ' + jp.getFreelancer().getName()}">Fees</td>
-							<td th:text="${jp.getRatePerHourString()}">Fees</td>
+							<td th:text="${'Dr ' + jp.getFreelancer().getName() + ' (' + jp.getFreelancer().getMedicalLicenseNo() + ')'}">Name</td>
+							<td th:text="${'$' + jp.computeTotalRate()}">Total Fees</td>
 							<td align="center">
 								<div th:switch="${#strings.toString(jp.status)}">
 									<a th:case="'OPEN'" th:href="@{/jobpost/}+${jp.id}+@{/delete}">Delete</a>

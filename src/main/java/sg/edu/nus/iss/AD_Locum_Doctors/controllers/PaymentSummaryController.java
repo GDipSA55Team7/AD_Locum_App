@@ -25,11 +25,6 @@ public class PaymentSummaryController {
 	
 	@GetMapping(value= {""})
 	public String UnpaidjobPostsListPage(Model model) {
-		LocalDateTime startDate = LocalDateTime.of(2022, 12, 31, 19, 00);
-		LocalDateTime endDate = LocalDateTime.of(2022, 12, 31, 20, 30);
-		Long minutes = ChronoUnit.MINUTES.between(startDate, endDate);
-		Double minutes_to_hour = ((double) minutes) / 60;
-		System.out.println("Hours: " + minutes_to_hour);
 		List<JobPost> jobPosts = jobPostService.findJobPostsWithOutstandingPayment();;
 		model.addAttribute("jobPosts", jobPosts);
 		return "Outstanding_Payment";

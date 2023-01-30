@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.AD_Locum_Doctors;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,22 +103,18 @@ public class AdLocumDoctorsApplication {
 			JobPost jp1 = new JobPost();
 			jp1.setClinic(c1);
 			jp1.setDescription("Looking for locum doctor for Punggol Family clinic");
-			jp1.setStartDate(LocalDate.of(2023, 01, 11));
-			jp1.setEndDate(LocalDate.of(2023, 02, 28));
-			jp1.setStartTime(LocalTime.of(8, 30));
-			jp1.setEndTime(LocalTime.of(18, 30));
+			jp1.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
+			jp1.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
 			jp1.setRatePerHour(100);
 			jp1.setFreelancer(testUser1);
-			jp1.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
+			jp1.setStatus(JobStatus.OPEN);
 			jobPostRepo.saveAndFlush(jp1);
 
 			JobPost jp2 = new JobPost();
 			jp2.setClinic(c2);
 			jp2.setDescription("Looking for locum physiotherapist");
-			jp2.setStartDate(LocalDate.of(2023, 02, 1));
-			jp2.setEndDate(LocalDate.of(2023, 03, 30));
-			jp2.setStartTime(LocalTime.of(15, 30));
-			jp2.setEndTime(LocalTime.of(23, 30));
+			jp2.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
+			jp2.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
 			jp2.setStatus(JobStatus.PENDING_ACCEPTANCE);
 			jp2.setRatePerHour(88.8);
 			jp2.setFreelancer(testUser1);
@@ -126,13 +123,12 @@ public class AdLocumDoctorsApplication {
 			JobPost jp3 = new JobPost();
 			jp3.setClinic(c2);
 			jp3.setDescription("Looking for locum occupational therapist");
-			jp3.setStartDate(LocalDate.of(2023, 02, 1));
-			jp3.setEndDate(LocalDate.of(2023, 03, 30));
-			jp3.setStartTime(LocalTime.of(15, 30));
-			jp3.setEndTime(LocalTime.of(23, 30));
+			jp3.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
+			jp3.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
 			jp3.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jp3.setFreelancer(testUser1);
 			jp3.setRatePerHour(88.8);
+			jobPostRepo.saveAndFlush(jp3);
 
 			User testUser2 = new User();
 			testUser2.setName("Mary Tan");
@@ -147,22 +143,18 @@ public class AdLocumDoctorsApplication {
 			JobPost jp4 = new JobPost();
 			jp4.setClinic(c3);
 			jp4.setDescription("Raffles Medical Group in Lot1 looking for locum urgently!");
-			jp4.setStartDate(LocalDate.of(2023, 01, 11));
-			jp4.setEndDate(LocalDate.of(2023, 01, 11));
-			jp4.setStartTime(LocalTime.of(18, 30));
-			jp4.setEndTime(LocalTime.of(20, 30));
+			jp4.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
+			jp4.setEndDateTime(LocalDateTime.of(2023, 01, 11, 20, 30, 0));
 			jp4.setRatePerHour(100);
-			jp4.setFreelancer(testUser2);
+			jp4.setFreelancer(testUser1);
 			jp4.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jobPostRepo.saveAndFlush(jp4);
 			
 			JobPost jp5 = new JobPost();
 			jp5.setClinic(c4);
 			jp5.setDescription("Raffles Medical Group in Loyang Point looking for locum urgently!");
-			jp5.setStartDate(LocalDate.of(2023, 01, 15));
-			jp5.setEndDate(LocalDate.of(2023, 01, 15));
-			jp5.setStartTime(LocalTime.of(18, 30));
-			jp5.setEndTime(LocalTime.of(20, 30));
+			jp5.setStartDateTime(LocalDateTime.of(2023, 01, 15, 18, 30, 0));
+			jp5.setEndDateTime(LocalDateTime.of(2023, 01, 15, 22, 30, 0));
 			jp5.setRatePerHour(100);
 			jp5.setFreelancer(testUser2);
 			jp5.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
@@ -171,10 +163,8 @@ public class AdLocumDoctorsApplication {
 			JobPost jp6 = new JobPost();
 			jp6.setClinic(c5);
 			jp6.setDescription("Raffles Medical Group in Raffles City Shopping Centre looking for locum urgently!");
-			jp6.setStartDate(LocalDate.of(2023, 01, 20));
-			jp6.setEndDate(LocalDate.of(2023, 01, 20));
-			jp6.setStartTime(LocalTime.of(18, 30));
-			jp6.setEndTime(LocalTime.of(20, 30));
+			jp6.setStartDateTime(LocalDateTime.of(2023, 01, 20, 18, 30, 0));
+			jp6.setEndDateTime(LocalDateTime.of(2023, 01, 20, 20, 30, 0));
 			jp6.setRatePerHour(100);
 			jp6.setFreelancer(testUser2);
 			jp6.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
@@ -183,10 +173,8 @@ public class AdLocumDoctorsApplication {
 			JobPost jp7 = new JobPost();
 			jp7.setClinic(c5);
 			jp7.setDescription("Raffles Medical Group in Lot1 looking for locum urgently!");
-			jp7.setStartDate(LocalDate.of(2022, 12, 30));
-			jp7.setEndDate(LocalDate.of(2023, 12, 30));
-			jp7.setStartTime(LocalTime.of(18, 30));
-			jp7.setEndTime(LocalTime.of(20, 30));
+			jp7.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
+			jp7.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
 			jp7.setRatePerHour(100);
 			jp7.setFreelancer(testUser2);
 			jp7.setStatus(JobStatus.COMPLETED_PAYMENT_PROCESSED);
