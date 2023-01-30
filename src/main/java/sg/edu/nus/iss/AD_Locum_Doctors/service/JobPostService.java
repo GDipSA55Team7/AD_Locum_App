@@ -13,6 +13,10 @@ public interface JobPostService {
 
 	JobPost createJobPost(JobPostForm jobPostForm, User user);
 
+	JobPost findJobPostById(String id);
+
+	JobPost createJobPost(JobPostForm jobPostForm, User user);
+
 	void cancel(JobPost jobPost);
 	
 	List<JobPost> findJobPostsWithOutstandingPayment();

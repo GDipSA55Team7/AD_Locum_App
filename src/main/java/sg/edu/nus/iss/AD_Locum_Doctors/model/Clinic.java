@@ -29,6 +29,8 @@ public class Clinic {
 
 	private String HCICode;
 
+	private String contact;
+
 	@ManyToOne (cascade=CascadeType.PERSIST)
 	private Organization organization;
 

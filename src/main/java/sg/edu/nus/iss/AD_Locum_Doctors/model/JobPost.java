@@ -27,7 +27,7 @@ public class JobPost {
 	private Long id;
 
 	private String description;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
 	private LocalDateTime startDateTime;
@@ -50,9 +50,9 @@ public class JobPost {
 
 	@ManyToOne
 	private Clinic clinic;
-	
+
 	private String paymentReferenceNumber;
-	
+
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	private LocalDate paymentDate;

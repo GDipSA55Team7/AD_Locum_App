@@ -1,8 +1,6 @@
 package sg.edu.nus.iss.AD_Locum_Doctors;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,19 +38,19 @@ public class AdLocumDoctorsApplication {
 			RoleRepository roleRepo,
 			UserRepository userRepo) {
 		return args -> {
-			
+
 			Role r1 = new Role();
 			r1.setName("Locum_Doctor");
 			roleRepo.saveAndFlush(r1);
-			
+
 			Role r2 = new Role();
 			r2.setName("Clinic_Admin");
 			roleRepo.saveAndFlush(r2);
-			
+
 			Role r3 = new Role();
 			r3.setName("Clinic_User");
 			roleRepo.saveAndFlush(r3);
-			
+
 			Clinic c1 = new Clinic();
 			c1.setName("Punggol Family Clinic");
 			c1.setAddress("Punggol");
@@ -64,17 +62,17 @@ public class AdLocumDoctorsApplication {
 			c2.setAddress("Yishun");
 			c2.setPostalCode("S654321");
 			clinicRepo.saveAndFlush(c2);
-			
+
 			Organization org1 = new Organization();
 			org1.setName("Raffles Medical Group Ltd");
 			org1.setUEN("198901967K");
 			Clinic c3 = new Clinic();
-			c3.setName("Raffles Medical (Lot1 Shoppers Mall");
+			c3.setName("Raffles Medical (Lot1 Shoppers Mall)");
 			c3.setAddress("21 CHOA CHU KANG AVE 4 LOT 1 SHOPPERS' MALL #B1-07A SINGAPORE 689812");
 			c3.setPostalCode("689812");
 			c3.setOrganization(org1);
 			Clinic c4 = new Clinic();
-			c4.setName("Raffles Medical (Loyang Point");
+			c4.setName("Raffles Medical (Loyang Point)");
 			c4.setAddress("BLK 259 PASIR RIS STREET 21 LOYANG POINT #02-33");
 			c4.setPostalCode("510259");
 			c4.setOrganization(org1);
@@ -82,7 +80,11 @@ public class AdLocumDoctorsApplication {
 			c5.setName("Raffles Medical (Raffles City Shopping Centre)");
 			c5.setAddress("252 NORTH BRIDGE ROAD RAFFLES CITY SHOPPING CENTRE #02-17");
 			c5.setPostalCode("179103");
+			Organization org1 = new Organization();
+			org1.setName("Raffles Medical Group Ltd");
+			org1.setUEN("198901967K");
 			c5.setOrganization(org1);
+      
 			List<Clinic> rafflesClinics = new ArrayList<>();
 			rafflesClinics.add(c3);
 			rafflesClinics.add(c4);
@@ -99,7 +101,7 @@ public class AdLocumDoctorsApplication {
 			testUser1.setMedicalLicenseNo("M31234H");
 			testUser1.setRole(r1);
 			userRepo.saveAndFlush(testUser1);
-			
+
 			JobPost jp1 = new JobPost();
 			jp1.setClinic(c1);
 			jp1.setDescription("Looking for locum doctor for Punggol Family clinic");
@@ -139,7 +141,16 @@ public class AdLocumDoctorsApplication {
 			testUser2.setMedicalLicenseNo("M11266G");
 			testUser2.setRole(r1);
 			userRepo.saveAndFlush(testUser2);
-			
+
+			User testUser3 = new User();
+			testUser3.setName("Jon Ng");
+			testUser3.setEmail("JonNg@rmg.com.sg");
+			testUser3.setUsername("jon");
+			testUser3.setPassword("password123");
+			testUser3.setContact("91119111");
+			testUser3.setRole(r2);
+			userRepo.saveAndFlush(testUser3);
+
 			JobPost jp4 = new JobPost();
 			jp4.setClinic(c3);
 			jp4.setDescription("Raffles Medical Group in Lot1 looking for locum urgently!");
@@ -149,7 +160,7 @@ public class AdLocumDoctorsApplication {
 			jp4.setFreelancer(testUser1);
 			jp4.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jobPostRepo.saveAndFlush(jp4);
-			
+
 			JobPost jp5 = new JobPost();
 			jp5.setClinic(c4);
 			jp5.setDescription("Raffles Medical Group in Loyang Point looking for locum urgently!");

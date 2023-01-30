@@ -1,8 +1,6 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 

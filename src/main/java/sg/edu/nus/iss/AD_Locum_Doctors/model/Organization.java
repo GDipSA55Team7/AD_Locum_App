@@ -24,9 +24,16 @@ public class Organization {
 
 	private String UEN;
 
+	private String HCI;
+
+	private String address;
+
+	private String contact;
+
 	@OneToMany(mappedBy = "organization")
 	private List<User> users;
 
 	@OneToMany(mappedBy = "organization", cascade=CascadeType.PERSIST)
 	private List<Clinic> clinics = new ArrayList<>();
+
 }

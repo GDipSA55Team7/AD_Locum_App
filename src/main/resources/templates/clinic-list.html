@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
 	layout:decorate="~{fragments/layout}">
+
 <head>
 	<div th:replace="fragments/layout.html :: html_head" />
 	<div th:replace="fragments/layout.html :: datatable_css" />
 </head>
-
 
 <body class="hold-transition sidebar-mini">
 	<div class="wrapper">
@@ -18,12 +18,12 @@
 				<div class="container-fluid">
 					<div class="row mb-2">
 						<div class="col-sm-6">
-							<h1 class="m-0">View Job Posts</h1>
+							<h1 class="m-0">View Clinics</h1>
 						</div><!-- /.col -->
 						<div class="col-sm-6">
 							<ol class="breadcrumb float-sm-right">
 								<li class="breadcrumb-item"><a href="#">Home</a></li>
-								<li class="breadcrumb-item active">Job Post</li>
+								<li class="breadcrumb-item active">Clinic</li>
 							</ol>
 						</div>
 					</div><!-- /.row -->
@@ -42,8 +42,8 @@
 
 								</div>
 								<div class="p-2">
-									<form th:action="@{/jobpost/create}">
-										<button type="submit" class="btn btn-info">Add Job Post</button>
+									<form th:action="@{/addClinicForm}">
+										<button type="submit" class="btn btn-info">Add Clinic</button>
 									</form>
 								</div>
 							</div>
@@ -53,40 +53,24 @@
 										<table id="example1" class="table table-bordered table-hover">
 											<thead>
 												<tr>
-													<th>S/N</th>
-													<th>Job Description</th>
-													<th>Clinic Location</th>
-													<th>Status</th>
-													<th>Date/Time</th>
-													<th>Fees</th>
+													<th>Name</th>
+													<th>HCI Code</th>
+													<th>Postal Code</th>
+													<th>Contact</th>
+													<th>Address</th>
 													<th>Actions</th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr th:each="jp : ${jobPosts}" class="listRecord">
-													<td th:text="${jp.id}">Job Post Id</td>
-													<td th:text="${jp.description}">Job Description</td>
-													<td th:text="${jp.clinic.name}">Clinic Location</td>
-
-													<td>
-														<span th:text="${jp.status.value}"></span>
-													</td>
-													<td>
-														<span
-															th:text="${jp.getStartDateTimeString()}"></span> to<br>
-															<span
-															th:text="${jp.getEndDateTimeString()}"></span>
-															
-													</td>
-													<td th:text="${jp.getRatePerHourString}">Fees</td>
+												<tr th:each="clinic : ${clinicList}" class="listRecord">
+													<td th:text="${clinic.name}">Name</td>
+													<td th:text="${clinic.HCICode}">HCI Code</td>
+													<td th:text="${clinic.postalCode}">Postal Code</td>
+													<td th:text="${clinic.contact}">Contact</td>
+													<td th:text="${clinic.address}">Address</td>
 													<td align="center">
-														<div th:switch="${#strings.toString(jp.status.name)}">
-															<a th:case="'OPEN'"
-																th:href="@{/jobpost/}+${jp.id}+@{/delete}">Delete</a>
-															<a th:case="'PENDING_ACCEPTANCE'"
-																th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel</a>
-														</div>
-														<div><a th:href="@{/jobpost/}+${jp.id}">View</a></div>
+														<div><a th:href="@{/deleteclinic/}+${clinic.id}">Delete</a></div>
+														<div><a th:href="@{/viewclinic/}+${clinic.id}">View</a></div>
 													</td>
 												</tr>
 											</tbody>
@@ -108,6 +92,7 @@
 		<div th:replace="fragments/layout.html :: footer" />
 		<div th:replace="fragments/layout.html :: script" />
 		<div th:replace="fragments/layout.html :: datatable_script" />
+
 		<script>
 			$(function () {
 				$("#example1").DataTable({
