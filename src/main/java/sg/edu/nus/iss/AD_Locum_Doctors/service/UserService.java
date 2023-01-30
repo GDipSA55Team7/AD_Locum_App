@@ -18,5 +18,7 @@ public interface UserService {
     User authenticate(String username, String pwd);
     
     void deleteUser(User user);
+
+    List<User> findByOrganizationId(Long id);
     
 }

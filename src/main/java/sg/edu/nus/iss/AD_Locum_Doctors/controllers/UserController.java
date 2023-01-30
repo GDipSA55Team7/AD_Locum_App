@@ -1,5 +1,6 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.Organization;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.OrganizationService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
@@ -25,18 +28,35 @@ public class UserController {
     @Autowired
     OrganizationService organizationService;
 
+    @Autowired
+    HttpSession session;
+
+    List<Organization> organizations= new ArrayList<>();
+
+    User user;
+
+    private void loadReference(){
+        organizations= new ArrayList<>();
+        user= (User) session.getAttribute("user");
+        Organization organization= organizationService.findById(user.getOrganization().getId());
+        organizations.add(organization);
+
+    }
+
     @GetMapping("/UserList")
     public String userListPage(Model model) {
-        List<User> users = userService.findAll();
+        loadReference();
+        List<User> users = userService.findByOrganizationId(user.getOrganization().getId());
         model.addAttribute("userList", users);
         return "user-list";
     }
 
     @GetMapping("/register/addUserForm")
     public String addUserForm(Model model) {
+        loadReference();
         User user = new User();
         model.addAttribute("user", user);
-        model.addAttribute("organizationList", organizationService.getAllOrganizations());
+        model.addAttribute("organizationList", organizations);
         return "addUserForm";
     }
 
@@ -49,8 +69,9 @@ public class UserController {
 
     @GetMapping("/viewUser/{id}")
     public String viewClinic(Model model, @PathVariable(value = "id") Long id) {
+        loadReference();
         model.addAttribute("user", userService.findById(id));
-        model.addAttribute("organizationList", organizationService.getAllOrganizations());
+        model.addAttribute("organizationList", organizations);
         return "editUserForm";
     }
 

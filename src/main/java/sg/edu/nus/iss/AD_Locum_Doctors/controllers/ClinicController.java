@@ -37,7 +37,7 @@ public class ClinicController {
 
     User user;
 
-    public void loadReference()
+    private void loadReference()
     {
         organizations = new ArrayList<>();
         user=  (User) session.getAttribute("user");
