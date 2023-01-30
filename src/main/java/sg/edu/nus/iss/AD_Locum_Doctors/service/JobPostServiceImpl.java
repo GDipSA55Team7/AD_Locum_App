@@ -2,6 +2,7 @@ package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
 import java.util.List;
 
+import com.sun.jdi.LongValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +17,10 @@ import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobPostRepository;
 public class JobPostServiceImpl implements JobPostService {
 	@Autowired
 	private JobPostRepository jobPostRepo;
-
 	@Autowired
 	private ClinicRepository clinicRepo;
+	@Autowired
+	private UserService userService;
 
 	public List<JobPost> findAll() {
 		return jobPostRepo.findAll();
@@ -42,6 +44,37 @@ public class JobPostServiceImpl implements JobPostService {
 
 	public List<JobPost> findJobPostsWithOutstandingPayment() {
 		return jobPostRepo.findJobPostsWithOutstandingPayment();
+	}
+
+	@Override
+	public void setStatus(JobPost jobPost, JobStatus status, String userId) {
+		User freelancer = userService.findById(Long.valueOf(userId));
+
+		switch (status) {
+			case OPEN -> {
+				jobPost.setStatus(JobStatus.OPEN);
+			}
+			case PENDING_ACCEPTANCE -> {
+				jobPost.setStatus(JobStatus.PENDING_ACCEPTANCE);
+				jobPost.setFreelancer(freelancer);
+			}
+			case ACCEPTED -> {
+				jobPost.setStatus(JobStatus.ACCEPTED);
+			}
+			case COMPLETED_PENDING_PAYMENT -> {
+				jobPost.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
+			}
+			case COMPLETED_PAYMENT_PROCESSED -> {
+				jobPost.setStatus(JobStatus.COMPLETED_PAYMENT_PROCESSED);
+			}
+			case CANCELLED -> {
+				jobPost.setStatus(JobStatus.CANCELLED);
+			}
+			case DELETED -> {
+				jobPost.setStatus(JobStatus.DELETED);
+			}
+		}
+		jobPostRepo.save(jobPost);
 	}
 
 	public JobPost createJobPost(JobPostForm jobPostForm, User user) {

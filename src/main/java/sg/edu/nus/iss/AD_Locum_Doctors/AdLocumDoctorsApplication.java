@@ -104,7 +104,7 @@ public class AdLocumDoctorsApplication {
 			jp1.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
 			jp1.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
 			jp1.setRatePerHour(100);
-			jp1.setFreelancer(testUser1);
+			jp1.setFreelancer(null);
 			jp1.setStatus(JobStatus.OPEN);
 			jobPostRepo.saveAndFlush(jp1);
 
