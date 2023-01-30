@@ -22,5 +22,7 @@ public interface UserService {
 
 	FreeLancerDTO createFreeLancer(FreeLancerDTO freeLancerDTO);
 	FreeLancerDTO loginFreeLancer(FreeLancerDTO freeLancerDTO);
-	Boolean updateFreeLancer(FreeLancerDTO freeLancerDTO);
+	FreeLancerDTO updateFreeLancer(FreeLancerDTO freeLancerDTO);
+	String checkIfFieldIsUnique(List<User> checkAgainstUsers,String fieldName,String fieldValue);
+
 }

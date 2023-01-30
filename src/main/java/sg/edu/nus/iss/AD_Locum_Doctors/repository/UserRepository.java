@@ -10,7 +10,8 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	@Query("select u From User u Where UPPER(u.username) = UPPER(:username) and UPPER(u.password) = UPPER(:password)")
-	User findUserByUsernameAndPassword(@Param("username") String username,@Param("password") String password);
+	@Query(value = "SELECT * FROM User u WHERE u.username = BINARY ?1 AND u.password = BINARY ?2", nativeQuery = true)
+	User findUserByUsernameAndPassword(String username, String password);
+
 
 }

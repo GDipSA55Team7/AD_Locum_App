@@ -1,13 +1,17 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.stereotype.Service;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.FreeLancerDTO;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.Role;
+
 import java.util.List;
 
 import jakarta.transaction.Transactional;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
+import sg.edu.nus.iss.AD_Locum_Doctors.repository.RoleRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.UserRepository;
 
 @Service
@@ -16,6 +20,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepo;
+    
+    @Autowired
+    RoleRepository roleRepo;
 
     @Override
     public void saveUser(User user) {
@@ -45,43 +52,58 @@ public class UserServiceImpl implements UserService {
        userRepo.delete(user);
     }
 
-	@Override
+    @Override
 	public FreeLancerDTO createFreeLancer(FreeLancerDTO freeLancerDTO) {
-		//username,email,medicalLicenseNo must be unique
-		//get all registered users
+		// Check against all Registered users. Username,Email,medicalLicenseNo must be unique 
 		String errorsFieldString ="";
-		for(User currentUser : userRepo.findAll()) {
-			  if(currentUser.getUsername().equalsIgnoreCase(freeLancerDTO.getUsername())) {
-				  errorsFieldString += "username";
+		List<User> allRegisteredUsersList = userRepo.findAll();
+		if(!allRegisteredUsersList.isEmpty()) {
+			for(User currentUser : allRegisteredUsersList ) {
+				  if(currentUser.getUsername() != null &&  currentUser.getUsername().equals(freeLancerDTO.getUsername())) {
+					  errorsFieldString += "username";
+				  }
+				  if(currentUser.getEmail() != null &&  currentUser.getEmail().equals(freeLancerDTO.getEmail())) {
+					  errorsFieldString += "email";
+				  }
+				  //Not validating against any official/external medicalLicenseNumber Record
+				  if(currentUser.getMedicalLicenseNo() != null  && currentUser.getMedicalLicenseNo().equals(freeLancerDTO.getMedicalLicenseNo())) {
+					  errorsFieldString += "medical";
+				  }
 			  }
-			  if(currentUser.getEmail().equalsIgnoreCase(freeLancerDTO.getEmail())) {
-				  errorsFieldString += "email";
-			  }
-			  //validate against official medical system?
-			  if(currentUser.getMedicalLicenseNo().equalsIgnoreCase(freeLancerDTO.getMedicalLicenseNo())) {
-				  errorsFieldString += "medical";
-			  }
-		  }
-
-		System.out.println("errors = " + errorsFieldString);
-		//not unique username,email,medicalLicense
+		}
+//        if(errorsFieldString.isEmpty()) {
+//    		System.out.println("Username,Email,medicalLicenseNo are unique" );
+//        }
+//        else {
+//        	System.out.println("NonUnique Fields" + errorsFieldString);
+//        }
+		
+		//Username/email/medicalLicense is not unique
 		if(!errorsFieldString.isEmpty()) {
 			freeLancerDTO.setErrorsFieldString(errorsFieldString);
+			//System.out.println("Returning errString to controller" + errorsFieldString );
 			return freeLancerDTO;
 		}
 
-		User newFreeLancer = new User();
-		newFreeLancer.setName(freeLancerDTO.getName());
-		newFreeLancer.setUsername(freeLancerDTO.getUsername());
-		newFreeLancer.setPassword(freeLancerDTO.getPassword());
-		newFreeLancer.setContact(freeLancerDTO.getContact());
-		newFreeLancer.setEmail(freeLancerDTO.getEmail());
-		newFreeLancer.setMedicalLicenseNo(freeLancerDTO.getMedicalLicenseNo());
+		//proceed to register new FreeLancerUser
+		
+		User newFreeLancerUser = new User();
+		newFreeLancerUser.setName(freeLancerDTO.getName());
+		newFreeLancerUser.setUsername(freeLancerDTO.getUsername());
+		newFreeLancerUser.setPassword(freeLancerDTO.getPassword());
+		newFreeLancerUser.setContact(freeLancerDTO.getContact());
+		newFreeLancerUser.setEmail(freeLancerDTO.getEmail());
+		newFreeLancerUser.setMedicalLicenseNo(freeLancerDTO.getMedicalLicenseNo());
 		//set role
-		System.out.println("before" + freeLancerDTO);
-		userRepo.saveAndFlush(newFreeLancer);
-		freeLancerDTO.setId(newFreeLancer.getId().toString());
-		System.out.println("after" + freeLancerDTO);
+		Role locumDoctorRole =  roleRepo.findByName("Locum_Doctor");
+		newFreeLancerUser.setRole(locumDoctorRole);
+
+		userRepo.saveAndFlush(newFreeLancerUser);
+		
+		//return newly created UserId DTO to client with 
+		freeLancerDTO.setId(newFreeLancerUser.getId().toString());
+		//System.out.println("DTO after setting newly created UserId : " + freeLancerDTO);
+		
 		return freeLancerDTO;
 	}
 
@@ -89,50 +111,100 @@ public class UserServiceImpl implements UserService {
 	public FreeLancerDTO loginFreeLancer(FreeLancerDTO freeLancerDTO) {
 		User existingUser = userRepo.findUserByUsernameAndPassword(freeLancerDTO.getUsername(),
 				freeLancerDTO.getPassword());
-
-		FreeLancerDTO existingFreeLancerDTO = new FreeLancerDTO();
-		if(existingUser != null) {
-			existingFreeLancerDTO.setId(existingUser.getId().toString());
-			existingFreeLancerDTO.setName(existingUser.getName());
-			existingFreeLancerDTO.setUsername(existingUser.getUsername());
-			existingFreeLancerDTO.setPassword(existingUser.getPassword());
-			existingFreeLancerDTO.setContact(existingUser.getContact());
-			existingFreeLancerDTO.setEmail(existingUser.getEmail());
-			existingFreeLancerDTO.setMedicalLicenseNo(existingUser.getMedicalLicenseNo());
-			existingFreeLancerDTO.setId(existingUser.getId().toString());
-			return existingFreeLancerDTO;
+	
+		//Found Registered User
+		if(existingUser != null && existingUser.getRole().getName().equals("Locum_Doctor")) {
+			freeLancerDTO.setId(existingUser.getId().toString());   //tag id
+			freeLancerDTO.setName(existingUser.getName());
+			freeLancerDTO.setUsername(existingUser.getUsername());
+			freeLancerDTO.setPassword(existingUser.getPassword());
+			freeLancerDTO.setContact(existingUser.getContact());
+			freeLancerDTO.setEmail(existingUser.getEmail());
+			freeLancerDTO.setMedicalLicenseNo(existingUser.getMedicalLicenseNo());
+			return freeLancerDTO;
 		}
 		return null;
 	}
 
 	@Override
-	public Boolean updateFreeLancer(FreeLancerDTO freeLancerDTO) {
+	public FreeLancerDTO updateFreeLancer(FreeLancerDTO freeLancerDTO) {
 		User existingUser = userRepo.findById(Long.valueOf(freeLancerDTO.getId())).orElse(null);
-		if(existingUser != null) {
+		if(existingUser != null && freeLancerDTO != null) {
+			
+			List<User> checkAgainstUsers = userRepo.findAll().stream().filter(u->u.getId() != existingUser.getId()).toList();
+			
 			if(!freeLancerDTO.getContact().equals(existingUser.getContact())) {
 				existingUser.setContact(freeLancerDTO.getContact());
 			}
 			if(!freeLancerDTO.getName().equals(existingUser.getName())) {
                 existingUser.setName(freeLancerDTO.getName());
             }
-			if(!freeLancerDTO.getEmail().equals(existingUser.getEmail())) {
-                existingUser.setEmail(freeLancerDTO.getEmail());
-            }
-			if(!freeLancerDTO.getMedicalLicenseNo().equals(existingUser.getMedicalLicenseNo())) {
-                existingUser.setMedicalLicenseNo(freeLancerDTO.getMedicalLicenseNo());
-            }
-			if(!freeLancerDTO.getUsername().equals(existingUser.getUsername())) {
-                existingUser.setUsername(freeLancerDTO.getUsername());
-            }
 			if(!freeLancerDTO.getPassword().equals(existingUser.getPassword())) {
                 existingUser.setPassword(freeLancerDTO.getPassword());
             }
-			userRepo.saveAndFlush(existingUser);
-			return true;
+			
+			if(!checkAgainstUsers.isEmpty()) {
+				System.out.println("listcheckusersNotEmpty");
+				String errString = "";
+		
+				if(!freeLancerDTO.getEmail().equals(existingUser.getEmail())) {
+					String result =  checkIfFieldIsUnique(checkAgainstUsers,"email", freeLancerDTO.getEmail());
+					System.out.println( "Result" + result);
+					if(!result.contains("email")) {
+						existingUser.setEmail(freeLancerDTO.getEmail());
+						System.out.println("set email true");
+					}
+					else {
+						errString += result;
+					}
+	            }
+				if(!freeLancerDTO.getMedicalLicenseNo().equals(existingUser.getMedicalLicenseNo())) {
+					System.out.println("medical");
+					String result =  checkIfFieldIsUnique(checkAgainstUsers,"medical", freeLancerDTO.getMedicalLicenseNo());
+					System.out.println( "Result" + result);
+					if(!result.contains("medical")) {
+						existingUser.setMedicalLicenseNo(freeLancerDTO.getMedicalLicenseNo());
+						System.out.println("set medicalno true");
+					}
+					else {
+						errString += result;
+					}
+					System.out.println("medicalmethod complete");
+	            }
+				userRepo.saveAndFlush(existingUser);
+				freeLancerDTO.setErrorsFieldString(errString);
+				return freeLancerDTO;
+			}
 		}
-		return false;
+		return null;
 	}
 
-
-
+	@Override
+	public String checkIfFieldIsUnique(List<User> checkAgainstUsers,String fieldName, String fieldValue) {
+		String errStr = "err";
+		try {
+			for(User user : checkAgainstUsers) {
+				if(fieldName.equals("email")) {
+					if( user.getEmail().equals(fieldValue)) {
+						errStr += fieldName;
+						return errStr;
+					}
+					
+				}
+				if(fieldName.equals("medical")) {
+					System.out.println("inside submethod medical 1");
+					if( user.getMedicalLicenseNo() != null &&  user.getMedicalLicenseNo().equals(fieldValue)) {
+						errStr += fieldName;
+						return errStr;
+					}
+				}
+			}
+			System.out.println("output : " +  errStr );
+			return errStr;
+		} catch (Exception e) {
+			System.err.println("Error: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return errStr;
+	}
 }

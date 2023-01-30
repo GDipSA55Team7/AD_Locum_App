@@ -23,11 +23,12 @@ public class FreeLancerRestController {
 	@PostMapping("/login")
 	public ResponseEntity<FreeLancerDTO> loginNewFreeLancer(@RequestBody FreeLancerDTO freeLancerDTO) {
 		try {
+			//updates all dto fields with registered user data
 			FreeLancerDTO existingFreeLancer = userService.loginFreeLancer(freeLancerDTO);
 			if(existingFreeLancer == null) {
-				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404 
 			}
-			return new ResponseEntity<>(existingFreeLancer,HttpStatus.OK);
+			return new ResponseEntity<>(existingFreeLancer,HttpStatus.OK); // 200
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -37,31 +38,29 @@ public class FreeLancerRestController {
 	public ResponseEntity<FreeLancerDTO> registerNewFreeLancer(@RequestBody FreeLancerDTO freeLancerDTO) {
 		try {
 			FreeLancerDTO newFreeLancerDTO = userService.createFreeLancer(freeLancerDTO);
-			return new ResponseEntity<>(newFreeLancerDTO,HttpStatus.CREATED);
-//			if(!newFreeLancerDTO.getErrorsFieldString().isEmpty()) {
-//				return new ResponseEntity<>(newFreeLancerDTO,HttpStatus.CONFLICT);
-//			}
-//			else {
-//				return new ResponseEntity<>(newFreeLancerDTO,HttpStatus.CREATED);
-//			}
+			if(newFreeLancerDTO.getErrorsFieldString().isEmpty()) {
+				return new ResponseEntity<>(newFreeLancerDTO,HttpStatus.CREATED);
+			}
+			//return errorString to indicate non-unique fields(username,Email,medicalLicenseNo)
+			else {
+				return new ResponseEntity<>(newFreeLancerDTO,HttpStatus.NOT_ACCEPTABLE);
+			}
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@PostMapping("/update")
-	public ResponseEntity<?> updateNewFreeLancer(@RequestBody FreeLancerDTO freeLancerDTO) {
+	public ResponseEntity<FreeLancerDTO> updateNewFreeLancer(@RequestBody FreeLancerDTO freeLancerDTO) {
 		try {
-			System.out.println("updateController");
-			if(!userService.updateFreeLancer(freeLancerDTO)) {
-				System.out.println("NOT FOUND");
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			FreeLancerDTO updatedFL = userService.updateFreeLancer(freeLancerDTO);
+			if(updatedFL != null && updatedFL.getErrorsFieldString().isEmpty()) {
+				return new ResponseEntity<>(updatedFL,HttpStatus.OK);
 			}
-			System.out.println("UPDATED" + "\n" + freeLancerDTO);
-			return new ResponseEntity<>(freeLancerDTO,HttpStatus.OK);
+			return new ResponseEntity<>(updatedFL,HttpStatus.NOT_ACCEPTABLE);
 		} catch (Exception e) {
-			System.out.println("ERROR" + "\n" + freeLancerDTO);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }
+

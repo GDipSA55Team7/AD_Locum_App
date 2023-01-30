@@ -7,5 +7,6 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
+	Role findByName(String name);
 
 }
