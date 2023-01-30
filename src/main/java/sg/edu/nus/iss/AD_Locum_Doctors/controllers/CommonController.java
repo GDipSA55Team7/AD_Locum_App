@@ -24,27 +24,42 @@ public class CommonController {
 	@PostMapping("/home/authenticate")
 	public String authenticate(User user, Model model, HttpSession session) {
 		// not completed yet
-		if (user != null) {
-			User u = userService.authenticate(user.getUsername(), user.getPassword());
-			if (u == null) {
-				model.addAttribute("loginMessage", "Incorrect username/password");
-				return "login";
-			}
-			session.setAttribute("user", u);
-			if (u.getRole().getName().equals("Clinic_Admin")) {
-				return "redirect:/";
-			} else if (u.getRole().getName().equals("Locum_Doctor")) {
-				return "redirect:/";
-			} else if (u.getRole().getName().equals("Clinic_User")) {
-				return "redirect:/";
-			}
+		User u = userService.authenticate(user.getUsername(), user.getPassword());
+		if (u == null) {
+			model.addAttribute("loginMessage", "Incorrect username/password");
+			return "login";
 		}
-		return "";
+		session.setAttribute("user", u);
+		switch (u.getRole().getName()) {
+			case "System_Admin":
+				return "redirect:/system-admin";
+			case "Clinic_Admin":
+				return "redirect:/clinic-admin";
+			case "Clinic_User":
+				return "redirect:/clinic-user";
+			default:
+				return "login";
+		}
 	}
 
 	@GetMapping(value = "/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
 		return "redirect:/login";
+	}
+
+	@GetMapping("/system-admin")
+	public String systemAdminPage() {
+		return "home-system-admin";
+	}
+
+	@GetMapping("/clinic-admin")
+	public String clinicAdminPage() {
+		return "home-clinic-admin";
+	}
+
+	@GetMapping("/clinic-user")
+	public String clinicUserPage() {
+		return "home-clinic-user";
 	}
 }

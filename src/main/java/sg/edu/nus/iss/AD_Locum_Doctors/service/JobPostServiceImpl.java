@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.sun.jdi.LongValue;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,8 +90,16 @@ public class JobPostServiceImpl implements JobPostService {
 		return jobPostRepo.saveAndFlush(newJobPost);
 	}
 
-	public void cancel(JobPost jobpost) {
-		jobpost.setStatus(JobStatus.CANCELLED);
-		jobPostRepo.save(jobpost);
+	public void cancel(JobPost jobPost) {
+		jobPost.setStatus(JobStatus.CANCELLED);
+		jobPostRepo.save(jobPost);
+	}
+
+	public void delete(JobPost jobPost) {
+		jobPostRepo.delete(jobPost);
+	}
+
+	public List<JobPost> findJobPostsCreatedByUser(User user) {
+		return jobPostRepo.findByClinicUser(user);
 	}
 }

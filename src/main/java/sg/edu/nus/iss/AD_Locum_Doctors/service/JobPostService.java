@@ -12,8 +12,9 @@ public interface JobPostService {
 	List<JobPost> findAllOpen();
 	JobPost createJobPost(JobPostForm jobPostForm);
 	JobPost findJobPostById(String id);
-	JobPost createJobPost(JobPostForm jobPostForm, User user);
 	void cancel(JobPost jobPost);
+	void delete(JobPost jobPost);
+	List<JobPost> findJobPostsCreatedByUser(User user);
 	List<JobPost> findJobPostsWithOutstandingPayment();
 	void setStatus(JobPost jobPost, JobStatus status, String userId);
 }
