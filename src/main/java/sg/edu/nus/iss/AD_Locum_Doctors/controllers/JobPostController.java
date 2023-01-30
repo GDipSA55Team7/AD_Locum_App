@@ -1,5 +1,6 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +29,29 @@ public class JobPostController {
 	private ClinicService clinicService;
 
 	@GetMapping("/list")
-	public String jobPostListPage(Model model) {
-		model.addAttribute("jobPosts", jobPostService.findAll());
+	public String jobPostListPage(Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		List<JobPost> jobPosts = new ArrayList<>();
+		if (user != null) {
+			switch (user.getRole().getName()) {
+				case "System_Admin":
+					jobPosts = jobPostService.findAll();
+					break;
+				default:
+					jobPosts = jobPostService.findJobPostsCreatedByUser(user);
+					break;
+			}
+			model.addAttribute("jobPosts", jobPosts);
+		}
 		return "jobpost-list";
 	}
 
 	@GetMapping("/create")
 	public String createJobPostPage(Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if (user == null) {
+			return "redirect:/login";
+		}
 		List<Clinic> clinics = clinicService.findAll();
 		model.addAttribute("clinics", clinics);
 		model.addAttribute("jobPostForm", new JobPostForm());
@@ -44,9 +61,6 @@ public class JobPostController {
 	@PostMapping("/create")
 	public String createJobPost(JobPostForm jobPostForm, Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
-		if (user == null) {
-			return "redirect:/login";
-		}
 		jobPostService.createJobPost(jobPostForm, user);
 		return "redirect:/jobpost/list";
 	}

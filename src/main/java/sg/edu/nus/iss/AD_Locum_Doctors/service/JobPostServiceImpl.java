@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,5 +52,9 @@ public class JobPostServiceImpl implements JobPostService {
 
 	public void delete(JobPost jobPost) {
 		jobPostRepo.delete(jobPost);
+	}
+
+	public List<JobPost> findJobPostsCreatedByUser(User user) {
+		return jobPostRepo.findByClinicUser(user);
 	}
 }

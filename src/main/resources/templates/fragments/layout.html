@@ -129,34 +129,67 @@
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- Sidebar user panel (optional) -->
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div th:if="${session.user != null}" class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
                         <img src="/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block" th:text="${session.user != null} ? ${session.user['name']} : 'null!'"></a>
-                        <span class="nav-header small" th:text="${session.user != null} ? ${session.user.role.name} : 'null!'"></span>
+                        <a href="#" class="d-block"
+                            th:text="${session.user != null} ? ${session.user['name']} : 'Not logged in'"></a>
+                        <span class="nav-header small"
+                            th:text="${session.user != null} ? ${session.user.role.name} : ''"></span>
                     </div>
                 </div>
 
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                    <ul th:if="${session.user.role.name == 'System_Admin'}"
+                        class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                        with font-awesome or any other icon font library -->
+                        <li class="nav-header">SYSTEM ADMIN</li>
                         <li class="nav-item">
-                            <a href="/logout" class="nav-link">
-                                <i class="nav-icon fas fa-right-from-bracket"></i>
+                            <a href="/system-admin" class="nav-link">
+                                <i class="nav-icon fas fa-home"></i>
                                 <p>
-                                    Logout
+                                    Home
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-header">ADMIN</li>
                         <li class="nav-item">
-                            <a href="/admin-home.html" class="nav-link">
+                            <a href="/UserList" class="nav-link">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>
+                                    Manage User
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a th:href="@{/cliniclist}" class="nav-link">
+                                <i class="nav-icon fas fa-clinic-medical"></i>
+                                <p>
+                                    Manage Clinic
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/jobpost/list" class="nav-link">
+                                <i class="nav-icon fas fa-briefcase"></i>
+                                <p>
+                                    Manage Job Posting
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul th:if="${session.user.role.name == 'Clinic_Admin'}"
+                        class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                        data-accordion="false">
+                        <li class="nav-header">CLINIC ADMIN</li>
+                        <li class="nav-item">
+                            <a href="/clinic-admin" class="nav-link">
                                 <i class="nav-icon fas fa-home"></i>
                                 <p>
                                     Home
@@ -179,7 +212,6 @@
                                 </p>
                             </a>
                         </li>
-
                         <li class="nav-item">
                             <a th:href="@{/jobpost/list}" class="nav-link">
                                 <i class="nav-icon fas fa-briefcase"></i>
@@ -188,10 +220,12 @@
                                 </p>
                             </a>
                         </li>
-
-                        <li class="nav-header">EMPLOYER</li>
+                    </ul>
+                    <ul th:if="${session.user.role.name == 'Clinic_User'}" class="nav nav-pills nav-sidebar flex-column"
+                        data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-header">CLINIC USER</li>
                         <li class="nav-item">
-                            <a href="/bus-company-home.html" class="nav-link">
+                            <a href="/clinic-user" class="nav-link">
                                 <i class="nav-icon fas fa-home"></i>
                                 <p>
                                     Home
@@ -200,17 +234,29 @@
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-users"></i>
-                                <p>
-                                    Manage User
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-briefcase"></i>
                                 <p>
                                     Manage Job Posting
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                        data-accordion="false">
+                        <li class="nav-header">SETTINGS</li>
+                        <li th:if="${session.user == null}" class="nav-item">
+                            <a href="/login" class="nav-link">
+                                <i class="nav-icon fas fa-right-to-bracket"></i>
+                                <p>
+                                    Login
+                                </p>
+                            </a>
+                        </li>
+                        <li th:unless="${session.user == null}" class="nav-item">
+                            <a href="/logout" class="nav-link">
+                                <i class="nav-icon fas fa-right-from-bracket"></i>
+                                <p>
+                                    Logout
                                 </p>
                             </a>
                         </li>
