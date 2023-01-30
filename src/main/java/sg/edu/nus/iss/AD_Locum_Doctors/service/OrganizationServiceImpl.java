@@ -23,4 +23,9 @@ public class OrganizationServiceImpl implements OrganizationService {
     public List<Organization> getAllOrganizations(){
         return organizationRepository.findAll();
     }
+
+    @Override
+    public Organization findById(Long id) {
+       return organizationRepository.findById(id).get();
+    }
 }
