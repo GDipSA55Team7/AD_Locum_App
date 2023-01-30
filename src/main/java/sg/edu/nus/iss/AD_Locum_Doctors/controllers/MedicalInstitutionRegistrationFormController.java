@@ -62,7 +62,7 @@ public class MedicalInstitutionRegistrationFormController {
     @PostMapping("/createAdmin")
     public String createAdmin(@ModelAttribute("user") @Valid User user, BindingResult result,
             Model model, HttpSession session) {
-        Role role= roleService.findByName("System_Admin");
+        Role role= roleService.findByName("Clinic_Admin");
         if(role != null){
             user.setRole(role);
         }

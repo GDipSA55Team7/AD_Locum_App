@@ -1,7 +1,9 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.aspectj.internal.lang.annotation.ajcDeclareAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,8 +13,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.Organization;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.OrganizationService;
 
@@ -25,18 +30,35 @@ public class ClinicController {
     @Autowired
     ClinicService cService;
 
+    @Autowired 
+    HttpSession session;
+
+    List<Organization> organizations = new ArrayList<>();
+
+    User user;
+
+    public void loadReference()
+    {
+        organizations = new ArrayList<>();
+        user=  (User) session.getAttribute("user");
+        Organization organization = oService.findById(user.getOrganization().getId());
+        organizations.add(organization);
+    }
+
     @GetMapping("/cliniclist")
     public String clinicListPage(Model model){
-        List<Clinic> clinics = cService.findAll();
+        loadReference();
+        List<Clinic> clinics= cService.findByOrganizationId(user.getOrganization().getId());
         model.addAttribute("clinicList", clinics);
         return "clinic-list";
     }
 
     @GetMapping("/addClinicForm")
     public String addClinicForm(Model model){
+        loadReference();
         Clinic clinic = new Clinic();
         model.addAttribute("clinic", clinic);
-        model.addAttribute("organizationList", oService.getAllOrganizations());
+        model.addAttribute("organizationList",organizations);
         return "addClinicForm";
     }
     
@@ -49,9 +71,10 @@ public class ClinicController {
 
    @GetMapping("/viewclinic/{id}")
    public String viewClinic(Model model,@PathVariable(value = "id") Long id){
+    loadReference();
     Clinic clinic = cService.findById(id);
     model.addAttribute("clinic",clinic);
-    model.addAttribute("organizationList", oService.getAllOrganizations());
+    model.addAttribute("organizationList", organizations);
     return "editClinicForm";
    }
 
