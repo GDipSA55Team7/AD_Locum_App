@@ -24,8 +24,6 @@ public class JobPostForm {
 
 	private double ratePerHour;
 
-	private double totalRate;
-
 	private Long clinicUserId;
 
 	private Long clinicId;

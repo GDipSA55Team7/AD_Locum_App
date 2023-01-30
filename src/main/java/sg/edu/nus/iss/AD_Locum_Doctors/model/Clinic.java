@@ -3,12 +3,7 @@ package sg.edu.nus.iss.AD_Locum_Doctors.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -33,6 +28,6 @@ public class Clinic {
 	@ManyToOne
 	private Organization organization;
 
-	@OneToMany(mappedBy = "clinic")
-	private List<JobPost> jobPosts = new ArrayList<>();
+	@OneToMany(mappedBy = "clinic", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<JobPost> jobPosts;
 }

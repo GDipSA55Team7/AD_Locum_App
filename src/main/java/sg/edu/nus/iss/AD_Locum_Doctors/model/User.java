@@ -3,12 +3,7 @@ package sg.edu.nus.iss.AD_Locum_Doctors.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -38,9 +33,9 @@ public class User {
 	@ManyToOne
 	private Role role;
 
-	@OneToMany(mappedBy = "clinicUser")
+	@OneToMany(mappedBy = "clinicUser", cascade = CascadeType.ALL)
 	private List<JobPost> jobPosts = new ArrayList<>();
 
-	@OneToMany(mappedBy = "freelancer")
+	@OneToMany(mappedBy = "freelancer", cascade = CascadeType.ALL)
 	private List<JobPost> jobApplications = new ArrayList<>();
 }

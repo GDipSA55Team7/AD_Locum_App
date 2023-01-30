@@ -9,18 +9,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.Organization;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.Role;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
-import sg.edu.nus.iss.AD_Locum_Doctors.repository.AverageCompensationRateRepository;
-import sg.edu.nus.iss.AD_Locum_Doctors.repository.ClinicRepository;
-import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobPostRepository;
-import sg.edu.nus.iss.AD_Locum_Doctors.repository.OrganizationRepository;
-import sg.edu.nus.iss.AD_Locum_Doctors.repository.RoleRepository;
-import sg.edu.nus.iss.AD_Locum_Doctors.repository.UserRepository;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
+import sg.edu.nus.iss.AD_Locum_Doctors.repository.*;
 
 @SpringBootApplication
 public class AdLocumDoctorsApplication {
@@ -36,7 +26,8 @@ public class AdLocumDoctorsApplication {
 			JobPostRepository jobPostRepo,
 			OrganizationRepository organizationRepo,
 			RoleRepository roleRepo,
-			UserRepository userRepo) {
+			UserRepository userRepo,
+			AdditionalFeeDetailsRepository additionalFeeDetailsRepository) {
 		return args -> {
 
 			Role r1 = new Role();
@@ -118,6 +109,7 @@ public class AdLocumDoctorsApplication {
 			jp2.setFreelancer(testUser1);
 			jobPostRepo.saveAndFlush(jp2);
 
+
 			JobPost jp3 = new JobPost();
 			jp3.setClinic(c2);
 			jp3.setDescription("Looking for locum occupational therapist");
@@ -127,6 +119,21 @@ public class AdLocumDoctorsApplication {
 			jp3.setFreelancer(testUser1);
 			jp3.setRatePerHour(88.8);
 			jobPostRepo.saveAndFlush(jp3);
+
+
+			AdditionalFeeDetails afdJob3 = new AdditionalFeeDetails();
+			afdJob3.setJobPost(jp3);
+			afdJob3.setDescription("Swab");
+			afdJob3.setAdditionalFeesAmount(50);
+			additionalFeeDetailsRepository.saveAndFlush(afdJob3);
+
+			AdditionalFeeDetails afdJob3_1 = new AdditionalFeeDetails();
+			afdJob3_1.setJobPost(jp3);
+			afdJob3_1.setDescription("Transport");
+			afdJob3_1.setAdditionalFeesAmount(60);
+			additionalFeeDetailsRepository.saveAndFlush(afdJob3_1);
+
+
 
 			User testUser2 = new User();
 			testUser2.setName("Mary Tan");

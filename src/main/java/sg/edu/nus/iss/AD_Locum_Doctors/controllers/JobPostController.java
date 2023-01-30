@@ -2,19 +2,15 @@ package sg.edu.nus.iss.AD_Locum_Doctors.controllers;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.AdditionalFeeDetailsService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 
@@ -23,6 +19,9 @@ import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 public class JobPostController {
 	@Autowired
 	private JobPostService jobPostService;
+
+	@Autowired
+	private AdditionalFeeDetailsService additionalFeeDetailsService;
 
 	@Autowired
 	private ClinicService clinicService;
@@ -55,6 +54,10 @@ public class JobPostController {
 	public String viewJobPost(@PathVariable String id, Model model) {
 		JobPost jobPost = jobPostService.findJobPostById(id);
 		model.addAttribute("jobPost", jobPost);
+
+		AdditionalFeeDetailsForm additional = new AdditionalFeeDetailsForm();
+		additional.setJobPostId(Long.parseLong(id));
+		model.addAttribute("additional", additional);
 		return "jobpost-view";
 	}
 
@@ -63,5 +66,26 @@ public class JobPostController {
 		JobPost jobPost = jobPostService.findJobPostById(id);
 		jobPostService.cancel(jobPost);
 		return "redirect:/jobpost/list";
+	}
+
+	@PostMapping("/update")
+	public String updateJobPost(JobPost jobPost, Model model) {
+		String id = jobPost.getId().toString();
+		JobPost toUpdateJobPost= jobPostService.findJobPostById(id);
+		toUpdateJobPost.setActualStartDateTime(jobPost.getActualStartDateTime());
+		toUpdateJobPost.setActualEndDateTime(jobPost.getActualEndDateTime());
+		toUpdateJobPost.setAdditionalRemarks(jobPost.getAdditionalRemarks());
+		jobPostService.saveJobPost(toUpdateJobPost);
+
+		return "redirect:/jobpost/list";
+	}
+
+	@PostMapping("/additional")
+	public String createJobPostAdditional(AdditionalFeeDetailsForm additionalFeeDetailsForm)
+	{
+		JobPost jobPost = jobPostService.findJobPostById(additionalFeeDetailsForm.getJobPostId().toString());
+		additionalFeeDetailsService.createAdditionalFeeDetail(additionalFeeDetailsForm, jobPost);
+
+		return "redirect:/jobpost/"+jobPost.getId();
 	}
 }

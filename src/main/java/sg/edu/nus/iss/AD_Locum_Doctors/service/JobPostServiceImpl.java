@@ -32,6 +32,11 @@ public class JobPostServiceImpl implements JobPostService {
 		return jobPostRepo.findJobPostsWithOutstandingPayment();
 	}
 
+	@Override
+	public void saveJobPost(JobPost jobPost) {
+		jobPostRepo.saveAndFlush(jobPost);
+	}
+
 	public JobPost createJobPost(JobPostForm jobPostForm, User user) {
 		JobPost newJobPost = new JobPost();
 		newJobPost.setClinicUser(user);
@@ -39,7 +44,7 @@ public class JobPostServiceImpl implements JobPostService {
 		newJobPost.setStartDateTime(jobPostForm.getStartDateTime());
 		newJobPost.setEndDateTime(jobPostForm.getEndDateTime());
 		newJobPost.setRatePerHour(jobPostForm.getRatePerHour());
-		newJobPost.setTotalRate(jobPostForm.getTotalRate());
+		//newJobPost.setTotalRate(jobPostForm.getTotalRate());
 		newJobPost.setClinic(clinicRepo.findById(jobPostForm.getClinicId()).get());
 		return jobPostRepo.saveAndFlush(newJobPost);
 	}

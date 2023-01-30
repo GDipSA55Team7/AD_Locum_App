@@ -3,16 +3,13 @@ package sg.edu.nus.iss.AD_Locum_Doctors.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -34,9 +31,17 @@ public class JobPost {
 	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
 	private LocalDateTime endDateTime;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+	private LocalDateTime actualStartDateTime;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+	private LocalDateTime actualEndDateTime;
+
 	private double ratePerHour;
 
-	private double totalRate;
+	//private double totalRate;
 
 	private JobStatus status = JobStatus.OPEN;
 
@@ -47,7 +52,13 @@ public class JobPost {
 	private User freelancer;
 
 	@ManyToOne
+	@JoinColumn(name="clinic_id")
 	private Clinic clinic;
+
+	@OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL)
+	private List<AdditionalFeeDetails> additionalFeeDetails;
+
+	private String additionalRemarks;
 
 	private String paymentReferenceNumber;
 
