@@ -32,7 +32,7 @@ public class UserController {
         return "user-list";
     }
 
-    @GetMapping("/addUserForm")
+    @GetMapping("/register/addUserForm")
     public String addUserForm(Model model) {
         User user = new User();
         model.addAttribute("user", user);

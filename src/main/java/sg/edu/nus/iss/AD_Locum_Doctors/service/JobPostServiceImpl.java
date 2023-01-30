@@ -1,7 +1,6 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.sun.jdi.LongValue;
 import org.springframework.beans.factory.annotation.Autowired;

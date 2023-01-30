@@ -118,6 +118,7 @@ public class AdLocumDoctorsApplication {
 			testUser3.setUsername("jon");
 			testUser3.setPassword("password123");
 			testUser3.setContact("91119111");
+			testUser3.setOrganization(org1);
 			testUser3.setRole(r2);
 			userRepo.saveAndFlush(testUser3);
 
@@ -127,6 +128,7 @@ public class AdLocumDoctorsApplication {
 			testUser4.setUsername("ann");
 			testUser4.setPassword("password123");
 			testUser4.setContact("92229222");
+			testUser4.setOrganization(org1);
 			testUser4.setRole(r4);
 			userRepo.saveAndFlush(testUser4);
 
@@ -136,6 +138,7 @@ public class AdLocumDoctorsApplication {
 			testUser5.setUsername("ben");
 			testUser5.setPassword("password123");
 			testUser5.setContact("93339333");
+			testUser5.setOrganization(org1);
 			testUser5.setRole(r3);
 			userRepo.saveAndFlush(testUser5);
 

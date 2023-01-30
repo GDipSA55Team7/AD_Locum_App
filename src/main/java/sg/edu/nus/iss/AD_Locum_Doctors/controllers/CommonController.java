@@ -23,12 +23,7 @@ public class CommonController {
 
 	@PostMapping("/home/authenticate")
 	public String authenticate(User user, Model model, HttpSession session) {
-		// not completed yet
 		User u = userService.authenticate(user.getUsername(), user.getPassword());
-		if (u == null) {
-			model.addAttribute("loginMessage", "Incorrect username/password");
-			return "login";
-		}
 		session.setAttribute("user", u);
 		switch (u.getRole().getName()) {
 			case "System_Admin":
