@@ -23,15 +23,23 @@ public class JobPostServiceImpl implements JobPostService {
 	public List<JobPost> findAll() {
 		return jobPostRepo.findAll();
 	}
-
+	
 	public JobPost findJobPostById(String id) {
 		return jobPostRepo.findById(Long.parseLong(id)).orElse(null);
 	}
-
-	public List<JobPost> findJobPostsWithOutstandingPayment() {
+	
+	public List<JobPost> findJobPostsWithOutstandingPayment(){
 		return jobPostRepo.findJobPostsWithOutstandingPayment();
 	}
-
+	
+	public List<JobPost> findPaidJobPosts(){
+		return jobPostRepo.findPaidJobPosts();
+	}
+	
+	public List<JobPost> findPaidandUnpaidJobPosts(){
+		return jobPostRepo.findPaidAndUnpaidJobPosts();
+	}
+	
 	public JobPost createJobPost(JobPostForm jobPostForm, User user) {
 		JobPost newJobPost = new JobPost();
 		newJobPost.setClinicUser(user);

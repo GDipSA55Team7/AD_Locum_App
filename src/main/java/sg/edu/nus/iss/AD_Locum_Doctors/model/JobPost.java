@@ -2,7 +2,9 @@ package sg.edu.nus.iss.AD_Locum_Doctors.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -67,5 +69,12 @@ public class JobPost {
 	public String getEndDateTimeString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
 		return endDateTime.format(formatter);
+	}
+	
+	public double computeTotalRate() {
+		Long minutes = ChronoUnit.MINUTES.between(startDateTime, endDateTime);
+		Double convertToHour = ((double) minutes) / 60;
+		Double totalRate = ratePerHour * convertToHour;
+		return totalRate;
 	}
 }
