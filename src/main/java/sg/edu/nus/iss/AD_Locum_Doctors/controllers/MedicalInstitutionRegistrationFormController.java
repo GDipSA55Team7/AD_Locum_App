@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Organization;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.Role;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.OrganizationService;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.RoleService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
 @Controller
@@ -29,6 +31,9 @@ public class MedicalInstitutionRegistrationFormController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RoleService roleService;
 
     @GetMapping("/medicalInstitutionRegistrationForm")
     public String medicalInstitutionRegistrationForm(Model model) {
@@ -57,6 +62,10 @@ public class MedicalInstitutionRegistrationFormController {
     @PostMapping("/createAdmin")
     public String createAdmin(@ModelAttribute("user") @Valid User user, BindingResult result,
             Model model, HttpSession session) {
+        Role role= roleService.findByName("System_Admin");
+        if(role != null){
+            user.setRole(role);
+        }
         userService.saveUser(user);
         return "redirect:/login";
     }
