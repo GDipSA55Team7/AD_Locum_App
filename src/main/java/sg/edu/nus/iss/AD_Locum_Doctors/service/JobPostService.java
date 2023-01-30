@@ -10,6 +10,7 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 public interface JobPostService {
 	List<JobPost> findAll();
 	List<JobPost> findAllOpen();
+	List<JobPost> findJobHistory(String userId);
 	JobPost createJobPost(JobPostForm jobPostForm);
 	JobPost findJobPostById(String id);
 	void cancel(JobPost jobPost);
