@@ -32,6 +32,11 @@ public class JobPostServiceImpl implements JobPostService {
 	}
 
 	@Override
+	public List<JobPost> findJobHistory(String userId) {
+		return jobPostRepo.findByIdAndStatusOrStatus(userId, JobStatus.COMPLETED_PENDING_PAYMENT, JobStatus.COMPLETED_PAYMENT_PROCESSED);
+	}
+
+	@Override
 	public JobPost createJobPost(JobPostForm jobPostForm) {
 		return null;
 	}
