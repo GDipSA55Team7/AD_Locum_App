@@ -32,9 +32,9 @@ public class Clinic {
 
 	private String contact;
 
-	@ManyToOne (cascade=CascadeType.PERSIST)
+	@ManyToOne
 	private Organization organization;
 
-	@OneToMany(mappedBy = "clinic", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "clinic", cascade = CascadeType.ALL)
 	private List<JobPost> jobPosts;
 }

@@ -82,7 +82,7 @@ public class JobPostController {
 		model.addAttribute("jobPost", jobPost);
 		model.addAttribute("statusList", List.of(
 				JobStatus.OPEN,
-				JobStatus.PENDING_ACCEPTANCE,
+				JobStatus.PENDING_CONFIRMATION_BY_CLINIC,
 				JobStatus.ACCEPTED,
 				JobStatus.COMPLETED_PENDING_PAYMENT,
 				JobStatus.COMPLETED_PAYMENT_PROCESSED,
@@ -92,7 +92,10 @@ public class JobPostController {
 		AdditionalFeeDetailsForm additional = new AdditionalFeeDetailsForm();
 		additional.setJobPostId(Long.parseLong(id));
 		model.addAttribute("additional", additional);
-		return "jobpost-view";
+		if (jobPost.getStatus().equals(JobStatus.OPEN)) {
+			return "jobpost-view";
+		}
+		return "jobpost-accepted-view";
 	}
 
 	@GetMapping("/{id}/cancel")
@@ -104,10 +107,10 @@ public class JobPostController {
 	}
 
 	@PostMapping("/{id}/confirmcancel")
-	public String confirmcancelJobPost(@PathVariable String id, JobAdditionalRemarks additionalRemarks) {
+	public String confirmcancelJobPost(@PathVariable String id, JobAdditionalRemarks additionalRemarks, HttpSession session) {
+		User user = (User) session.getAttribute("user");
 		System.out.println(additionalRemarks.getCategory());
 		JobPost jobPost = jobPostService.findJobPostById(id);
-		User user = userService.findById(Long.parseLong("3"));
 		jobPostService.cancel(jobPost, additionalRemarks, user);
 		return "redirect:/jobpost/list";
 	}

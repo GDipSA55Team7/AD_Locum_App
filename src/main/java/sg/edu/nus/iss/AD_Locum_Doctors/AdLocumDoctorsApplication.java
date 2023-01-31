@@ -48,7 +48,7 @@ public class AdLocumDoctorsApplication {
 			roleRepo.saveAndFlush(r1);
 
 			Role r2 = new Role();
-			r2.setName("Clinic_Admin");
+			r2.setName("Clinic_Main_Admin");
 			roleRepo.saveAndFlush(r2);
 
 			Role r3 = new Role();
@@ -56,13 +56,13 @@ public class AdLocumDoctorsApplication {
 			roleRepo.saveAndFlush(r3);
 
 			Role r4 = new Role();
-			r4.setName("Super_Admin");
+			r4.setName("Clinic_Admin");
 			roleRepo.saveAndFlush(r4);
 
 			Role r5 = new Role();
 			r5.setName("System_Admin");
 			roleRepo.saveAndFlush(r5);
-
+	
 			Clinic c1 = new Clinic();
 			c1.setName("Punggol Family Clinic");
 			c1.setAddress("Punggol");
@@ -155,6 +155,15 @@ public class AdLocumDoctorsApplication {
 			testUser6.setRole(r5);
 			userRepo.saveAndFlush(testUser6);
 
+			User testUser7 = new User();
+			testUser7.setName("Ron");
+			testUser7.setEmail("ron@rmg.com.sg");
+			testUser7.setUsername("ron");
+			testUser7.setPassword("password123");
+			testUser7.setContact("98889888");
+			testUser7.setRole(r5);
+			userRepo.saveAndFlush(testUser7);
+
 			JobPost jp1 = new JobPost();
 			jp1.setClinic(c1);
 			jp1.setDescription("Looking for locum doctor for Punggol Family clinic");
@@ -170,7 +179,7 @@ public class AdLocumDoctorsApplication {
 			jp2.setDescription("Looking for locum physiotherapist");
 			jp2.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
 			jp2.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
-			jp2.setStatus(JobStatus.PENDING_ACCEPTANCE);
+			jp2.setStatus(JobStatus.PENDING_CONFIRMATION_BY_CLINIC);
 			jp2.setRatePerHour(88.8);
 			jp2.setFreelancer(testUser1);
 			jobPostRepo.saveAndFlush(jp2);
@@ -224,7 +233,7 @@ public class AdLocumDoctorsApplication {
 			jp7.setRatePerHour(100);
 			jp7.setFreelancer(testUser2);
 			jp7.setClinicUser(testUser3);
-			jp7.setStatus(JobStatus.COMPLETED_PAYMENT_PROCESSED);
+			jp7.setStatus(JobStatus.PENDING_CONFIRMATION_BY_CLINIC);
 			jobPostRepo.saveAndFlush(jp7);
 
 			AdditionalFeeDetails afdJob3 = new AdditionalFeeDetails();
