@@ -8,7 +8,7 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
 
 @Service
 public interface ClinicService {
-    
+
     void saveClinic(Clinic clinic);
 
     List<Clinic> findAll();

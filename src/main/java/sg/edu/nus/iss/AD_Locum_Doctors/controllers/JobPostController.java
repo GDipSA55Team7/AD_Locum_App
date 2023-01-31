@@ -12,18 +12,29 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpSession;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.AdditionalFeeDetailsForm;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.AdditionalFeeDetailsService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
 @Controller
 @RequestMapping("/jobpost")
 public class JobPostController {
 	@Autowired
 	private JobPostService jobPostService;
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private AdditionalFeeDetailsService additionalFeeDetailsService;
 
 	@Autowired
 	private ClinicService clinicService;
@@ -69,13 +80,35 @@ public class JobPostController {
 	public String viewJobPost(@PathVariable String id, Model model) {
 		JobPost jobPost = jobPostService.findJobPostById(id);
 		model.addAttribute("jobPost", jobPost);
+		model.addAttribute("statusList", List.of(
+				JobStatus.OPEN,
+				JobStatus.PENDING_ACCEPTANCE,
+				JobStatus.ACCEPTED,
+				JobStatus.COMPLETED_PENDING_PAYMENT,
+				JobStatus.COMPLETED_PAYMENT_PROCESSED,
+				JobStatus.CANCELLED,
+				JobStatus.DELETED));
+
+		AdditionalFeeDetailsForm additional = new AdditionalFeeDetailsForm();
+		additional.setJobPostId(Long.parseLong(id));
+		model.addAttribute("additional", additional);
 		return "jobpost-view";
 	}
 
 	@GetMapping("/{id}/cancel")
-	public String cancelJobPost(@PathVariable String id) {
+	public String cancelJobPost(@PathVariable String id, Model model) {
 		JobPost jobPost = jobPostService.findJobPostById(id);
-		jobPostService.cancel(jobPost);
+		model.addAttribute("jobPost", jobPost);
+		model.addAttribute("additionalRemarks", new JobAdditionalRemarks());
+		return "jobpost-cancel";
+	}
+
+	@PostMapping("/{id}/confirmcancel")
+	public String confirmcancelJobPost(@PathVariable String id, JobAdditionalRemarks additionalRemarks) {
+		System.out.println(additionalRemarks.getCategory());
+		JobPost jobPost = jobPostService.findJobPostById(id);
+		User user = userService.findById(Long.parseLong("3"));
+		jobPostService.cancel(jobPost, additionalRemarks, user);
 		return "redirect:/jobpost/list";
 	}
 
@@ -84,5 +117,26 @@ public class JobPostController {
 		JobPost jobPost = jobPostService.findJobPostById(id);
 		jobPostService.delete(jobPost);
 		return "redirect:/jobpost/list";
+	}
+
+	@PostMapping("/update")
+	public String updateJobPost(JobPost jobPost, Model model) {
+		String id = jobPost.getId().toString();
+		JobPost toUpdateJobPost = jobPostService.findJobPostById(id);
+		toUpdateJobPost.setActualStartDateTime(jobPost.getActualStartDateTime());
+		toUpdateJobPost.setActualEndDateTime(jobPost.getActualEndDateTime());
+		toUpdateJobPost.setAdditionalRemarks(jobPost.getAdditionalRemarks());
+		toUpdateJobPost.setStatus(jobPost.getStatus());
+		jobPostService.saveJobPost(toUpdateJobPost);
+
+		return "redirect:/jobpost/" + jobPost.getId();
+	}
+
+	@PostMapping("/additional")
+	public String createJobPostAdditional(AdditionalFeeDetailsForm additionalFeeDetailsForm) {
+		JobPost jobPost = jobPostService.findJobPostById(additionalFeeDetailsForm.getJobPostId().toString());
+		additionalFeeDetailsService.createAdditionalFeeDetail(additionalFeeDetailsForm, jobPost);
+
+		return "redirect:/jobpost/" + jobPost.getId();
 	}
 }
