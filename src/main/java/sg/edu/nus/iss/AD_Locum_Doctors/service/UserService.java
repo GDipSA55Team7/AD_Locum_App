@@ -20,6 +20,9 @@ public interface UserService {
 
     void deleteUser(User user);
 
+    List<User> findByOrganizationId(Long id);
+
+
 	FreeLancerDTO createFreeLancer(FreeLancerDTO freeLancerDTO);
 	FreeLancerDTO loginFreeLancer(FreeLancerDTO freeLancerDTO);
 	FreeLancerDTO updateFreeLancer(FreeLancerDTO freeLancerDTO);

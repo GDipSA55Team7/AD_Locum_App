@@ -206,4 +206,9 @@ public class UserServiceImpl implements UserService {
 		}
 		return errStr;
 	}
+
+    @Override
+    public List<User> findByOrganizationId(Long id) {
+        return userRepo.findByOrganizationId(id);
+    }
 }
