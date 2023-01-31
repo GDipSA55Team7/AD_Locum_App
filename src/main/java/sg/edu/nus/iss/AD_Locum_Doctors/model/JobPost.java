@@ -2,14 +2,21 @@ package sg.edu.nus.iss.AD_Locum_Doctors.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-
-import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 import org.springframework.format.annotation.DateTimeFormat;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -54,6 +61,9 @@ public class JobPost {
 	@ManyToOne
 	@JoinColumn(name="clinic_id")
 	private Clinic clinic;
+	
+	@OneToMany(mappedBy="jobPost")
+	private List<JobAdditionalRemarks> jobAdditionalRemarks;
 
 	@OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL)
 	private List<AdditionalFeeDetails> additionalFeeDetails;
@@ -78,5 +88,12 @@ public class JobPost {
 	public String getEndDateTimeString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
 		return endDateTime.format(formatter);
+	}
+	
+	public double computeTotalRate() {
+		Long minutes = ChronoUnit.MINUTES.between(startDateTime, endDateTime);
+		Double convertToHour = ((double) minutes) / 60;
+		Double totalRate = ratePerHour * convertToHour;
+		return totalRate;
 	}
 }

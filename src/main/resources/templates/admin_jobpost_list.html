@@ -82,13 +82,14 @@
 													</td>
 													<td th:text="${jp.getRatePerHourString}">Fees</td>
 													<td align="center">
+														<div><a th:href="@{/jobpost/}+${jp.id}">View</a></div>
 														<div th:switch="${#strings.toString(jp.status.name)}">
 															<a th:case="'OPEN'"
-																th:href="@{/jobpost/}+${jp.id}+@{/delete}">Delete</a>
+																th:href="@{/superadmin/}+${jp.id}+@{/remove}">Remove
+																Post</a>
 															<a th:case="'PENDING_ACCEPTANCE'"
-																th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel</a>
+																th:href="@{/superadmin/}+${jp.id}+@{/cancel}">Cancel Post</a>
 														</div>
-														<div><a th:href="@{/jobpost/}+${jp.id}">View</a></div>
 													</td>
 												</tr>
 											</tbody>

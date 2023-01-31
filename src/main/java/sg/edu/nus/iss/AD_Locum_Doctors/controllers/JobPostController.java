@@ -10,15 +10,19 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
-import sg.edu.nus.iss.AD_Locum_Doctors.service.AdditionalFeeDetailsService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.AdditionalFeeDetailsService;
 
 @Controller
 @RequestMapping("/jobpost")
 public class JobPostController {
 	@Autowired
 	private JobPostService jobPostService;
+	
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	private AdditionalFeeDetailsService additionalFeeDetailsService;
@@ -70,9 +74,19 @@ public class JobPostController {
 	}
 
 	@GetMapping("/{id}/cancel")
-	public String cancelJobPost(@PathVariable String id) {
+	public String cancelJobPost(@PathVariable String id, Model model) {
 		JobPost jobPost = jobPostService.findJobPostById(id);
-		jobPostService.cancel(jobPost);
+		model.addAttribute("jobPost", jobPost);
+		model.addAttribute("additionalRemarks", new JobAdditionalRemarks());
+		return "jobpost-cancel";
+	}
+	
+	@PostMapping("/{id}/confirmcancel")
+	public String confirmcancelJobPost(@PathVariable String id, JobAdditionalRemarks additionalRemarks) {
+		System.out.println(additionalRemarks.getCategory());
+		JobPost jobPost = jobPostService.findJobPostById(id);
+		User user = userService.findById(Long.parseLong("3"));
+		jobPostService.cancel(jobPost, additionalRemarks, user);
 		return "redirect:/jobpost/list";
 	}
 
