@@ -16,3 +16,4 @@ public interface ClinicService {
     Clinic findById(Long id);
 
     void deleteClinic(Clinic clinic);
+}

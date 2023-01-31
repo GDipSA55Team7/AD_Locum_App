@@ -11,8 +11,11 @@ public enum JobStatus {
 	COMPLETED_PENDING_PAYMENT("Completed (Pending Payment)"),
 	COMPLETED_PAYMENT_PROCESSED("Completed (Payment Processed)"),
 	CANCELLED("Cancelled"),
-	DELETED("Deleted");
+	DELETED("Deleted"),
+	REMOVED("Removed (By Admin)");
 
 	@Getter
 	public String value;
+	
+	
 }

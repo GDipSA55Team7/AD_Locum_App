@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -13,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.Data;
@@ -50,6 +52,9 @@ public class JobPost {
 
 	@ManyToOne
 	private Clinic clinic;
+	
+	@OneToMany(mappedBy="jobPost")
+	private List<JobAdditionalRemarks> jobAdditionalRemarks;
 
 	private String paymentReferenceNumber;
 

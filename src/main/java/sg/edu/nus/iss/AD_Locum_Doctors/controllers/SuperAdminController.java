@@ -1,7 +1,5 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,73 +8,67 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import jakarta.servlet.http.HttpSession;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
-import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
-@Controller
-@RequestMapping("/jobpost")
-public class JobPostController {
+@Controller 
+@RequestMapping("/superadmin")
+public class SuperAdminController {
+	
 	@Autowired
 	private JobPostService jobPostService;
 	
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private ClinicService clinicService;
-
-	@GetMapping("/list")
+	
+	@GetMapping("/listJobPosts")
 	public String jobPostListPage(Model model) {
 		model.addAttribute("jobPosts", jobPostService.findAll());
-		return "jobpost-list";
+		return "admin_jobpost_list";
 	}
-
-	@GetMapping("/create")
-	public String createJobPostPage(Model model, HttpSession session) {
-		List<Clinic> clinics = clinicService.findAll();
-		model.addAttribute("clinics", clinics);
-		model.addAttribute("jobPostForm", new JobPostForm());
-		return "jobpost-create";
-	}
-
-	@PostMapping("/create")
-	public String createJobPost(JobPostForm jobPostForm, Model model, HttpSession session) {
-		User user = (User) session.getAttribute("user");
-		if (user == null) {
-			return "redirect:/login";
-		}
-		jobPostService.createJobPost(jobPostForm, user);
-		return "redirect:/jobpost/list";
-	}
-
+	
 	@GetMapping("/{id}")
 	public String viewJobPost(@PathVariable String id, Model model) {
 		JobPost jobPost = jobPostService.findJobPostById(id);
 		model.addAttribute("jobPost", jobPost);
-		return "jobpost-view";
+		return "admin_jobpost_view";
 	}
-
+	
 	@GetMapping("/{id}/cancel")
 	public String cancelJobPost(@PathVariable String id, Model model) {
 		JobPost jobPost = jobPostService.findJobPostById(id);
 		model.addAttribute("jobPost", jobPost);
 		model.addAttribute("additionalRemarks", new JobAdditionalRemarks());
-		return "jobpost-cancel";
+		return "admin_jobpost_cancel";
 	}
 	
 	@PostMapping("/{id}/confirmcancel")
 	public String confirmcancelJobPost(@PathVariable String id, JobAdditionalRemarks additionalRemarks) {
-		System.out.println(additionalRemarks.getCategory());
+		System.out.println("Cancel id:" + id);
 		JobPost jobPost = jobPostService.findJobPostById(id);
-		User user = userService.findById(Long.parseLong("3"));
+		User user = userService.findById(Long.parseLong("4"));
 		jobPostService.cancel(jobPost, additionalRemarks, user);
-		return "redirect:/jobpost/list";
+		return "redirect:/superadmin/listJobPosts";
 	}
+	
+	@GetMapping("/{id}/remove")
+	public String deleteJobPost(@PathVariable String id, Model model) {
+		JobPost jobPost = jobPostService.findJobPostById(id);
+		model.addAttribute("jobPost", jobPost);
+		model.addAttribute("additionalRemarks", new JobAdditionalRemarks());
+		return "admin_jobpost_delete";
+	}
+	
+	@PostMapping("/{id}/confirmremove")
+	public String confirmDeleteJobPost(@PathVariable String id, JobAdditionalRemarks additionalRemarks) {
+		System.out.println("Delete id:" + id);
+		JobPost jobPost = jobPostService.findJobPostById(id);
+		User user = userService.findById(Long.parseLong("4"));
+		jobPostService.delete(jobPost, additionalRemarks, user);
+		return "redirect:/superadmin/listJobPosts";
+	}
+
 }

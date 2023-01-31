@@ -28,15 +28,11 @@ public class AdLocumDoctorsApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AdLocumDoctorsApplication.class, args);
 	}
-	
+
 	@Bean
-	public CommandLineRunner commandLineRun(
-			AverageCompensationRateRepository averageCompensationRateRepo,
-			ClinicRepository clinicRepo,
-			JobPostRepository jobPostRepo,
-			OrganizationRepository organizationRepo,
-			RoleRepository roleRepo,
-			UserRepository userRepo) {
+	public CommandLineRunner commandLineRun(AverageCompensationRateRepository averageCompensationRateRepo,
+			ClinicRepository clinicRepo, JobPostRepository jobPostRepo, OrganizationRepository organizationRepo,
+			RoleRepository roleRepo, UserRepository userRepo) {
 		return args -> {
 
 			Role r1 = new Role();
@@ -50,6 +46,10 @@ public class AdLocumDoctorsApplication {
 			Role r3 = new Role();
 			r3.setName("Clinic_User");
 			roleRepo.saveAndFlush(r3);
+			
+			Role r4 = new Role();
+			r4.setName("Super_Admin");
+			roleRepo.saveAndFlush(r4);
 
 			Clinic c1 = new Clinic();
 			c1.setName("Punggol Family Clinic");
@@ -80,11 +80,10 @@ public class AdLocumDoctorsApplication {
 			c5.setName("Raffles Medical (Raffles City Shopping Centre)");
 			c5.setAddress("252 NORTH BRIDGE ROAD RAFFLES CITY SHOPPING CENTRE #02-17");
 			c5.setPostalCode("179103");
-			Organization org1 = new Organization();
 			org1.setName("Raffles Medical Group Ltd");
 			org1.setUEN("198901967K");
 			c5.setOrganization(org1);
-      
+
 			List<Clinic> rafflesClinics = new ArrayList<>();
 			rafflesClinics.add(c3);
 			rafflesClinics.add(c4);
@@ -170,7 +169,7 @@ public class AdLocumDoctorsApplication {
 			jp5.setFreelancer(testUser2);
 			jp5.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jobPostRepo.saveAndFlush(jp5);
-			
+
 			JobPost jp6 = new JobPost();
 			jp6.setClinic(c5);
 			jp6.setDescription("Raffles Medical Group in Raffles City Shopping Centre looking for locum urgently!");
@@ -180,7 +179,7 @@ public class AdLocumDoctorsApplication {
 			jp6.setFreelancer(testUser2);
 			jp6.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jobPostRepo.saveAndFlush(jp6);
-			
+
 			JobPost jp7 = new JobPost();
 			jp7.setClinic(c5);
 			jp7.setDescription("Raffles Medical Group in Lot1 looking for locum urgently!");
@@ -190,6 +189,16 @@ public class AdLocumDoctorsApplication {
 			jp7.setFreelancer(testUser2);
 			jp7.setStatus(JobStatus.COMPLETED_PAYMENT_PROCESSED);
 			jobPostRepo.saveAndFlush(jp7);
+			
+			User testUser4 = new User();
+			testUser4.setName("Robert Lin");
+			testUser4.setEmail("RobertLin@gmail.com");
+			testUser4.setUsername("dr_robert");
+			testUser4.setPassword("password123");
+			testUser4.setContact("97117782");
+			testUser4.setMedicalLicenseNo("M31234H");
+			testUser4.setRole(r4);
+			userRepo.saveAndFlush(testUser4);
 		};
 	}
 }
