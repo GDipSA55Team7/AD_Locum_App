@@ -10,7 +10,8 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-	Role findByName(String name);
+	@Query("SELECT r FROM Role r WHERE r.name=?1")
+	Role findRole(String name);
 
     @Query("SELECT r FROM Role r WHERE r.name=?1")
     Optional<Role> findByName(String name);

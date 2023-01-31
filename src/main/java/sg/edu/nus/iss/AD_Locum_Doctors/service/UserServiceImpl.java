@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
 		newFreeLancerUser.setEmail(freeLancerDTO.getEmail());
 		newFreeLancerUser.setMedicalLicenseNo(freeLancerDTO.getMedicalLicenseNo());
 		//set role
-		Role locumDoctorRole =  roleRepo.findByName("Locum_Doctor");
+		Role locumDoctorRole =  roleRepo.findRole("Locum_Doctor");
 		newFreeLancerUser.setRole(locumDoctorRole);
 
 		userRepo.saveAndFlush(newFreeLancerUser);
