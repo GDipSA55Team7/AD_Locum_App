@@ -19,7 +19,6 @@ public class FreeLancerRestController {
 	@Autowired
 	UserService userService;
 	
-	
 	@PostMapping("/login")
 	public ResponseEntity<FreeLancerDTO> loginNewFreeLancer(@RequestBody FreeLancerDTO freeLancerDTO) {
 		try {
@@ -41,7 +40,7 @@ public class FreeLancerRestController {
 			if(newFreeLancerDTO.getErrorsFieldString().isEmpty()) {
 				return new ResponseEntity<>(newFreeLancerDTO,HttpStatus.CREATED);
 			}
-			//return errorString to indicate non-unique fields(username,Email,medicalLicenseNo)
+			//return errorString to client indicate supplied fields(username,Email,medicalLicenseNo) are non-unique
 			else {
 				return new ResponseEntity<>(newFreeLancerDTO,HttpStatus.NOT_ACCEPTABLE);
 			}

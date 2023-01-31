@@ -59,34 +59,27 @@ public class UserServiceImpl implements UserService {
 		List<User> allRegisteredUsersList = userRepo.findAll();
 		if(!allRegisteredUsersList.isEmpty()) {
 			for(User currentUser : allRegisteredUsersList ) {
-				  if(currentUser.getUsername() != null &&  currentUser.getUsername().equals(freeLancerDTO.getUsername())) {
-					  errorsFieldString += "username";
+				  // case insensitive comparison with db usernames
+				  if(currentUser.getUsername() != null &&  currentUser.getUsername().equalsIgnoreCase(freeLancerDTO.getUsername())) {
+					  errorsFieldString += "Username";
 				  }
-				  if(currentUser.getEmail() != null &&  currentUser.getEmail().equals(freeLancerDTO.getEmail())) {
-					  errorsFieldString += "email";
+				  if(currentUser.getEmail() != null &&  currentUser.getEmail().equalsIgnoreCase(freeLancerDTO.getEmail())) {
+					  errorsFieldString += "Email";
 				  }
 				  //Not validating against any official/external medicalLicenseNumber Record
-				  if(currentUser.getMedicalLicenseNo() != null  && currentUser.getMedicalLicenseNo().equals(freeLancerDTO.getMedicalLicenseNo())) {
-					  errorsFieldString += "medical";
+				  if(currentUser.getMedicalLicenseNo() != null  && currentUser.getMedicalLicenseNo().equalsIgnoreCase(freeLancerDTO.getMedicalLicenseNo())) {
+					  errorsFieldString += "Medical";
 				  }
 			  }
 		}
-//        if(errorsFieldString.isEmpty()) {
-//    		System.out.println("Username,Email,medicalLicenseNo are unique" );
-//        }
-//        else {
-//        	System.out.println("NonUnique Fields" + errorsFieldString);
-//        }
-		
+
 		//Username/email/medicalLicense is not unique
 		if(!errorsFieldString.isEmpty()) {
 			freeLancerDTO.setErrorsFieldString(errorsFieldString);
-			//System.out.println("Returning errString to controller" + errorsFieldString );
 			return freeLancerDTO;
 		}
 
 		//proceed to register new FreeLancerUser
-		
 		User newFreeLancerUser = new User();
 		newFreeLancerUser.setName(freeLancerDTO.getName());
 		newFreeLancerUser.setUsername(freeLancerDTO.getUsername());
@@ -100,9 +93,7 @@ public class UserServiceImpl implements UserService {
 
 		userRepo.saveAndFlush(newFreeLancerUser);
 		
-		//return newly created UserId DTO to client with 
 		freeLancerDTO.setId(newFreeLancerUser.getId().toString());
-		//System.out.println("DTO after setting newly created UserId : " + freeLancerDTO);
 		
 		return freeLancerDTO;
 	}
@@ -133,10 +124,10 @@ public class UserServiceImpl implements UserService {
 			
 			List<User> checkAgainstUsers = userRepo.findAll().stream().filter(u->u.getId() != existingUser.getId()).toList();
 			
-			if(!freeLancerDTO.getContact().equals(existingUser.getContact())) {
+			if(!freeLancerDTO.getContact().equalsIgnoreCase(existingUser.getContact())) {
 				existingUser.setContact(freeLancerDTO.getContact());
 			}
-			if(!freeLancerDTO.getName().equals(existingUser.getName())) {
+			if(!freeLancerDTO.getName().equalsIgnoreCase(existingUser.getName())) {
                 existingUser.setName(freeLancerDTO.getName());
             }
 			if(!freeLancerDTO.getPassword().equals(existingUser.getPassword())) {
@@ -144,32 +135,25 @@ public class UserServiceImpl implements UserService {
             }
 			
 			if(!checkAgainstUsers.isEmpty()) {
-				System.out.println("listcheckusersNotEmpty");
 				String errString = "";
 		
-				if(!freeLancerDTO.getEmail().equals(existingUser.getEmail())) {
-					String result =  checkIfFieldIsUnique(checkAgainstUsers,"email", freeLancerDTO.getEmail());
-					System.out.println( "Result" + result);
-					if(!result.contains("email")) {
+				if(!freeLancerDTO.getEmail().equalsIgnoreCase(existingUser.getEmail())) {
+					String result =  checkIfFieldIsUnique(checkAgainstUsers,"Email", freeLancerDTO.getEmail());
+					if(!result.contains("Email")) {
 						existingUser.setEmail(freeLancerDTO.getEmail());
-						System.out.println("set email true");
 					}
 					else {
 						errString += result;
 					}
 	            }
-				if(!freeLancerDTO.getMedicalLicenseNo().equals(existingUser.getMedicalLicenseNo())) {
-					System.out.println("medical");
-					String result =  checkIfFieldIsUnique(checkAgainstUsers,"medical", freeLancerDTO.getMedicalLicenseNo());
-					System.out.println( "Result" + result);
-					if(!result.contains("medical")) {
+				if(!freeLancerDTO.getMedicalLicenseNo().equalsIgnoreCase(existingUser.getMedicalLicenseNo())) {
+					String result =  checkIfFieldIsUnique(checkAgainstUsers,"Medical", freeLancerDTO.getMedicalLicenseNo());
+					if(!result.contains("Medical")) {
 						existingUser.setMedicalLicenseNo(freeLancerDTO.getMedicalLicenseNo());
-						System.out.println("set medicalno true");
 					}
 					else {
 						errString += result;
 					}
-					System.out.println("medicalmethod complete");
 	            }
 				userRepo.saveAndFlush(existingUser);
 				freeLancerDTO.setErrorsFieldString(errString);
@@ -184,22 +168,20 @@ public class UserServiceImpl implements UserService {
 		String errStr = "err";
 		try {
 			for(User user : checkAgainstUsers) {
-				if(fieldName.equals("email")) {
-					if( user.getEmail().equals(fieldValue)) {
+				if(fieldName.equals("Email")) {
+					if( user.getEmail().equalsIgnoreCase(fieldValue)) {
 						errStr += fieldName;
 						return errStr;
 					}
 					
 				}
-				if(fieldName.equals("medical")) {
-					System.out.println("inside submethod medical 1");
-					if( user.getMedicalLicenseNo() != null &&  user.getMedicalLicenseNo().equals(fieldValue)) {
+				if(fieldName.equals("Medical")) {
+					if( user.getMedicalLicenseNo() != null &&  user.getMedicalLicenseNo().equalsIgnoreCase(fieldValue)) {
 						errStr += fieldName;
 						return errStr;
 					}
 				}
 			}
-			System.out.println("output : " +  errStr );
 			return errStr;
 		} catch (Exception e) {
 			System.err.println("Error: " + e.getMessage());
