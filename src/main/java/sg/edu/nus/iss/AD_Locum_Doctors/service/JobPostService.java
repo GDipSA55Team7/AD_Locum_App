@@ -15,7 +15,7 @@ public interface JobPostService {
 
 	List<JobPost> findJobHistory(String userId);
 
-	JobPost createJobPost(JobPostForm jobPostForm);
+	JobPost createJobPost(JobPostForm jobPostForm, User user);
 
 	JobPost findJobPostById(String id);
 

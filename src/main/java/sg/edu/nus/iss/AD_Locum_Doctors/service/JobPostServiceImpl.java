@@ -44,12 +44,6 @@ public class JobPostServiceImpl implements JobPostService {
 				JobStatus.COMPLETED_PAYMENT_PROCESSED);
 	}
 
-	@Override
-	public JobPost createJobPost(JobPostForm jobPostForm) {
-		return null;
-	}
-
-	// public JobPost createJobPost(JobPostForm jobPostForm) { }
 	public JobPost findJobPostById(String id) {
 		return jobPostRepo.findById(Long.parseLong(id)).orElse(null);
 	}

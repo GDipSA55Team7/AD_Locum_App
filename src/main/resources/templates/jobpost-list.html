@@ -88,6 +88,8 @@
 																th:href="@{/jobpost/}+${jp.id}+@{/delete}">Delete</a>
 															<a th:case="'PENDING_CONFIRMATION_BY_CLINIC'"
 																th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel</a>
+															<a th:case="'ACCEPTED'"
+															   th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel</a>
 														</div>
 														<div><a th:href="@{/jobpost/}+${jp.id}">View</a></div>
 													</td>

@@ -72,7 +72,7 @@ public class JobPostController {
 	@PostMapping("/create")
 	public String createJobPost(JobPostForm jobPostForm, Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
-		jobPostService.createJobPost(jobPostForm);
+		jobPostService.createJobPost(jobPostForm, user);
 		return "redirect:/jobpost/list";
 	}
 

@@ -19,7 +19,9 @@ import com.google.gson.GsonBuilder;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostApiDTO;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
 @RestController
 @RequestMapping("api/jobs")
@@ -29,6 +31,9 @@ public class JobPostRestController {
 
     @Autowired
     JobPostService jobPostService;
+
+    @Autowired
+    UserService userService;
 
     @GetMapping("/allopen")
     public ResponseEntity<List<JobPostApiDTO>> findAllOpen() {
@@ -72,6 +77,9 @@ public class JobPostRestController {
                     jobPostService.setStatus(jobPost, JobStatus.PENDING_CONFIRMATION_BY_CLINIC, userId);
                 } else if (Objects.equals(status, "cancel")) {
                     jobPostService.setStatus(jobPost, JobStatus.OPEN, userId);
+                    // TODO: add to job history
+//                    User user = userService.findById(Long.valueOf(userId));
+//                    jobPostService.cancel(jobPost, "Cancelled by doctor", user);
                 }
                 JobPostApiDTO jobPostDTO = setJobPostDTO(jobPost);
                 return new ResponseEntity<>(jobPostDTO, HttpStatus.OK);
