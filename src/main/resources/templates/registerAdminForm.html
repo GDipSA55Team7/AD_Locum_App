@@ -1,97 +1,100 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
-    layout:decorate="~{fragments/layout}">
+  layout:decorate="~{fragments/layout}">
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Locum Application</title>
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/css/site.css" />
-    <!-- Bootstrap CSS -->
-    <style>
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Locum Application</title>
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/site.css" />
+  <!-- Bootstrap CSS -->
+  <style>
+  </style>
 </head>
+
 <body>
-    <br/>
-    <div class="container">
-		<h1>Medical Institution Admin Registration Form</h1>
-		<hr>
-		<form  th:object="${user}" th:action="@{/createAdmin}"method="POST">
-			<div class="row">
-                <div class="col-sm-2">
-                  <label for="organization">Organization:</label>
-                </div>
-                <div class="col-sm-6">
-                    <select name="organization" th:field="*{organization.id}" class="form-control">
-                        <option th:each="organization : ${organizationList}" th:value="${organization.id}"
-                            th:text="${organization.name}"></option>
-                    </select>
-                </div>
-              </div>
-              <br/>
-              <div class="row">
-                <div class="col-sm-2">
-                  <label for="username">Username:</label>
-                </div>
-                <div class="col-sm-6">
-                  <input type="text" th:field="*{username}" class="form-control" id="username" name="username">
-                </div>
-              </div>
-              <br/>
-              <div class="row">
-                <div class="col-sm-2">
-                  <label for="name">Name:</label>
-                </div>
-                <div class="col-sm-6">
-                  <input type="text" th:field="*{name}"class="form-control" id="name" name="name">
-                </div>
-              </div>
-              <br/>
-              <div class="row">
-                <div class="col-sm-2">
-                  <label for="password">Password:</label>
-                </div>
-                <div class="col-sm-6">
-                  <input type="password" th:field="*{password}"class="form-control" id="password" name="password">
-                </div>
-              </div>
-              <br/>
-              <div class="row">
-                <div class="col-sm-2">
-                  <label for="address">Contact:</label>
-                </div>
-                <div class="col-sm-6">
-                  <input type="text" th:field="*{contact}"class="form-control" id="contact" name="contact">
-                </div>
-              </div>
-              <br/>
-              <div class="row">
-                <div class="col-sm-2">
-                  <label for="email">Email:</label>
-                </div>
-                <div class="col-sm-6">
-                  <input type="email" th:field="*{email}"class="form-control" id="email" name="email">
-                </div>
-              </div>
-              <br/>
-              <div class="row">
-                <div class="col-sm-2">
-                    <label for="address"></label>
-                  </div>
-                  <div class="col-sm-6">
-			<button type="submit" class="btn btn-info col-2">Register</button>
+  <br />
+  <div class="container">
+    <h1>Medical Institution Admin Registration Form</h1>
+    <hr>
+    <form th:object="${user}" th:action="@{/register/createAdmin}" method="POST">
+      <div class="row">
+        <div class="col-sm-2">
+          <label for="organization">Organization:</label>
         </div>
+        <div class="col-sm-6">
+          <select name="organization" th:field="*{organization.id}" class="form-control">
+            <option th:each="organization : ${organizationList}" th:value="${organization.id}"
+              th:text="${organization.name}"></option>
+          </select>
         </div>
-		</form>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-sm-2">
+          <label for="username">Username:</label>
+        </div>
+        <div class="col-sm-6">
+          <input type="text" th:field="*{username}" class="form-control" id="username" name="username">
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-sm-2">
+          <label for="name">Name:</label>
+        </div>
+        <div class="col-sm-6">
+          <input type="text" th:field="*{name}" class="form-control" id="name" name="name">
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-sm-2">
+          <label for="password">Password:</label>
+        </div>
+        <div class="col-sm-6">
+          <input type="password" th:field="*{password}" class="form-control" id="password" name="password">
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-sm-2">
+          <label for="address">Contact:</label>
+        </div>
+        <div class="col-sm-6">
+          <input type="text" th:field="*{contact}" class="form-control" id="contact" name="contact">
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-sm-2">
+          <label for="email">Email:</label>
+        </div>
+        <div class="col-sm-6">
+          <input type="email" th:field="*{email}" class="form-control" id="email" name="email">
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-sm-2">
+          <label for="address"></label>
+        </div>
+        <div class="col-sm-6">
+          <button type="submit" class="btn btn-info col-2">Register</button>
+        </div>
+      </div>
+    </form>
 
-		<hr>
+    <hr>
 
-	</div>
-<br/>
-    <footer b-8i4qlzt809 class="border-top footer text-muted">
-        <div b-8i4qlzt809 class="container">
-            &copy; 2023 - Locum Application
-        </div>
-    </footer>
-    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+  </div>
+  <br />
+  <footer b-8i4qlzt809 class="border-top footer text-muted">
+    <div b-8i4qlzt809 class="container">
+      &copy; 2023 - Locum Application
+    </div>
+  </footer>
+  <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+
 </html>

@@ -40,16 +40,15 @@ public class UserServiceImpl implements UserService {
         return userRepo.findById(id).get();
     }
 
-    @Transactional
     @Override
     public User authenticate(String username, String pwd) {
         return userRepo.findAll().stream().filter(u -> u.getPassword().equals(pwd) && u.getUsername().equals(username))
-                .findFirst().orElse(null);
+                .findFirst().get();
     }
 
     @Override
     public void deleteUser(User user) {
-       userRepo.delete(user);
+        userRepo.delete(user);
     }
 
     @Override
@@ -189,4 +188,9 @@ public class UserServiceImpl implements UserService {
 		}
 		return errStr;
 	}
+
+    @Override
+    public List<User> findByOrganizationId(Long id) {
+        return userRepo.findByOrganizationId(id);
+    }
 }

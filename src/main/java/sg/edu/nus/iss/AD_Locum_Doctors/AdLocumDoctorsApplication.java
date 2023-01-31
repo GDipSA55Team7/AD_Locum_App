@@ -51,6 +51,10 @@ public class AdLocumDoctorsApplication {
 			r3.setName("Clinic_User");
 			roleRepo.saveAndFlush(r3);
 
+			Role r4 = new Role();
+			r4.setName("System_Admin");
+			roleRepo.saveAndFlush(r4);
+
 			Clinic c1 = new Clinic();
 			c1.setName("Punggol Family Clinic");
 			c1.setAddress("Punggol");
@@ -98,36 +102,6 @@ public class AdLocumDoctorsApplication {
 			testUser1.setRole(r1);
 			userRepo.saveAndFlush(testUser1);
 
-			JobPost jp1 = new JobPost();
-			jp1.setClinic(c1);
-			jp1.setDescription("Looking for locum doctor for Punggol Family clinic");
-			jp1.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
-			jp1.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
-			jp1.setRatePerHour(100);
-			jp1.setFreelancer(testUser1);
-			jp1.setStatus(JobStatus.OPEN);
-			jobPostRepo.saveAndFlush(jp1);
-
-			JobPost jp2 = new JobPost();
-			jp2.setClinic(c2);
-			jp2.setDescription("Looking for locum physiotherapist");
-			jp2.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
-			jp2.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
-			jp2.setStatus(JobStatus.PENDING_ACCEPTANCE);
-			jp2.setRatePerHour(88.8);
-			jp2.setFreelancer(testUser1);
-			jobPostRepo.saveAndFlush(jp2);
-
-			JobPost jp3 = new JobPost();
-			jp3.setClinic(c2);
-			jp3.setDescription("Looking for locum occupational therapist");
-			jp3.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
-			jp3.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
-			jp3.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
-			jp3.setFreelancer(testUser1);
-			jp3.setRatePerHour(88.8);
-			jobPostRepo.saveAndFlush(jp3);
-
 			User testUser2 = new User();
 			testUser2.setName("Mary Tan");
 			testUser2.setEmail("MaryTan@gmail.com");
@@ -144,8 +118,61 @@ public class AdLocumDoctorsApplication {
 			testUser3.setUsername("jon");
 			testUser3.setPassword("password123");
 			testUser3.setContact("91119111");
+			testUser3.setOrganization(org1);
 			testUser3.setRole(r2);
 			userRepo.saveAndFlush(testUser3);
+
+			User testUser4 = new User();
+			testUser4.setName("Ann");
+			testUser4.setEmail("ann@rmg.com.sg");
+			testUser4.setUsername("ann");
+			testUser4.setPassword("password123");
+			testUser4.setContact("92229222");
+			testUser4.setOrganization(org1);
+			testUser4.setRole(r4);
+			userRepo.saveAndFlush(testUser4);
+
+			User testUser5 = new User();
+			testUser5.setName("Ben");
+			testUser5.setEmail("ben@rmg.com.sg");
+			testUser5.setUsername("ben");
+			testUser5.setPassword("password123");
+			testUser5.setContact("93339333");
+			testUser5.setOrganization(org1);
+			testUser5.setRole(r3);
+			userRepo.saveAndFlush(testUser5);
+
+			JobPost jp1 = new JobPost();
+			jp1.setClinic(c1);
+			jp1.setDescription("Looking for locum doctor for Punggol Family clinic");
+			jp1.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
+			jp1.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
+			jp1.setRatePerHour(100);
+			jp1.setFreelancer(testUser1);
+			jp1.setStatus(JobStatus.OPEN);
+			jp1.setClinicUser(testUser3);
+			jobPostRepo.saveAndFlush(jp1);
+
+			JobPost jp2 = new JobPost();
+			jp2.setClinic(c2);
+			jp2.setDescription("Looking for locum physiotherapist");
+			jp2.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
+			jp2.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
+			jp2.setStatus(JobStatus.PENDING_ACCEPTANCE);
+			jp2.setRatePerHour(88.8);
+			jp2.setFreelancer(testUser1);
+			jp2.setClinicUser(testUser3);
+			jobPostRepo.saveAndFlush(jp2);
+
+			JobPost jp3 = new JobPost();
+			jp3.setClinic(c2);
+			jp3.setDescription("Looking for locum occupational therapist");
+			jp3.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
+			jp3.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
+			jp3.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
+			jp3.setFreelancer(testUser1);
+			jp3.setRatePerHour(88.8);
+			jobPostRepo.saveAndFlush(jp3);
 
 			JobPost jp4 = new JobPost();
 			jp4.setClinic(c3);
@@ -154,6 +181,7 @@ public class AdLocumDoctorsApplication {
 			jp4.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
 			jp4.setRatePerHour(100);
 			jp4.setFreelancer(testUser2);
+			jp4.setClinicUser(testUser3);
 			jp4.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jobPostRepo.saveAndFlush(jp4);
 		};
