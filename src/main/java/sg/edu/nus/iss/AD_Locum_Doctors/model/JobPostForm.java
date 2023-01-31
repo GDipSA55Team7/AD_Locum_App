@@ -14,13 +14,21 @@ import lombok.NoArgsConstructor;
 public class JobPostForm {
 	private String description;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
-	private LocalDateTime startDateTime;
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	private LocalDateTime startDate;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
-	private LocalDateTime endDateTime;
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	private LocalDateTime endDate;
+
+	private String startTimeHour;
+	private String startTimeMin;
+	private String startTimeAmPm;
+
+	private String endTimeHour;
+	private String endTimeMin;
+	private String endTimeAmPm;
 
 	private double ratePerHour;
 
