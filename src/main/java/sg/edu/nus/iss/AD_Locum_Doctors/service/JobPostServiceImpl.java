@@ -26,11 +26,30 @@ public class JobPostServiceImpl implements JobPostService {
 
 	@Autowired
 	private ClinicRepository clinicRepo;
+	@Autowired
+	private UserService userService;
 
 	public List<JobPost> findAll() {
 		return jobPostRepo.findAll();
 	}
 
+	@Override
+	public List<JobPost> findAllOpen() {
+		return jobPostRepo.findByStatus(JobStatus.OPEN);
+	}
+
+	@Override
+	public List<JobPost> findJobHistory(String userId) {
+		return jobPostRepo.findByIdAndStatusOrStatus(userId, JobStatus.COMPLETED_PENDING_PAYMENT,
+				JobStatus.COMPLETED_PAYMENT_PROCESSED);
+	}
+
+	@Override
+	public JobPost createJobPost(JobPostForm jobPostForm) {
+		return null;
+	}
+
+	// public JobPost createJobPost(JobPostForm jobPostForm) { }
 	public JobPost findJobPostById(String id) {
 		return jobPostRepo.findById(Long.parseLong(id)).orElse(null);
 	}
@@ -50,6 +69,37 @@ public class JobPostServiceImpl implements JobPostService {
 
 	public List<JobPost> findPaidandUnpaidJobPosts() {
 		return jobPostRepo.findPaidAndUnpaidJobPosts();
+	}
+
+	@Override
+	public void setStatus(JobPost jobPost, JobStatus status, String userId) {
+		User freelancer = userService.findById(Long.valueOf(userId));
+
+		switch (status) {
+			case OPEN -> {
+				jobPost.setStatus(JobStatus.OPEN);
+			}
+			case PENDING_CONFIRMATION_BY_CLINIC -> {
+				jobPost.setStatus(JobStatus.PENDING_CONFIRMATION_BY_CLINIC);
+				jobPost.setFreelancer(freelancer);
+			}
+			case ACCEPTED -> {
+				jobPost.setStatus(JobStatus.ACCEPTED);
+			}
+			case COMPLETED_PENDING_PAYMENT -> {
+				jobPost.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
+			}
+			case COMPLETED_PAYMENT_PROCESSED -> {
+				jobPost.setStatus(JobStatus.COMPLETED_PAYMENT_PROCESSED);
+			}
+			case CANCELLED -> {
+				jobPost.setStatus(JobStatus.CANCELLED);
+			}
+			case DELETED -> {
+				jobPost.setStatus(JobStatus.DELETED);
+			}
+		}
+		jobPostRepo.save(jobPost);
 	}
 
 	public JobPost createJobPost(JobPostForm jobPostForm, User user) {

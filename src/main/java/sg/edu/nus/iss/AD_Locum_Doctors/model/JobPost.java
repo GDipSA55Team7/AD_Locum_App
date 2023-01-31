@@ -2,13 +2,13 @@ package sg.edu.nus.iss.AD_Locum_Doctors.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import org.hibernate.annotations.Cascade;
+
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -55,12 +55,15 @@ public class JobPost {
 
 	private JobStatus status = JobStatus.OPEN;
 
+	@JsonIgnore
 	@ManyToOne
 	private User clinicUser;
 
+	@JsonIgnore
 	@ManyToOne
 	private User freelancer;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "clinic_id")
 	private Clinic clinic;

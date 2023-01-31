@@ -72,7 +72,7 @@ public class JobPostController {
 	@PostMapping("/create")
 	public String createJobPost(JobPostForm jobPostForm, Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
-		jobPostService.createJobPost(jobPostForm, user);
+		jobPostService.createJobPost(jobPostForm);
 		return "redirect:/jobpost/list";
 	}
 
@@ -107,7 +107,8 @@ public class JobPostController {
 	}
 
 	@PostMapping("/{id}/confirmcancel")
-	public String confirmcancelJobPost(@PathVariable String id, JobAdditionalRemarks additionalRemarks, HttpSession session) {
+	public String confirmcancelJobPost(@PathVariable String id, JobAdditionalRemarks additionalRemarks,
+			HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		System.out.println(additionalRemarks.getCategory());
 		JobPost jobPost = jobPostService.findJobPostById(id);

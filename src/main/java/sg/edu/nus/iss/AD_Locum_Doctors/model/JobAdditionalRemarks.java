@@ -1,7 +1,6 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,20 +15,20 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class JobAdditionalRemarks {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private RemarksCategory category;
-	
+
 	private String remarks;
-	
+
 	private LocalDate date;
-	
+
 	@ManyToOne
 	private JobPost jobPost;
-	
+
 	@OneToOne
 	private User user;
 
