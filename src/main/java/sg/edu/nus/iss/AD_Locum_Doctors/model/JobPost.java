@@ -31,6 +31,8 @@ public class JobPost {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	private String title;
+
 	private String description;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -50,8 +52,6 @@ public class JobPost {
 	private LocalDateTime actualEndDateTime;
 
 	private double ratePerHour;
-
-	private double totalRate;
 
 	private JobStatus status = JobStatus.OPEN;
 

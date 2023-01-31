@@ -19,7 +19,6 @@ import com.google.gson.GsonBuilder;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostApiDTO;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
@@ -78,8 +77,8 @@ public class JobPostRestController {
                 } else if (Objects.equals(status, "cancel")) {
                     jobPostService.setStatus(jobPost, JobStatus.OPEN, userId);
                     // TODO: add to job history
-//                    User user = userService.findById(Long.valueOf(userId));
-//                    jobPostService.cancel(jobPost, "Cancelled by doctor", user);
+                    // User user = userService.findById(Long.valueOf(userId));
+                    // jobPostService.cancel(jobPost, "Cancelled by doctor", user);
                 }
                 JobPostApiDTO jobPostDTO = setJobPostDTO(jobPost);
                 return new ResponseEntity<>(jobPostDTO, HttpStatus.OK);
@@ -116,7 +115,7 @@ public class JobPostRestController {
         jobPostDTO.setEndDateTime(jobPost.getEndDateTime().toString());
         jobPostDTO.setClinic(jobPost.getClinic());
         jobPostDTO.setStatus(jobPost.getStatus());
-        jobPostDTO.setTotalRate(jobPost.getTotalRate());
+        jobPostDTO.setTotalRate(jobPost.computeTotalRate());
         jobPostDTO.setRatePerHour(jobPost.getRatePerHour());
         jobPostDTO.setClinicUser(jobPost.getClinicUser());
         jobPostDTO.setClinic(jobPost.getClinic());

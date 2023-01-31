@@ -26,6 +26,7 @@ public class JobPostServiceImpl implements JobPostService {
 
 	@Autowired
 	private ClinicRepository clinicRepo;
+
 	@Autowired
 	private UserService userService;
 
@@ -44,10 +45,12 @@ public class JobPostServiceImpl implements JobPostService {
 				JobStatus.COMPLETED_PAYMENT_PROCESSED);
 	}
 
+	@Override
 	public JobPost findJobPostById(String id) {
 		return jobPostRepo.findById(Long.parseLong(id)).orElse(null);
 	}
 
+	@Override
 	public List<JobPost> findJobPostsWithOutstandingPayment() {
 		return jobPostRepo.findJobPostsWithOutstandingPayment();
 	}
@@ -57,10 +60,12 @@ public class JobPostServiceImpl implements JobPostService {
 		jobPostRepo.saveAndFlush(jobPost);
 	}
 
+	@Override
 	public List<JobPost> findPaidJobPosts() {
 		return jobPostRepo.findPaidJobPosts();
 	}
 
+	@Override
 	public List<JobPost> findPaidandUnpaidJobPosts() {
 		return jobPostRepo.findPaidAndUnpaidJobPosts();
 	}
@@ -96,6 +101,7 @@ public class JobPostServiceImpl implements JobPostService {
 		jobPostRepo.save(jobPost);
 	}
 
+	@Override
 	public JobPost createJobPost(JobPostForm jobPostForm, User user) {
 		JobPost newJobPost = new JobPost();
 		newJobPost.setClinicUser(user);
@@ -103,24 +109,27 @@ public class JobPostServiceImpl implements JobPostService {
 		newJobPost.setStartDateTime(jobPostForm.getStartDateTime());
 		newJobPost.setEndDateTime(jobPostForm.getEndDateTime());
 		newJobPost.setRatePerHour(jobPostForm.getRatePerHour());
-		// newJobPost.setTotalRate(jobPostForm.getTotalRate());
 		newJobPost.setClinic(clinicRepo.findById(jobPostForm.getClinicId()).get());
 		return jobPostRepo.saveAndFlush(newJobPost);
 	}
 
+	@Override
 	public void cancel(JobPost jobPost) {
 		jobPost.setStatus(JobStatus.CANCELLED);
 		jobPostRepo.save(jobPost);
 	}
 
+	@Override
 	public void delete(JobPost jobPost) {
 		jobPostRepo.delete(jobPost);
 	}
 
+	@Override
 	public List<JobPost> findJobPostsCreatedByUser(User user) {
 		return jobPostRepo.findByClinicUser(user);
 	}
 
+	@Override
 	public void cancel(JobPost jobpost, JobAdditionalRemarks additionalRemarks, User user) {
 		jobpost.setStatus(JobStatus.CANCELLED);
 		jobPostRepo.saveAndFlush(jobpost);
@@ -131,6 +140,7 @@ public class JobPostServiceImpl implements JobPostService {
 		jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
 	}
 
+	@Override
 	public void delete(JobPost jobpost, JobAdditionalRemarks additionalRemarks, User user) {
 		jobpost.setStatus(JobStatus.REMOVED);
 		jobPostRepo.saveAndFlush(jobpost);

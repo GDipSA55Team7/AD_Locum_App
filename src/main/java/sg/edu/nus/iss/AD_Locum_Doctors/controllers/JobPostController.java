@@ -22,16 +22,12 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.AdditionalFeeDetailsService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
-import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
 @Controller
 @RequestMapping("/jobpost")
 public class JobPostController {
 	@Autowired
 	private JobPostService jobPostService;
-
-	@Autowired
-	private UserService userService;
 
 	@Autowired
 	private AdditionalFeeDetailsService additionalFeeDetailsService;

@@ -1,5 +1,6 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,19 +13,21 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class JobPostForm {
+	private String title;
+
 	private String description;
 
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
-	private LocalDateTime startDate;
-
-	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "dd-MM-yyyy")
-	private LocalDateTime endDate;
+	private LocalDate startDate;
 
 	private String startTimeHour;
 	private String startTimeMin;
 	private String startTimeAmPm;
+
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	private LocalDate endDate;
 
 	private String endTimeHour;
 	private String endTimeMin;
@@ -35,4 +38,40 @@ public class JobPostForm {
 	private Long clinicUserId;
 
 	private Long clinicId;
+
+	public LocalDateTime getStartDateTime() {
+		int startTimeHourInt = 0;
+		int startTimeMinInt = 0;
+		try {
+			startTimeHourInt = Integer.parseInt(startTimeHour);
+			startTimeMinInt = Integer.parseInt(startTimeMin);
+		} catch (NumberFormatException ex) {
+			ex.printStackTrace();
+		}
+		return LocalDateTime.of(
+				startDate.getYear(),
+				startDate.getMonthValue(),
+				startDate.getDayOfMonth(),
+				startTimeHourInt,
+				startTimeMinInt,
+				0);
+	}
+
+	public LocalDateTime getEndDateTime() {
+		int endTimeHourInt = 0;
+		int endTimeMinInt = 0;
+		try {
+			endTimeHourInt = Integer.parseInt(endTimeHour);
+			endTimeMinInt = Integer.parseInt(endTimeMin);
+		} catch (NumberFormatException ex) {
+			ex.printStackTrace();
+		}
+		return LocalDateTime.of(
+				endDate.getYear(),
+				endDate.getMonthValue(),
+				endDate.getDayOfMonth(),
+				endTimeHourInt,
+				endTimeMinInt,
+				0);
+	}
 }
