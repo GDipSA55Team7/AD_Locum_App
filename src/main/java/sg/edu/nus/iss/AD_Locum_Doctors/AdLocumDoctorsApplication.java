@@ -63,33 +63,46 @@ public class AdLocumDoctorsApplication {
 			r5.setName("System_Admin");
 			roleRepo.saveAndFlush(r5);
 
+			Organization org1 = new Organization();
+			org1.setName("Raffles Medical Group Ltd");
+			org1.setUEN("198901967K");
+			organizationRepo.saveAndFlush(org1);
+			Organization org_sc = new Organization();
+			org_sc.setName("SC Organization");
+			org_sc.setUEN("222901967A");
+			organizationRepo.saveAndFlush(org_sc);
+			Organization org_pg = new Organization();
+			org_pg.setName("PG Organization");
+			org_pg.setUEN("333901967B");
+			organizationRepo.saveAndFlush(org_pg);
+
 			Clinic c1 = new Clinic();
 			c1.setName("Punggol Family Clinic");
 			c1.setAddress("Punggol");
 			c1.setPostalCode("S123456");
+			c1.setOrganization(org_pg);
 			clinicRepo.saveAndFlush(c1);
 
 			Clinic c2 = new Clinic();
 			c2.setName("SilverCross Clinic (Yishun)");
 			c2.setAddress("Yishun");
 			c2.setPostalCode("S654321");
+			c2.setOrganization(org_sc);
 			clinicRepo.saveAndFlush(c2);
-
-			Organization org1 = new Organization();
-			org1.setName("Raffles Medical Group Ltd");
-			org1.setUEN("198901967K");
 
 			Clinic c3 = new Clinic();
 			c3.setName("Raffles Medical (Lot1 Shoppers Mall)");
 			c3.setAddress("21 CHOA CHU KANG AVE 4 LOT 1 SHOPPERS' MALL #B1-07A SINGAPORE 689812");
 			c3.setPostalCode("689812");
 			c3.setOrganization(org1);
+			clinicRepo.saveAndFlush(c3);
 
 			Clinic c4 = new Clinic();
 			c4.setName("Raffles Medical (Loyang Point)");
 			c4.setAddress("BLK 259 PASIR RIS STREET 21 LOYANG POINT #02-33");
 			c4.setPostalCode("510259");
 			c4.setOrganization(org1);
+			clinicRepo.saveAndFlush(c4);
 
 			Clinic c5 = new Clinic();
 			c5.setName("Raffles Medical (Raffles City Shopping Centre)");
@@ -98,6 +111,7 @@ public class AdLocumDoctorsApplication {
 			org1.setName("Raffles Medical Group Ltd");
 			org1.setUEN("198901967K");
 			c5.setOrganization(org1);
+			clinicRepo.saveAndFlush(c5);
 
 			List<Clinic> rafflesClinics = new ArrayList<>();
 			rafflesClinics.add(c3);
@@ -188,6 +202,7 @@ public class AdLocumDoctorsApplication {
 
 			JobPost jp3 = new JobPost();
 			jp3.setClinic(c2);
+			jp3.setTitle("Looking for locum occupational therapist");
 			jp3.setDescription("Looking for locum occupational therapist");
 			jp3.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
 			jp3.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
@@ -200,6 +215,7 @@ public class AdLocumDoctorsApplication {
 
 			JobPost jp4 = new JobPost();
 			jp4.setClinic(c3);
+			jp4.setTitle("Urgent Request for RMG @ Lot 1");
 			jp4.setDescription("Raffles Medical Group in Lot1 looking for locum urgently!");
 			jp4.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
 			jp4.setEndDateTime(LocalDateTime.of(2023, 01, 11, 20, 30, 0));
@@ -221,6 +237,7 @@ public class AdLocumDoctorsApplication {
 
 			JobPost jp6 = new JobPost();
 			jp6.setClinic(c5);
+			jp6.setTitle("Urgent Request for RMG @ Raffles City");
 			jp6.setDescription("Raffles Medical Group in Raffles City Shopping Centre looking for locum urgently!");
 			jp6.setStartDateTime(LocalDateTime.of(2023, 01, 20, 18, 30, 0));
 			jp6.setEndDateTime(LocalDateTime.of(2023, 01, 20, 20, 30, 0));
@@ -231,8 +248,8 @@ public class AdLocumDoctorsApplication {
 
 			JobPost jp7 = new JobPost();
 			jp7.setClinic(c5);
-			jp7.setTitle("Urgent Request for RMG @ Lot 1");
-			jp7.setDescription("Raffles Medical Group in Lot1 looking for locum urgently!");
+			jp7.setTitle("Urgent Request for RMG @ Raffles City");
+			jp7.setDescription("Raffles Medical Group in Raffles City looking for locum urgently!");
 			jp7.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
 			jp7.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
 			jp7.setRatePerHour(100);
@@ -243,7 +260,7 @@ public class AdLocumDoctorsApplication {
 
 			JobPost jp8 = new JobPost();
 			jp8.setClinic(c5);
-			jp8.setTitle("Urgent Request for ABC @ Canberra");
+			jp8.setTitle("Urgent Request for RMG @ Raffles City");
 			jp8.setDescription("Looking for locum urgently!");
 			jp8.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
 			jp8.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
@@ -255,7 +272,7 @@ public class AdLocumDoctorsApplication {
 
 			JobPost jp9 = new JobPost();
 			jp9.setClinic(c5);
-			jp9.setTitle("Urgent Request for ABC @ Canberra");
+			jp9.setTitle("Urgent Request for RMG @ Raffles City");
 			jp9.setDescription("Looking for locum urgently!");
 			jp9.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
 			jp9.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
@@ -267,7 +284,7 @@ public class AdLocumDoctorsApplication {
 
 			JobPost jp10 = new JobPost();
 			jp10.setClinic(c5);
-			jp10.setTitle("Urgent Request for ABC @ Canberra");
+			jp10.setTitle("Urgent Request for RMG @ Raffles City");
 			jp10.setDescription("Looking for locum urgently!");
 			jp10.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
 			jp10.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));

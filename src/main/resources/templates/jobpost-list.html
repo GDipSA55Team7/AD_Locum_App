@@ -85,11 +85,11 @@
 													<td align="center">
 														<a th:href="@{/jobpost/}+${jp.id}">
 															<div
-																th:if="${jp.status.name == 'CANCELLED' OR jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}">
+																th:if="${jp.status.name == 'OPEN' OR jp.status.name == 'CANCELLED' OR jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}">
 																View
 															</div>
 															<div
-																th:unless="${jp.status.name == 'CANCELLED' OR jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}">
+																th:unless="${jp.status.name == 'OPEN' OR jp.status.name == 'CANCELLED' OR jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}">
 																Edit
 															</div>
 														</a>

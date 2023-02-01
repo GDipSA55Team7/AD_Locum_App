@@ -103,4 +103,8 @@ public class JobPost {
 		Double totalRate = ratePerHour * convertToHour;
 		return totalRate;
 	}
+
+	public String getComputedRateString() {
+		return String.format("%.2f", computeTotalRate());
+	}
 }
