@@ -1,5 +1,6 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.rest;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -16,9 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostApiDTO;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
@@ -38,15 +37,7 @@ public class JobPostRestController {
     public ResponseEntity<List<JobPostApiDTO>> findAllOpen() {
         try {
             List<JobPost> jobPostList = jobPostService.findAllOpen();
-            List<JobPostApiDTO> jobPostDTOList = new ArrayList<>();
-            for (JobPost jobPost : jobPostList) {
-                JobPostApiDTO jobPostDTO = setJobPostDTO(jobPost);
-                jobPostDTOList.add(jobPostDTO);
-            }
-            if (jobPostList.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(jobPostDTOList, HttpStatus.OK);
+            return getListResponseEntity(jobPostList);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -73,12 +64,16 @@ public class JobPostRestController {
             JobPost jobPost = jobPostService.findJobPostById(id);
             if (jobPost != null) {
                 if (Objects.equals(status, "apply")) {
-                    jobPostService.setStatus(jobPost, JobStatus.PENDING_CONFIRMATION_BY_CLINIC, userId);
+                    jobPostService.setStatus(jobPost, JobStatus.PENDING_CONFIRMATION_BY_CLINIC, userId, null);
                 } else if (Objects.equals(status, "cancel")) {
-                    jobPostService.setStatus(jobPost, JobStatus.OPEN, userId);
-                    // TODO: add to job history
-                    // User user = userService.findById(Long.valueOf(userId));
-                    // jobPostService.cancel(jobPost, "Cancelled by doctor", user);
+                    User user = userService.findById(Long.valueOf(userId));
+                    JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
+                    additionalRemarks.setCategory(RemarksCategory.CANCELLATION);
+                    additionalRemarks.setRemarks("Application Cancelled");
+                    additionalRemarks.setDate(LocalDate.now());
+                    additionalRemarks.setJobPost(jobPost);
+                    additionalRemarks.setUser(user);
+                    jobPostService.setStatus(jobPost, JobStatus.OPEN, userId, additionalRemarks);
                 }
                 JobPostApiDTO jobPostDTO = setJobPostDTO(jobPost);
                 return new ResponseEntity<>(jobPostDTO, HttpStatus.OK);
@@ -92,16 +87,30 @@ public class JobPostRestController {
     @GetMapping("/history")
     public ResponseEntity<List<JobPostApiDTO>> findJobHistory(@RequestParam String id) {
         try {
+
             List<JobPost> jobPostList = jobPostService.findJobHistory(id);
-            List<JobPostApiDTO> jobPostDTOList = new ArrayList<>();
-            for (JobPost jobPost : jobPostList) {
-                JobPostApiDTO jobPostDTO = setJobPostDTO(jobPost);
-                jobPostDTOList.add(jobPostDTO);
-            }
-            if (jobPostList.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(jobPostDTOList, HttpStatus.OK);
+            return getListResponseEntity(jobPostList);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/applied")
+    public ResponseEntity<List<JobPostApiDTO>> findJobApplied(@RequestParam String id) {
+        try {
+
+            List<JobPost> jobPostList = jobPostService.findJobApplied(id);
+            return getListResponseEntity(jobPostList);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/confirmed")
+    public ResponseEntity<List<JobPostApiDTO>> findJobConfirmed(@RequestParam String id) {
+        try {
+            List<JobPost> jobPostList = jobPostService.findJobConfirmed(id);
+            return getListResponseEntity(jobPostList);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -122,5 +131,17 @@ public class JobPostRestController {
         jobPostDTO.setFreelancer(jobPost.getFreelancer());
 
         return jobPostDTO;
+    }
+
+    private ResponseEntity<List<JobPostApiDTO>> getListResponseEntity(List<JobPost> jobPostList) {
+        List<JobPostApiDTO> jobPostDTOList = new ArrayList<>();
+        for (JobPost jobPost : jobPostList) {
+            JobPostApiDTO jobPostDTO = setJobPostDTO(jobPost);
+            jobPostDTOList.add(jobPostDTO);
+        }
+        if (jobPostList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(jobPostDTOList, HttpStatus.OK);
     }
 }

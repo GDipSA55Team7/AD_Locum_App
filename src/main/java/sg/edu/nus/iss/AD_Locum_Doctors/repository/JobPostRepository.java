@@ -22,8 +22,11 @@ public interface JobPostRepository extends JpaRepository<JobPost, Long> {
 
 	List<JobPost> findByStatus(JobStatus status);
 
-	@Query("select j from JobPost j where j.freelancer.id = ?1 and j.status = ?2 or j.status = ?3")
-	List<JobPost> findByIdAndStatusOrStatus(String id, JobStatus status, JobStatus status1);
+	@Query("select j from JobPost j where j.freelancer.id = ?1 and j.status = ?2 or j.status = ?3 or j.status = ?4")
+	List<JobPost> findByIdAndStatusOrStatus(String id, JobStatus status, JobStatus status1, JobStatus status2);
+
+	@Query("select j from JobPost j where j.freelancer.id = ?1 and j.status = ?2")
+	List<JobPost> findByIdAndStatus(String id, JobStatus status);
 
 	List<JobPost> findByClinicUser(User user);
 
