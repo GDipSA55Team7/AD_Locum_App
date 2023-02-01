@@ -68,9 +68,11 @@ public class JobPost {
 	@JoinColumn(name = "clinic_id")
 	private Clinic clinic;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "jobPost")
 	private List<JobAdditionalRemarks> jobAdditionalRemarks;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL)
 	private List<AdditionalFeeDetails> additionalFeeDetails;
 
