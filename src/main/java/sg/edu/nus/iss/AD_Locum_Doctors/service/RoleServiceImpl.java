@@ -1,5 +1,7 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,11 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Role findByName(String name){
         return roleRepo.findByName(name).get();
+    }
+
+    @Override
+    public List<Role> findAll() {
+        return roleRepo.findAll();
     }
 
 }
