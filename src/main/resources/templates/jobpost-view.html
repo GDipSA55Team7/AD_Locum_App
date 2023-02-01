@@ -37,11 +37,24 @@
 							<div class="card">
 								<div class="card-body">
 									<form action="#" th:object="${jobPost}" method="post">
+										<div class="form-row">
+											<div class="form-group col">
+												<label class="form-label">Title</label>
+												<input th:field="*{title}" type="text" class="form-control"
+													th:value="*{title}" readonly>
+											</div>
+											<div class="form-group col">
+												<label class="form-label">Status</label>
+												<input id="*{status}" type="text" class="form-control"
+													th:value="*{status.value}" readonly>
+											</div>
+										</div>
 										<div class="mb-3 form-group">
 											<label class="form-label">Description</label>
-											<input th:field="*{description}" type="text" class="form-control"
-												th:value="*{description}" readonly>
+											<textarea th:field="*{description}" type="text" class="form-control"
+												th:value="*{description}" readonly></textarea>
 										</div>
+
 										<div class="row">
 											<div class="mb-3 col">
 												<label class="form-label">Start Date & Time</label>
@@ -81,7 +94,11 @@
 												</div>
 											</div>
 										</div>
-										<a href="/jobpost/list" class="btn btn-info">Back</a>
+										<div class="mb-3 form-group d-flex flex-row-reverse">
+											<a th:href="@{/jobpost/}+${jobPost.id}+@{/delete}"
+												class="btn btn-danger mr-2">Delete</a>
+											<a href="/jobpost/list" class="btn btn-info mr-2">Back</a>
+										</div>
 									</form>
 								</div>
 							</div>

@@ -105,6 +105,7 @@ public class JobPostServiceImpl implements JobPostService {
 	public JobPost createJobPost(JobPostForm jobPostForm, User user) {
 		JobPost newJobPost = new JobPost();
 		newJobPost.setClinicUser(user);
+		newJobPost.setTitle(jobPostForm.getTitle());
 		newJobPost.setDescription(jobPostForm.getDescription());
 		newJobPost.setStartDateTime(jobPostForm.getStartDateTime());
 		newJobPost.setEndDateTime(jobPostForm.getEndDateTime());
