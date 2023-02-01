@@ -14,7 +14,7 @@
 <body>
     <br/>
     <div class="container">
-		<h1>Medical Institution Registration Form</h1>
+		<h1>Organization Registration Form</h1>
 		<hr>
 		<form  th:object="${organization}" th:action="@{/register/registerOrg}"method="POST">
 			<div class="row">
@@ -32,15 +32,6 @@
                 </div>
                 <div class="col-sm-6">
                   <input type="text" th:field="*{UEN}" class="form-control" id="uen" name="uen">
-                </div>
-              </div>
-              <br/>
-              <div class="row">
-                <div class="col-sm-2">
-                  <label for="hci">HCI:</label>
-                </div>
-                <div class="col-sm-6">
-                  <input type="text" th:field="*{HCI}"class="form-control" id="hci" name="hci">
                 </div>
               </div>
               <br/>

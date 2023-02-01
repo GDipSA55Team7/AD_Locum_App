@@ -48,6 +48,7 @@ public class UserController {
         loadReference();
         List<User> users = userService.findByOrganizationId(user.getOrganization().getId());
         model.addAttribute("userList", users);
+        model.addAttribute("currentUserId", user.getId());
         return "user-list";
     }
 
