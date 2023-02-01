@@ -88,8 +88,6 @@ public class JobPostController {
 		JobPost jobPost = jobPostService.findJobPostById(id);
 		model.addAttribute("jobPost", jobPost);
 		model.addAttribute("statusList", List.of(
-				JobStatus.OPEN,
-				JobStatus.PENDING_CONFIRMATION_BY_CLINIC,
 				JobStatus.ACCEPTED,
 				JobStatus.COMPLETED_PENDING_PAYMENT,
 				JobStatus.COMPLETED_PAYMENT_PROCESSED,
@@ -103,12 +101,10 @@ public class JobPostController {
 		AdditionalFeeDetailsForm additional = new AdditionalFeeDetailsForm();
 		additional.setJobPostId(Long.parseLong(id));
 		model.addAttribute("additional", additional);
-		if (jobPost.getStatus().equals(JobStatus.OPEN)) {
+		if (jobPost.getStatus().equals(JobStatus.OPEN) || jobPost.getStatus().equals(JobStatus.CANCELLED)) {
 			return "jobpost-view";
 		} else if (jobPost.getStatus().equals(JobStatus.PENDING_CONFIRMATION_BY_CLINIC)) {
 			return "jobpost-locum";
-		} else if (jobPost.getStatus().equals(JobStatus.CANCELLED)) {
-			return "jobpost-view";
 		}
 		return "jobpost-accepted-view";
 	}
@@ -142,13 +138,35 @@ public class JobPostController {
 		jp.setAdditionalRemarks(jobPost.getAdditionalRemarks());
 		jobPostService.saveJobPost(jp);
 
-		JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
-		additionalRemarks.setCategory(RemarksCategory.CANCELLATION);
-		additionalRemarks.setDate(LocalDate.now());
-		additionalRemarks.setJobPost(jp);
-		additionalRemarks.setUser(user);
-		additionalRemarks.setRemarks(jp.getAdditionalRemarks());
-		jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
+		if (!jobPost.getAdditionalRemarks().equals("")) {
+			JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
+			additionalRemarks.setCategory(RemarksCategory.CANCELLATION);
+			additionalRemarks.setDate(LocalDate.now());
+			additionalRemarks.setJobPost(jp);
+			additionalRemarks.setUser(user);
+			additionalRemarks.setRemarks(jp.getAdditionalRemarks());
+			jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
+		}
+		return "redirect:/jobpost/list";
+	}
+
+	@PostMapping(value = "/update", params = "confirm-locum")
+	public String confirmJobPostForm(JobPost jobPost, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		String id = jobPost.getId().toString();
+		JobPost jp = jobPostService.findJobPostById(id);
+		jp.setStatus(JobStatus.ACCEPTED);
+		jp.setAdditionalRemarks(jobPost.getAdditionalRemarks());
+		jobPostService.saveJobPost(jp);
+		if (!jobPost.getAdditionalRemarks().equals("")) {
+			JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
+			additionalRemarks.setCategory(RemarksCategory.GENERAL);
+			additionalRemarks.setDate(LocalDate.now());
+			additionalRemarks.setJobPost(jp);
+			additionalRemarks.setUser(user);
+			additionalRemarks.setRemarks(jp.getAdditionalRemarks());
+			jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
+		}
 		return "redirect:/jobpost/list";
 	}
 

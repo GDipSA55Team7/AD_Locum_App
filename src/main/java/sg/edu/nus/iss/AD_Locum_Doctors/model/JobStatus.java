@@ -16,6 +16,4 @@ public enum JobStatus {
 
 	@Getter
 	public String value;
-	
-	
 }
