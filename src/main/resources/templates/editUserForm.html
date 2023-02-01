@@ -39,6 +39,7 @@
 									<form action="#" th:action="@{'/editUser'}" th:object="${user}"
 										method="post">
                                         <input type = "hidden" th:field="*{id}"/>
+										<input type="hidden" th:field="*{role.id}"/>
 										<div class="mb-3 form-group">
 											<label class="form-label">Organization</label>
                       <select name="organization" th:field="*{organization.id}" class="form-control">

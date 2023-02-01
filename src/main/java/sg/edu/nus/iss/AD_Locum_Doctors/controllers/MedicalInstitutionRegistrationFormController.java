@@ -62,23 +62,25 @@ public class MedicalInstitutionRegistrationFormController {
     @PostMapping("/createAdmin")
     public String createAdmin(@ModelAttribute("user") @Valid User user, BindingResult result,
             Model model, HttpSession session) {
-        Role role= roleService.findByName("Clinic_Admin");
-        if(role != null){
+        Role role = roleService.findByName("Clinic_Main_Admin");
+        if (role != null) {
             user.setRole(role);
         }
         userService.saveUser(user);
         User u = userService.authenticate(user.getUsername(), user.getPassword());
-		session.setAttribute("user", u);
-		switch (u.getRole().getName()) {
-			case "System_Admin":
-				return "redirect:/system-admin";
-			case "Clinic_Admin":
-				return "redirect:/clinic-admin";
-			case "Clinic_User":
-				return "redirect:/clinic-user";
-			default:
-				return "login";
-		}
-        
+        session.setAttribute("user", u);
+        switch (u.getRole().getName()) {
+            case "System_Admin":
+                return "redirect:/system-admin";
+            case "Clinic_Admin":
+                return "redirect:/clinic-admin";
+            case "Clinic_Main_Admin":
+                return "redirect:/clinic-admin";
+            case "Clinic_User":
+                return "redirect:/clinic-user";
+            default:
+                return "login";
+        }
+
     }
 }
