@@ -45,6 +45,11 @@ public class JobPostServiceImpl implements JobPostService {
 				JobStatus.COMPLETED_PAYMENT_PROCESSED, JobStatus.CANCELLED);
 	}
 
+	@Override
+	public List<JobPost> findJobApplied(String userId) {
+		return jobPostRepo.findByStatus(JobStatus.PENDING_CONFIRMATION_BY_CLINIC);
+	}
+
 	public JobPost findJobPostById(String id) {
 		return jobPostRepo.findById(Long.parseLong(id)).orElse(null);
 	}
