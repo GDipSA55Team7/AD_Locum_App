@@ -37,15 +37,7 @@ public class JobPostRestController {
     public ResponseEntity<List<JobPostApiDTO>> findAllOpen() {
         try {
             List<JobPost> jobPostList = jobPostService.findAllOpen();
-            List<JobPostApiDTO> jobPostDTOList = new ArrayList<>();
-            for (JobPost jobPost : jobPostList) {
-                JobPostApiDTO jobPostDTO = setJobPostDTO(jobPost);
-                jobPostDTOList.add(jobPostDTO);
-            }
-            if (jobPostList.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(jobPostDTOList, HttpStatus.OK);
+            return getListResponseEntity(jobPostList);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -97,15 +89,7 @@ public class JobPostRestController {
         try {
 
             List<JobPost> jobPostList = jobPostService.findJobHistory(id);
-            List<JobPostApiDTO> jobPostDTOList = new ArrayList<>();
-            for (JobPost jobPost : jobPostList) {
-                JobPostApiDTO jobPostDTO = setJobPostDTO(jobPost);
-                jobPostDTOList.add(jobPostDTO);
-            }
-            if (jobPostList.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(jobPostDTOList, HttpStatus.OK);
+            return getListResponseEntity(jobPostList);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -116,32 +100,17 @@ public class JobPostRestController {
         try {
 
             List<JobPost> jobPostList = jobPostService.findJobApplied(id);
-            List<JobPostApiDTO> jobPostDTOList = new ArrayList<>();
-            for (JobPost jobPost : jobPostList) {
-                JobPostApiDTO jobPostDTO = setJobPostDTO(jobPost);
-                jobPostDTOList.add(jobPostDTO);
-            }
-            if (jobPostList.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(jobPostDTOList, HttpStatus.OK);
+            return getListResponseEntity(jobPostList);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/confirmed")
     public ResponseEntity<List<JobPostApiDTO>> findJobConfirmed(@RequestParam String id) {
         try {
             List<JobPost> jobPostList = jobPostService.findJobConfirmed(id);
-            List<JobPostApiDTO> jobPostDTOList = new ArrayList<>();
-            for (JobPost jobPost :jobPostList) {
-                JobPostApiDTO jobPostDTO = setJobPostDTO(jobPost);
-                jobPostDTOList.add(jobPostDTO);
-            }
-            if(jobPostList.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(jobPostDTOList, HttpStatus.OK);
+            return getListResponseEntity(jobPostList);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -162,5 +131,17 @@ public class JobPostRestController {
         jobPostDTO.setFreelancer(jobPost.getFreelancer());
 
         return jobPostDTO;
+    }
+
+    private ResponseEntity<List<JobPostApiDTO>> getListResponseEntity(List<JobPost> jobPostList) {
+        List<JobPostApiDTO> jobPostDTOList = new ArrayList<>();
+        for (JobPost jobPost : jobPostList) {
+            JobPostApiDTO jobPostDTO = setJobPostDTO(jobPost);
+            jobPostDTOList.add(jobPostDTO);
+        }
+        if (jobPostList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(jobPostDTOList, HttpStatus.OK);
     }
 }
