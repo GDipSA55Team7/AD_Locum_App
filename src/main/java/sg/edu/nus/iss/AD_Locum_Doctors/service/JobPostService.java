@@ -17,6 +17,8 @@ public interface JobPostService {
 
 	List<JobPost> findJobApplied(String userId);
 
+	List<JobPost> findJobConfirmed(String userId);
+
 	JobPost createJobPost(JobPostForm jobPostForm, User user);
 
 	JobPost findJobPostById(String id);

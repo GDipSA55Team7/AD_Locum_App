@@ -50,6 +50,11 @@ public class JobPostServiceImpl implements JobPostService {
 		return jobPostRepo.findByStatus(JobStatus.PENDING_CONFIRMATION_BY_CLINIC);
 	}
 
+	@Override
+	public List<JobPost> findJobConfirmed(String userId) {
+		return jobPostRepo.findByIdAndStatus(userId, JobStatus.ACCEPTED);
+	}
+
 	public JobPost findJobPostById(String id) {
 		return jobPostRepo.findById(Long.parseLong(id)).orElse(null);
 	}

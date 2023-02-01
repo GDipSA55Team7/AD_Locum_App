@@ -236,6 +236,17 @@ public class AdLocumDoctorsApplication {
 			jp7.setStatus(JobStatus.PENDING_CONFIRMATION_BY_CLINIC);
 			jobPostRepo.saveAndFlush(jp7);
 
+			JobPost jp8 = new JobPost();
+			jp8.setClinic(c5);
+			jp8.setDescription("Raffles Medical Group looking for locum!");
+			jp8.setStartDateTime(LocalDateTime.of(2023, 01, 10, 18, 30, 0));
+			jp8.setEndDateTime(LocalDateTime.of(2023, 01, 30, 21, 00, 0));
+			jp8.setRatePerHour(100);
+			jp8.setFreelancer(testUser2);
+			jp8.setClinicUser(testUser3);
+			jp8.setStatus(JobStatus.ACCEPTED);
+			jobPostRepo.saveAndFlush(jp8);
+
 			AdditionalFeeDetails afdJob3 = new AdditionalFeeDetails();
 			afdJob3.setJobPost(jp3);
 			afdJob3.setDescription("Swab");

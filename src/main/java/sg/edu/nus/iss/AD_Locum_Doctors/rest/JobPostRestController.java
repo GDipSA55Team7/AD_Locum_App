@@ -129,6 +129,23 @@ public class JobPostRestController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/confirmed")
+    public ResponseEntity<List<JobPostApiDTO>> findJobConfirmed(@RequestParam String id) {
+        try {
+            List<JobPost> jobPostList = jobPostService.findJobConfirmed(id);
+            List<JobPostApiDTO> jobPostDTOList = new ArrayList<>();
+            for (JobPost jobPost :jobPostList) {
+                JobPostApiDTO jobPostDTO = setJobPostDTO(jobPost);
+                jobPostDTOList.add(jobPostDTO);
+            }
+            if(jobPostList.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(jobPostDTOList, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     private JobPostApiDTO setJobPostDTO(JobPost jobPost) {
         JobPostApiDTO jobPostDTO = new JobPostApiDTO();
