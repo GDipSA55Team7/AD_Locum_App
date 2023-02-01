@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -31,9 +32,9 @@ public class JobPost {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String title;
+	private String title = "";
 
-	private String description;
+	private String description = "";
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
@@ -69,14 +70,14 @@ public class JobPost {
 	private Clinic clinic;
 
 	@OneToMany(mappedBy = "jobPost")
-	private List<JobAdditionalRemarks> jobAdditionalRemarks;
+	private List<JobAdditionalRemarks> jobAdditionalRemarks = new ArrayList<>();
 
 	@OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL)
-	private List<AdditionalFeeDetails> additionalFeeDetails;
+	private List<AdditionalFeeDetails> additionalFeeDetails = new ArrayList<>();
 
-	private String additionalRemarks;
+	private String additionalRemarks = "";
 
-	private String paymentReferenceNumber;
+	private String paymentReferenceNumber = "";
 
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd-MM-yyyy")

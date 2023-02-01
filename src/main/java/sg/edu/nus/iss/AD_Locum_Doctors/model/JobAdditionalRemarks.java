@@ -22,7 +22,7 @@ public class JobAdditionalRemarks {
 
 	private RemarksCategory category;
 
-	private String remarks;
+	private String remarks = "";
 
 	private LocalDate date;
 

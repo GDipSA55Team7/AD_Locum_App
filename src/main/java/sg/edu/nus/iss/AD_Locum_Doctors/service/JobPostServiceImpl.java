@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
@@ -16,6 +17,7 @@ import sg.edu.nus.iss.AD_Locum_Doctors.repository.ClinicRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobPostRepository;
 
+@Transactional
 @Service
 public class JobPostServiceImpl implements JobPostService {
 	@Autowired
@@ -30,6 +32,7 @@ public class JobPostServiceImpl implements JobPostService {
 	@Autowired
 	private UserService userService;
 
+	@Override
 	public List<JobPost> findAll() {
 		return jobPostRepo.findAll();
 	}

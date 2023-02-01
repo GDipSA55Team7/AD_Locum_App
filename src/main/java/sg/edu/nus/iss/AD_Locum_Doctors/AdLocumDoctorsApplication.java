@@ -62,7 +62,7 @@ public class AdLocumDoctorsApplication {
 			Role r5 = new Role();
 			r5.setName("System_Admin");
 			roleRepo.saveAndFlush(r5);
-	
+
 			Clinic c1 = new Clinic();
 			c1.setName("Punggol Family Clinic");
 			c1.setAddress("Punggol");
@@ -176,10 +176,11 @@ public class AdLocumDoctorsApplication {
 
 			JobPost jp2 = new JobPost();
 			jp2.setClinic(c2);
-			jp2.setDescription("Looking for locum physiotherapist");
+			jp2.setTitle("Looking for locum physiotherapist");
+			jp2.setDescription("Looking for locum physiotherapist to perform the following ...");
 			jp2.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
 			jp2.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
-			jp2.setStatus(JobStatus.PENDING_CONFIRMATION_BY_CLINIC);
+			jp2.setStatus(JobStatus.OPEN);
 			jp2.setRatePerHour(88.8);
 			jp2.setClinicUser(testUser3);
 			jp2.setFreelancer(testUser1);
@@ -190,10 +191,11 @@ public class AdLocumDoctorsApplication {
 			jp3.setDescription("Looking for locum occupational therapist");
 			jp3.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
 			jp3.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
-			jp3.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
+			jp3.setStatus(JobStatus.CANCELLED);
 			jp3.setClinicUser(testUser3);
 			jp3.setFreelancer(testUser1);
 			jp3.setRatePerHour(88.8);
+			jp3.setAdditionalRemarks("cancelled");
 			jobPostRepo.saveAndFlush(jp3);
 
 			JobPost jp4 = new JobPost();
@@ -229,6 +231,7 @@ public class AdLocumDoctorsApplication {
 
 			JobPost jp7 = new JobPost();
 			jp7.setClinic(c5);
+			jp7.setTitle("Urgent Request for RMG @ Lot 1");
 			jp7.setDescription("Raffles Medical Group in Lot1 looking for locum urgently!");
 			jp7.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
 			jp7.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
