@@ -87,6 +87,10 @@ public class JobPost {
 		return "$" + String.format("%.2f", ratePerHour) + "/h";
 	}
 
+	public String getRatePerHour2dpString() {
+		return String.format("%.2f", ratePerHour);
+	}
+
 	public String getStartDateTimeString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
 		return startDateTime.format(formatter);

@@ -1,5 +1,6 @@
 package sg.edu.nus.iss.AD_Locum_Doctors;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +12,17 @@ import org.springframework.context.annotation.Bean;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.AdditionalFeeDetails;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Organization;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.RemarksCategory;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Role;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.AdditionalFeeDetailsRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.AverageCompensationRateRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.ClinicRepository;
+import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobPostRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.OrganizationRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.RoleRepository;
@@ -39,7 +43,8 @@ public class AdLocumDoctorsApplication {
 			OrganizationRepository organizationRepo,
 			RoleRepository roleRepo,
 			UserRepository userRepo,
-			AdditionalFeeDetailsRepository additionalFeeDetailsRepository) {
+			AdditionalFeeDetailsRepository additionalFeeDetailsRepository,
+			JobAdditionalRemarksRepository jobRemarksRepo) {
 
 		return args -> {
 
@@ -184,6 +189,7 @@ public class AdLocumDoctorsApplication {
 			jp1.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
 			jp1.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
 			jp1.setRatePerHour(100);
+			jp1.setClinicUser(testUser3);
 			jp1.setFreelancer(testUser1);
 			jp1.setStatus(JobStatus.OPEN);
 			jobPostRepo.saveAndFlush(jp1);
@@ -305,6 +311,22 @@ public class AdLocumDoctorsApplication {
 			afdJob3_1.setDescription("Transport");
 			afdJob3_1.setAdditionalFeesAmount(60);
 			additionalFeeDetailsRepository.saveAndFlush(afdJob3_1);
+
+			JobAdditionalRemarks jp1_remark_1 = new JobAdditionalRemarks();
+			jp1_remark_1.setJobPost(jp1);
+			jp1_remark_1.setUser(testUser1);
+			jp1_remark_1.setCategory(RemarksCategory.CANCELLATION);
+			jp1_remark_1.setDate(LocalDate.of(2021, 2, 1));
+			jp1_remark_1.setRemarks("Cancelled due to ...");
+			jobRemarksRepo.saveAndFlush(jp1_remark_1);
+
+			JobAdditionalRemarks jp1_remark_2 = new JobAdditionalRemarks();
+			jp1_remark_2.setJobPost(jp1);
+			jp1_remark_2.setUser(testUser2);
+			jp1_remark_2.setCategory(RemarksCategory.CANCELLATION);
+			jp1_remark_2.setDate(LocalDate.of(2021, 2, 2));
+			jp1_remark_2.setRemarks("Cancelled due to ...");
+			jobRemarksRepo.saveAndFlush(jp1_remark_2);
 		};
 	}
 }

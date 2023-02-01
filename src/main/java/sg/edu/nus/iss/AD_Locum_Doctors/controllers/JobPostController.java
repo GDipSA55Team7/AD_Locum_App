@@ -2,6 +2,7 @@ package sg.edu.nus.iss.AD_Locum_Doctors.controllers;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,8 @@ public class JobPostController {
 		if (user == null) {
 			return "redirect:/login";
 		}
-		List<Clinic> clinics = clinicService.findAll();
+		List<Clinic> clinics = clinicService.findAll().stream()
+				.filter(x -> x.getOrganization().getId() == user.getOrganization().getId()).toList();
 		model.addAttribute("clinics", clinics);
 		model.addAttribute("jobPostForm", new JobPostForm());
 		return "jobpost-create";
@@ -82,7 +84,7 @@ public class JobPostController {
 	}
 
 	@GetMapping("/{id}")
-	public String viewJobPost(@PathVariable String id, Model model) {
+	public String viewJobPost(@PathVariable String id, Model model, HttpSession session) {
 		JobPost jobPost = jobPostService.findJobPostById(id);
 		model.addAttribute("jobPost", jobPost);
 		model.addAttribute("statusList", List.of(
@@ -94,6 +96,10 @@ public class JobPostController {
 				JobStatus.CANCELLED,
 				JobStatus.DELETED));
 
+		List<JobAdditionalRemarks> remarksList = jobAdditionalRemarksRepo.findAll().stream()
+				.filter(x -> x.getJobPost().getId() == jobPost.getId())
+				.sorted(Comparator.comparing(JobAdditionalRemarks::getDate).reversed()).toList();
+		model.addAttribute("remarksList", remarksList);
 		AdditionalFeeDetailsForm additional = new AdditionalFeeDetailsForm();
 		additional.setJobPostId(Long.parseLong(id));
 		model.addAttribute("additional", additional);
@@ -102,7 +108,7 @@ public class JobPostController {
 		} else if (jobPost.getStatus().equals(JobStatus.PENDING_CONFIRMATION_BY_CLINIC)) {
 			return "jobpost-locum";
 		} else if (jobPost.getStatus().equals(JobStatus.CANCELLED)) {
-			return "jobpost-cancelled";
+			return "jobpost-view";
 		}
 		return "jobpost-accepted-view";
 	}
