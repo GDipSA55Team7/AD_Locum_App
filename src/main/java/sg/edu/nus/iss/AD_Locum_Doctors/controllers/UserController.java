@@ -17,6 +17,7 @@ import jakarta.validation.Valid;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Organization;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.OrganizationService;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.RoleService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
 @Controller
@@ -27,6 +28,9 @@ public class UserController {
 
     @Autowired
     OrganizationService organizationService;
+
+    @Autowired
+    RoleService roleService;
 
     @Autowired
     HttpSession session;
@@ -48,6 +52,7 @@ public class UserController {
         loadReference();
         List<User> users = userService.findByOrganizationId(user.getOrganization().getId());
         model.addAttribute("userList", users);
+        model.addAttribute("currentUserId", user.getId());
         return "user-list";
     }
 
@@ -57,6 +62,7 @@ public class UserController {
         User user = new User();
         model.addAttribute("user", user);
         model.addAttribute("organizationList", organizations);
+        model.addAttribute("roleList", roleService.findAll());
         return "addUserForm";
     }
 
