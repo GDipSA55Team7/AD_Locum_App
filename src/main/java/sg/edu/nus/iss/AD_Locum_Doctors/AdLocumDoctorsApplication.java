@@ -241,6 +241,42 @@ public class AdLocumDoctorsApplication {
 			jp7.setStatus(JobStatus.PENDING_CONFIRMATION_BY_CLINIC);
 			jobPostRepo.saveAndFlush(jp7);
 
+			JobPost jp8 = new JobPost();
+			jp8.setClinic(c5);
+			jp8.setTitle("Urgent Request for ABC @ Canberra");
+			jp8.setDescription("Looking for locum urgently!");
+			jp8.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
+			jp8.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
+			jp8.setRatePerHour(100);
+			jp8.setFreelancer(testUser2);
+			jp8.setClinicUser(testUser3);
+			jp8.setStatus(JobStatus.DELETED);
+			jobPostRepo.saveAndFlush(jp8);
+
+			JobPost jp9 = new JobPost();
+			jp9.setClinic(c5);
+			jp9.setTitle("Urgent Request for ABC @ Canberra");
+			jp9.setDescription("Looking for locum urgently!");
+			jp9.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
+			jp9.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
+			jp9.setRatePerHour(100);
+			jp9.setFreelancer(testUser2);
+			jp9.setClinicUser(testUser3);
+			jp9.setStatus(JobStatus.REMOVED);
+			jobPostRepo.saveAndFlush(jp9);
+
+			JobPost jp10 = new JobPost();
+			jp10.setClinic(c5);
+			jp10.setTitle("Urgent Request for ABC @ Canberra");
+			jp10.setDescription("Looking for locum urgently!");
+			jp10.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
+			jp10.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
+			jp10.setRatePerHour(100);
+			jp10.setFreelancer(testUser2);
+			jp10.setClinicUser(testUser3);
+			jp10.setStatus(JobStatus.COMPLETED_PAYMENT_PROCESSED);
+			jobPostRepo.saveAndFlush(jp10);
+
 			AdditionalFeeDetails afdJob3 = new AdditionalFeeDetails();
 			afdJob3.setJobPost(jp3);
 			afdJob3.setDescription("Swab");

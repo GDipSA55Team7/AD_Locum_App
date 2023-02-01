@@ -58,7 +58,7 @@
 											<thead>
 												<tr>
 													<th>S/N</th>
-													<th>Job Description</th>
+													<th>Job Title</th>
 													<th>Clinic Location</th>
 													<th>Status</th>
 													<th>Date/Time</th>
@@ -69,7 +69,7 @@
 											<tbody>
 												<tr th:each="jp : ${jobPosts}" class="listRecord">
 													<td th:text="${jp.id}">Job Post Id</td>
-													<td th:text="${jp.description}">Job Description</td>
+													<td th:text="${jp.title}">Job Title</td>
 													<td th:text="${jp.clinic.name}">Clinic Location</td>
 
 													<td>
@@ -83,15 +83,16 @@
 													<td th:text="${jp.getRatePerHourString}">Fees</td>
 
 													<td align="center">
-														<div th:switch="${#strings.toString(jp.status.name)}">
-															<a th:case="'OPEN'"
-																th:href="@{/jobpost/}+${jp.id}+@{/delete}">Delete</a>
-															<a th:case="'PENDING_CONFIRMATION_BY_CLINIC'"
-																th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel</a>
-															<a th:case="'ACCEPTED'"
-															   th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel</a>
-														</div>
-														<div><a th:href="@{/jobpost/}+${jp.id}">View</a></div>
+														<a th:href="@{/jobpost/}+${jp.id}">
+															<div
+																th:if="${jp.status.name == 'CANCELLED' OR jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}">
+																View
+															</div>
+															<div
+																th:unless="${jp.status.name == 'CANCELLED' OR jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}">
+																Edit
+															</div>
+														</a>
 													</td>
 												</tr>
 											</tbody>
@@ -104,7 +105,6 @@
 						</div>
 						<!-- /.col -->
 					</div>
-
 
 				</div><!-- /.container-fluid -->
 			</div>

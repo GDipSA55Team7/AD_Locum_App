@@ -51,7 +51,10 @@ public class JobPostController {
 					jobPosts = jobPostService.findAll();
 					break;
 				default:
-					jobPosts = jobPostService.findJobPostsCreatedByUser(user);
+					jobPosts = jobPostService.findJobPostsCreatedByUser(user).stream()
+							.filter(x -> !x.getStatus().equals(JobStatus.DELETED))
+							.filter(x -> !x.getStatus().equals(JobStatus.REMOVED))
+							.toList();
 					break;
 			}
 			model.addAttribute("jobPosts", jobPosts);
