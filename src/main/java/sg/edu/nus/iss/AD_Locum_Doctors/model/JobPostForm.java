@@ -45,9 +45,13 @@ public class JobPostForm {
 		try {
 			startTimeHourInt = Integer.parseInt(startTimeHour);
 			startTimeMinInt = Integer.parseInt(startTimeMin);
+			if (startTimeAmPm.equals("PM")) {
+				startTimeHourInt += 12;
+			}
 		} catch (NumberFormatException ex) {
 			ex.printStackTrace();
 		}
+
 		return LocalDateTime.of(
 				startDate.getYear(),
 				startDate.getMonthValue(),
@@ -63,6 +67,9 @@ public class JobPostForm {
 		try {
 			endTimeHourInt = Integer.parseInt(endTimeHour);
 			endTimeMinInt = Integer.parseInt(endTimeMin);
+			if (endTimeAmPm.equals("PM")) {
+				endTimeHourInt += 12;
+			}
 		} catch (NumberFormatException ex) {
 			ex.printStackTrace();
 		}

@@ -76,8 +76,8 @@
 													<div class="input-group-prepend">
 														<span class="input-group-text">$</span>
 													</div>
-													<input th:field="*{totalRate}" type="text" class="form-control"
-														th:value="*{totalRate}" readonly />
+													<input id="totalRate" type="text" class="form-control"
+														th:value="${jobPost.computeTotalRate()}" readonly />
 												</div>
 											</div>
 										</div>
