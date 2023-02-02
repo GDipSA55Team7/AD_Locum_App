@@ -103,6 +103,11 @@ public class JobPost {
 		return endDateTime.format(formatter);
 	}
 
+	public String getDateTimeString(LocalDateTime dateTime) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
+		return dateTime.format(formatter);
+	}
+
 	public double computeTotalRate() {
 		Long minutes = ChronoUnit.MINUTES.between(startDateTime, endDateTime);
 		Double convertToHour = ((double) minutes) / 60;

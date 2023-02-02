@@ -89,6 +89,7 @@ public class JobPostController {
 	@GetMapping("/{id}")
 	public String viewJobPost(@PathVariable String id, Model model, HttpSession session) {
 		JobPost jobPost = jobPostService.findJobPostById(id);
+		jobPost.setAdditionalRemarks("");
 		model.addAttribute("jobPost", jobPost);
 		model.addAttribute("statusList", List.of(
 				JobStatus.ACCEPTED,
@@ -105,7 +106,9 @@ public class JobPostController {
 		model.addAttribute("additional", additional);
 		if (jobPost.getStatus().equals(JobStatus.OPEN) || jobPost.getStatus().equals(JobStatus.CANCELLED)) {
 			return "jobpost-view";
-		} else if (jobPost.getStatus().equals(JobStatus.PENDING_CONFIRMATION_BY_CLINIC)) {
+		} else if (jobPost.getStatus().equals(JobStatus.PENDING_CONFIRMATION_BY_CLINIC)
+				|| jobPost.getStatus().equals(JobStatus.ACCEPTED)
+				|| jobPost.getStatus().equals(JobStatus.COMPLETED_PENDING_PAYMENT)) {
 			return "jobpost-locum";
 		}
 		return "jobpost-accepted-view";
@@ -158,7 +161,7 @@ public class JobPostController {
 			additionalRemarks.setRemarks(jp.getAdditionalRemarks());
 			jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
 		}
-		return "redirect:/jobpost/list";
+		return "redirect:/jobpost/" + id;
 	}
 
 	@PostMapping(value = "/update", params = "confirm-locum")
@@ -178,7 +181,29 @@ public class JobPostController {
 			additionalRemarks.setRemarks(jp.getAdditionalRemarks());
 			jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
 		}
-		return "redirect:/jobpost/list";
+		return "redirect:/jobpost/" + id;
+	}
+
+	@PostMapping(value = "/update", params = "pending-payment")
+	public String setPendingPaymentJobPostForm(JobPost jobPost, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		String id = jobPost.getId().toString();
+		JobPost jp = jobPostService.findJobPostById(id);
+		jp.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
+		jp.setActualStartDateTime(jobPost.getActualStartDateTime());
+		jp.setActualEndDateTime(jobPost.getActualEndDateTime());
+		jp.setAdditionalRemarks(jobPost.getAdditionalRemarks());
+		jobPostService.saveJobPost(jp);
+		if (!jobPost.getAdditionalRemarks().equals("")) {
+			JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
+			additionalRemarks.setCategory(RemarksCategory.COMPLETED_JOB);
+			additionalRemarks.setDate(LocalDate.now());
+			additionalRemarks.setJobPost(jp);
+			additionalRemarks.setUser(user);
+			additionalRemarks.setRemarks(jp.getAdditionalRemarks());
+			jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
+		}
+		return "redirect:/jobpost/" + id;
 	}
 
 	@PostMapping("/additional")

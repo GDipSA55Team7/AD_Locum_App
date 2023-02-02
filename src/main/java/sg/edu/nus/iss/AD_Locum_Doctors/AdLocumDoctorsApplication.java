@@ -229,6 +229,8 @@ public class AdLocumDoctorsApplication {
 			jp4.setClinicUser(testUser3);
 			jp4.setFreelancer(testUser1);
 			jp4.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
+			jp4.setActualStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
+			jp4.setActualEndDateTime(LocalDateTime.of(2023, 01, 11, 21, 30, 0));
 			jobPostRepo.saveAndFlush(jp4);
 
 			JobPost jp5 = new JobPost();
@@ -299,6 +301,18 @@ public class AdLocumDoctorsApplication {
 			jp10.setClinicUser(testUser3);
 			jp10.setStatus(JobStatus.COMPLETED_PAYMENT_PROCESSED);
 			jobPostRepo.saveAndFlush(jp10);
+
+			JobPost jp11 = new JobPost();
+			jp11.setClinic(c5);
+			jp11.setTitle("Urgent Request for RMG @ Raffles City");
+			jp11.setDescription("Looking for locum urgently!");
+			jp11.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
+			jp11.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
+			jp11.setRatePerHour(100);
+			jp11.setFreelancer(testUser2);
+			jp11.setClinicUser(testUser3);
+			jp11.setStatus(JobStatus.ACCEPTED);
+			jobPostRepo.saveAndFlush(jp11);
 
 			AdditionalFeeDetails afdJob3 = new AdditionalFeeDetails();
 			afdJob3.setJobPost(jp3);
