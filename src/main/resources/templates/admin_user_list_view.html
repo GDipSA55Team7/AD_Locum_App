@@ -2,14 +2,11 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
 	layout:decorate="~{fragments/layout}">
 
+
 <head>
 	<div th:replace="fragments/layout.html :: html_head" />
 	<div th:replace="fragments/layout.html :: datatable_css" />
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
-	<script src="//code.jquery.com/jquery-1.12.4.js"></script>
-	<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
-
 
 <body class="hold-transition sidebar-mini">
 	<div class="wrapper">
@@ -22,12 +19,12 @@
 				<div class="container-fluid">
 					<div class="row mb-2">
 						<div class="col-sm-6">
-							<h1 class="m-0">View Job Posts</h1>
+							<h1 class="m-0">View Users</h1>
 						</div><!-- /.col -->
 						<div class="col-sm-6">
 							<ol class="breadcrumb float-sm-right">
 								<li class="breadcrumb-item"><a href="#">Home</a></li>
-								<li class="breadcrumb-item active">Job Post</li>
+								<li class="breadcrumb-item active">User</li>
 							</ol>
 						</div>
 					</div><!-- /.row -->
@@ -46,8 +43,8 @@
 
 								</div>
 								<div class="p-2">
-									<form th:action="@{/jobpost/create}">
-										<button type="submit" class="btn btn-info">Add Job Post</button>
+									<form th:action="@{/register/addUserForm}">
+										<button type="submit" class="btn btn-info">Add User</button>
 									</form>
 								</div>
 							</div>
@@ -57,41 +54,41 @@
 										<table id="example1" class="table table-bordered table-hover">
 											<thead>
 												<tr>
-													<th>S/N</th>
-													<th>Job Description</th>
-													<th>Clinic Location</th>
-													<th>Status</th>
-													<th>Date/Time</th>
-													<th>Fees</th>
+													<th>Username</th>
+													<th>Name</th>
+													<th>Email</th>
+													<th>User Type</th>
+													<th>Contact</th>
+													<th>Organization</th>
+													<th>Medical License No.</th>
 													<th>Actions</th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr th:each="jp : ${jobPosts}" class="listRecord">
-													<td th:text="${jp.id}">Job Post Id</td>
-													<td th:text="${jp.description}">Job Description</td>
-													<td th:text="${jp.clinic.name}">Clinic Location</td>
-
+												<tr th:each="user : ${userList}" class="listRecord">
+													<td th:text="${user.username}">Name</td>
+													<td th:text="${user.name}">HCI Code</td>
+													<td th:text="${user.email}">Postal Code</td>
+													<td th:text="${user.role.name}">Postal Code</td>
+													<td th:text="${user.contact}">Contact</td>
 													<td>
-														<span th:text="${jp.status.value}"></span>
+														<span th:if="${user.organization !=null}"
+															th:text="${user.organization.name}"></span>
+														<span th:unless="${user.organization !=nuxll}">
+															<span>
+																-
+															</span>
+														</span>
 													</td>
 													<td>
-														<span th:text="${jp.getStartDateTimeString()}"></span> to<br>
-														<span th:text="${jp.getEndDateTimeString()}"></span>
-
+														<span th:if="${user.role.id == 1}"
+															th:text="${user.medicalLicenseNo}">Medical License
+															No.</span>
+														<span th:unless="${user.role.id == 1}">-</span>
 													</td>
-													<td th:text="${jp.getRatePerHourString}">Fees</td>
 													<td align="center">
-														<div><a th:href="@{/jobpost/}+${jp.id}">View</a></div>
-														<div th:switch="${#strings.toString(jp.status.name)}">
-															<a th:case="'OPEN'"
-																th:href="@{/jobpost/}+${jp.id}+@{/adminremove}">Remove Job
-																Post</a>
-															<a th:case="'PENDING_CONFIRMATION_BY_CLINIC'"
-																th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel Job Post</a>
-															<a th:case="'ACCEPTED'"
-																th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel Job Post</a>
-														</div>
+														<div><a th:href="@{/deleteuser/}+${user.id}">Delete</a></div>
+														<div><a th:href="@{/viewUser/}+${user.id}">Edit</a></div>
 													</td>
 												</tr>
 											</tbody>

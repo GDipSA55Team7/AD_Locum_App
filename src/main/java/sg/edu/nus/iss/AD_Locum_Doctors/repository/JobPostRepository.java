@@ -14,11 +14,11 @@ public interface JobPostRepository extends JpaRepository<JobPost, Long> {
 
 	// Hard coded organization ID for purpose of testing. Actual implementation will
 	// require us to retrieve user's organization ID
-	@Query("Select j from JobPost j where j.clinic.organization = 1 and j.status = 3 ORDER BY j.endDateTime DESC")
-	List<JobPost> findJobPostsWithOutstandingPayment();
+	@Query("Select j from JobPost j where j.clinic.organization.id = ?1 and j.status = 3 ORDER BY j.endDateTime DESC")
+	List<JobPost> findJobPostsWithOutstandingPayment(Long userOrgId);
 
-	@Query("Select j from JobPost j where j.clinic.organization = 1 and j.status = 4 ORDER BY j.endDateTime DESC")
-	List<JobPost> findPaidJobPosts();
+	@Query("Select j from JobPost j where j.clinic.organization.id = ?1 and j.status = 4 ORDER BY j.endDateTime DESC")
+	List<JobPost> findPaidJobPosts(Long userOrgId);
 
 	List<JobPost> findByStatus(JobStatus status);
 
@@ -27,7 +27,7 @@ public interface JobPostRepository extends JpaRepository<JobPost, Long> {
 
 	List<JobPost> findByClinicUser(User user);
 
-	@Query("Select j from JobPost j where j.clinic.organization = 1 and (j.status = 3 OR j.status = 4) ORDER BY j.endDateTime DESC")
-	List<JobPost> findPaidAndUnpaidJobPosts();
+	@Query("Select j from JobPost j where j.clinic.organization.id = ?1 and (j.status = 3 OR j.status = 4) ORDER BY j.endDateTime DESC")
+	List<JobPost> findPaidAndUnpaidJobPosts(Long userOrgId);
 
 }

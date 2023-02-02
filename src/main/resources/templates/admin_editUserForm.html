@@ -69,15 +69,23 @@
 											<label class="form-label">Medical License No</label>
 											<input th:field="*{medicalLicenseNo}" type="text" class="form-control">
 										</div>
+                                        <div class="mb-3 form-group">
+											<label class="form-label">Role</label>
+											<select name="role" th:field="*{role.id}"
+												class="form-control">
+												<option th:each="role : ${roles}"
+													th:value="${role.id}" th:text="${role.name}">
+												</option>
+											</select>
+										</div>
 										<button type="submit" class="btn btn-info">Save</button>
+                                        <a href="/UserList" class="btn btn-info">Back</a>
 									</form>
 								</div>
 							</div>
 						</div>
 						<!-- /.col -->
 					</div>
-
-
 				</div><!-- /.container-fluid -->
 			</div>
 			<!-- /.content -->

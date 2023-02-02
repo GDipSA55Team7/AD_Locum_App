@@ -27,13 +27,13 @@ public interface JobPostService {
 
 	void cancel(JobPost jobPost, JobAdditionalRemarks additionalRemarks, User user);
 
-	List<JobPost> findJobPostsWithOutstandingPayment();
+	List<JobPost> findJobPostsWithOutstandingPayment(Long userOrgID);
 
 	void saveJobPost(JobPost jobPost);
 
-	List<JobPost> findPaidJobPosts();
+	List<JobPost> findPaidJobPosts(Long userOrgId);
 
-	List<JobPost> findPaidandUnpaidJobPosts();
+	List<JobPost> findPaidandUnpaidJobPosts(Long userOrgId);
 
 	void delete(JobPost jobPost, JobAdditionalRemarks additionalRemarks, User user);
 

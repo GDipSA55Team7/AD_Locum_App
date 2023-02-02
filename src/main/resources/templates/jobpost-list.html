@@ -85,11 +85,11 @@
 													<td align="center">
 														<div th:switch="${#strings.toString(jp.status.name)}">
 															<a th:case="'OPEN'"
-																th:href="@{/jobpost/}+${jp.id}+@{/delete}">Delete</a>
+																th:href="@{/jobpost/}+${jp.id}+@{/delete}">Delete Job Post</a>
 															<a th:case="'PENDING_CONFIRMATION_BY_CLINIC'"
-																th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel</a>
+																th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel Job Post</a>
 															<a th:case="'ACCEPTED'"
-															   th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel</a>
+															   th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel Job Post</a>
 														</div>
 														<div><a th:href="@{/jobpost/}+${jp.id}">View</a></div>
 													</td>

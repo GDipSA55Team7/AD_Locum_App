@@ -37,7 +37,7 @@
 							<div class="card">
 								<div class="card-body">
 									<form th:object="${jobPost}"
-										th:action="@{/superadmin/{id}/confirmcancel(id=${jobPost.id})}" method="post">
+										th:action="@{/jobpost/{id}/confirmcancel(id=${jobPost.id})}" method="post">
 										<div class="mb-3 form-group">
 											<label class="form-label">Description</label>
 											<input th:field="*{description}" type="text" class="form-control"

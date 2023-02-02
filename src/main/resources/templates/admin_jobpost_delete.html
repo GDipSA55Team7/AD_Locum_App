@@ -37,7 +37,7 @@
 							<div class="card">
 								<div class="card-body">
 									<form th:object="${jobPost}"
-										th:action="@{/superadmin/{id}/confirmremove(id=${jobPost.id})}" method="post">
+										th:action="@{/jobpost/{id}/confirmadminremove(id=${jobPost.id})}" method="post">
 										<div class="mb-3 form-group">
 											<label class="form-label">Description</label>
 											<input th:field="*{description}" type="text" class="form-control"
@@ -88,7 +88,7 @@
 												th:value="${additionalRemarks.remarks}" name="remarks">
 										</div>
 										<button type="submit" class="btn btn-info">Remove Job Post</button>
-										<a href="/superadmin/listJobPosts" class="btn btn-info">Back</a>
+										<a href="/jobpost/list" class="btn btn-info">Back</a>
 									</form>
 								</div>
 							</div>

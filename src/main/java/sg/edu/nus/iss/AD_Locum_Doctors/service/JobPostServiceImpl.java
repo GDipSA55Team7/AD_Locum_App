@@ -48,8 +48,8 @@ public class JobPostServiceImpl implements JobPostService {
 		return jobPostRepo.findById(Long.parseLong(id)).orElse(null);
 	}
 
-	public List<JobPost> findJobPostsWithOutstandingPayment() {
-		return jobPostRepo.findJobPostsWithOutstandingPayment();
+	public List<JobPost> findJobPostsWithOutstandingPayment(Long userOrgId) {
+		return jobPostRepo.findJobPostsWithOutstandingPayment(userOrgId);
 	}
 
 	@Override
@@ -57,12 +57,12 @@ public class JobPostServiceImpl implements JobPostService {
 		jobPostRepo.saveAndFlush(jobPost);
 	}
 
-	public List<JobPost> findPaidJobPosts() {
-		return jobPostRepo.findPaidJobPosts();
+	public List<JobPost> findPaidJobPosts(Long userOrgId) {
+		return jobPostRepo.findPaidJobPosts(userOrgId);
 	}
 
-	public List<JobPost> findPaidandUnpaidJobPosts() {
-		return jobPostRepo.findPaidAndUnpaidJobPosts();
+	public List<JobPost> findPaidandUnpaidJobPosts(Long userOrgId) {
+		return jobPostRepo.findPaidAndUnpaidJobPosts(userOrgId);
 	}
 
 	@Override
@@ -91,6 +91,9 @@ public class JobPostServiceImpl implements JobPostService {
 			}
 			case DELETED -> {
 				jobPost.setStatus(JobStatus.DELETED);
+			}
+			case REMOVED -> {
+				jobPost.setStatus(JobStatus.REMOVED);
 			}
 		}
 		jobPostRepo.save(jobPost);

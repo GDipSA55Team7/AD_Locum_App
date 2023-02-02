@@ -47,12 +47,13 @@ public class JobPostController {
 			switch (user.getRole().getName()) {
 				case "System_Admin":
 					jobPosts = jobPostService.findAll();
-					break;
+					model.addAttribute("jobPosts", jobPosts);
+					return "admin_jobpost_list";
 				default:
 					jobPosts = jobPostService.findJobPostsCreatedByUser(user);
-					break;
+					return "jobpost-list";
 			}
-			model.addAttribute("jobPosts", jobPosts);
+			// model.addAttribute("jobPosts", jobPosts);
 		}
 		return "jobpost-list";
 	}
@@ -142,5 +143,22 @@ public class JobPostController {
 		additionalFeeDetailsService.createAdditionalFeeDetail(additionalFeeDetailsForm, jobPost);
 
 		return "redirect:/jobpost/" + jobPost.getId();
+	}
+
+	@GetMapping("/{id}/adminremove")
+	public String deleteJobPost(@PathVariable String id, Model model) {
+		JobPost jobPost = jobPostService.findJobPostById(id);
+		model.addAttribute("jobPost", jobPost);
+		model.addAttribute("additionalRemarks", new JobAdditionalRemarks());
+		return "admin_jobpost_delete";
+	}
+	
+	@PostMapping("/{id}/confirmadminremove")
+	public String confirmDeleteJobPost(@PathVariable String id, JobAdditionalRemarks additionalRemarks) {
+		System.out.println("Delete id:" + id);
+		JobPost jobPost = jobPostService.findJobPostById(id);
+		User user = userService.findById(Long.parseLong("4"));
+		jobPostService.delete(jobPost, additionalRemarks, user);
+		return "redirect:/jobpost/list";
 	}
 }

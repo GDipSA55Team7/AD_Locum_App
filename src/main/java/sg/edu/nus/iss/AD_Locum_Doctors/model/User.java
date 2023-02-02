@@ -43,6 +43,8 @@ public class User {
     @ManyToOne
     private Role role;
 
+    private Boolean active = true;
+
     @JsonIgnore
     @OneToMany(mappedBy = "clinicUser", cascade = CascadeType.ALL)
     private List<JobPost> jobPosts = new ArrayList<>();
