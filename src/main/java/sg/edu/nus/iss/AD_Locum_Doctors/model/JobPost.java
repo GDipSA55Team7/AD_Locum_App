@@ -3,15 +3,21 @@ package sg.edu.nus.iss.AD_Locum_Doctors.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.Data;
@@ -35,6 +41,14 @@ public class JobPost {
 	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
 	private LocalDateTime endDateTime;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+	private LocalDateTime actualStartDateTime;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+	private LocalDateTime actualEndDateTime;
+
 	private double ratePerHour;
 
 	private double totalRate;
@@ -51,7 +65,18 @@ public class JobPost {
 
 	@JsonIgnore
 	@ManyToOne
+	@JoinColumn(name = "clinic_id")
 	private Clinic clinic;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "jobPost")
+	private List<JobAdditionalRemarks> jobAdditionalRemarks;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL)
+	private List<AdditionalFeeDetails> additionalFeeDetails;
+
+	private String additionalRemarks;
 
 	private String paymentReferenceNumber;
 
@@ -71,5 +96,12 @@ public class JobPost {
 	public String getEndDateTimeString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
 		return endDateTime.format(formatter);
+	}
+
+	public double computeTotalRate() {
+		Long minutes = ChronoUnit.MINUTES.between(startDateTime, endDateTime);
+		Double convertToHour = ((double) minutes) / 60;
+		Double totalRate = ratePerHour * convertToHour;
+		return totalRate;
 	}
 }

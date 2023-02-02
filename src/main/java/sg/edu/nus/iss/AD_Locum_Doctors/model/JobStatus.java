@@ -6,13 +6,16 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum JobStatus {
 	OPEN("Open"),
-	PENDING_ACCEPTANCE("Pending Acceptance"),
+	PENDING_CONFIRMATION_BY_CLINIC("Pending Confirmation by Clinic"),
 	ACCEPTED("Accepted"),
 	COMPLETED_PENDING_PAYMENT("Completed (Pending Payment)"),
 	COMPLETED_PAYMENT_PROCESSED("Completed (Payment Processed)"),
 	CANCELLED("Cancelled"),
-	DELETED("Deleted");
+	DELETED("Deleted"),
+	REMOVED("Removed (By Admin)");
 
 	@Getter
 	public String value;
+	
+	
 }

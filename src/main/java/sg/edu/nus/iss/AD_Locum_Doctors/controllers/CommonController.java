@@ -30,6 +30,8 @@ public class CommonController {
 				return "redirect:/system-admin";
 			case "Clinic_Admin":
 				return "redirect:/clinic-admin";
+			case "Clinic_Main_Admin":
+				return "redirect:/clinic-admin";
 			case "Clinic_User":
 				return "redirect:/clinic-user";
 			default:

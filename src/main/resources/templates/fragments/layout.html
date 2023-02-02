@@ -221,6 +221,43 @@
                             </a>
                         </li>
                     </ul>
+                    <ul th:if="${session.user.role.name == 'Clinic_Main_Admin'}"
+                        class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                        data-accordion="false">
+                        <li class="nav-header">CLINIC MAIN ADMIN</li>
+                        <li class="nav-item">
+                            <a href="/clinic-admin" class="nav-link">
+                                <i class="nav-icon fas fa-home"></i>
+                                <p>
+                                    Home
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/UserList" class="nav-link">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>
+                                    Manage User
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a th:href="@{/cliniclist}" class="nav-link">
+                                <i class="nav-icon fas fa-clinic-medical"></i>
+                                <p>
+                                    Manage Clinic
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a th:href="@{/jobpost/list}" class="nav-link">
+                                <i class="nav-icon fas fa-briefcase"></i>
+                                <p>
+                                    Manage Job Posting
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
                     <ul th:if="${session.user.role.name == 'Clinic_User'}" class="nav nav-pills nav-sidebar flex-column"
                         data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-header">CLINIC USER</li>
