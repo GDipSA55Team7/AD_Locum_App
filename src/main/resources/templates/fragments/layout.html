@@ -168,14 +168,6 @@
                         </li>
 
                         <li class="nav-item">
-                            <a th:href="@{/cliniclist}" class="nav-link">
-                                <i class="nav-icon fas fa-clinic-medical"></i>
-                                <p>
-                                    Manage Clinic
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a href="/jobpost/list" class="nav-link">
                                 <i class="nav-icon fas fa-briefcase"></i>
                                 <p>
@@ -220,6 +212,14 @@
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a th:href="@{/paymentSummary}" class="nav-link">
+                                <i class="nav-icon fas fa-briefcase"></i>
+                                <p>
+                                    Manage Payment
+                                </p>
+                            </a>
+                        </li>
                     </ul>
                     <ul th:if="${session.user.role.name == 'Clinic_Main_Admin'}"
                         class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
@@ -257,6 +257,14 @@
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a th:href="@{/paymentSummary}" class="nav-link">
+                                <i class="nav-icon fas fa-briefcase"></i>
+                                <p>
+                                    Manage Payment
+                                </p>
+                            </a>
+                        </li>
                     </ul>
                     <ul th:if="${session.user.role.name == 'Clinic_User'}" class="nav nav-pills nav-sidebar flex-column"
                         data-widget="treeview" role="menu" data-accordion="false">
@@ -274,6 +282,14 @@
                                 <i class="nav-icon fas fa-briefcase"></i>
                                 <p>
                                     Manage Job Posting
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a th:href="@{/jobpost/list}" class="nav-link">
+                                <i class="nav-icon fas fa-briefcase"></i>
+                                <p>
+                                    Manage Payment
                                 </p>
                             </a>
                         </li>

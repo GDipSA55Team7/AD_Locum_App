@@ -13,7 +13,6 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.RemarksCategory;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.ClinicRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobPostRepository;
@@ -64,9 +63,8 @@ public class JobPostServiceImpl implements JobPostService {
 		return jobPostRepo.findById(Long.parseLong(id)).orElse(null);
 	}
 
-	@Override
-	public List<JobPost> findJobPostsWithOutstandingPayment() {
-		return jobPostRepo.findJobPostsWithOutstandingPayment();
+	public List<JobPost> findJobPostsWithOutstandingPayment(Long userOrgId) {
+		return jobPostRepo.findJobPostsWithOutstandingPayment(userOrgId);
 	}
 
 	@Override
@@ -74,14 +72,12 @@ public class JobPostServiceImpl implements JobPostService {
 		jobPostRepo.saveAndFlush(jobPost);
 	}
 
-	@Override
-	public List<JobPost> findPaidJobPosts() {
-		return jobPostRepo.findPaidJobPosts();
+	public List<JobPost> findPaidJobPosts(Long userOrgId) {
+		return jobPostRepo.findPaidJobPosts(userOrgId);
 	}
 
-	@Override
-	public List<JobPost> findPaidandUnpaidJobPosts() {
-		return jobPostRepo.findPaidAndUnpaidJobPosts();
+	public List<JobPost> findPaidandUnpaidJobPosts(Long userOrgId) {
+		return jobPostRepo.findPaidAndUnpaidJobPosts(userOrgId);
 	}
 
 	@Override
@@ -111,6 +107,9 @@ public class JobPostServiceImpl implements JobPostService {
 			}
 			case DELETED -> {
 				jobPost.setStatus(JobStatus.DELETED);
+			}
+			case REMOVED -> {
+				jobPost.setStatus(JobStatus.REMOVED);
 			}
 		}
 		jobPostRepo.save(jobPost);

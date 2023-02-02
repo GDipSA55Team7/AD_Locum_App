@@ -26,6 +26,7 @@ import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository
 import sg.edu.nus.iss.AD_Locum_Doctors.service.AdditionalFeeDetailsService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
 @Controller
 @RequestMapping("/jobpost")
@@ -40,27 +41,29 @@ public class JobPostController {
 	private ClinicService clinicService;
 
 	@Autowired
+	private UserService userService;
+
+	@Autowired
 	private JobAdditionalRemarksRepository jobAdditionalRemarksRepo;
 
 	@GetMapping("/list")
 	public String jobPostListPage(Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		List<JobPost> jobPosts = new ArrayList<>();
-		if (user != null) {
-			switch (user.getRole().getName()) {
-				case "System_Admin":
-					jobPosts = jobPostService.findAll();
-					break;
-				default:
-					jobPosts = jobPostService.findJobPostsCreatedByUser(user).stream()
-							.filter(x -> !x.getStatus().equals(JobStatus.DELETED))
-							.filter(x -> !x.getStatus().equals(JobStatus.REMOVED))
-							.toList();
-					break;
-			}
-			model.addAttribute("jobPosts", jobPosts);
+
+		switch (user.getRole().getName()) {
+			case "System_Admin":
+				jobPosts = jobPostService.findAll();
+				model.addAttribute("jobPosts", jobPosts);
+				return "admin_jobpost_list";
+			default:
+				jobPosts = jobPostService.findJobPostsCreatedByUser(user).stream()
+						.filter(x -> !x.getStatus().equals(JobStatus.DELETED))
+						.filter(x -> !x.getStatus().equals(JobStatus.REMOVED))
+						.toList();
+				model.addAttribute("jobPosts", jobPosts);
+				return "jobpost-list";
 		}
-		return "jobpost-list";
 	}
 
 	@GetMapping("/create")
@@ -176,5 +179,22 @@ public class JobPostController {
 		additionalFeeDetailsService.createAdditionalFeeDetail(additionalFeeDetailsForm, jobPost);
 
 		return "redirect:/jobpost/" + jobPost.getId();
+	}
+
+	@GetMapping("/{id}/adminremove")
+	public String deleteJobPost(@PathVariable String id, Model model) {
+		JobPost jobPost = jobPostService.findJobPostById(id);
+		model.addAttribute("jobPost", jobPost);
+		model.addAttribute("additionalRemarks", new JobAdditionalRemarks());
+		return "admin_jobpost_delete";
+	}
+
+	@PostMapping("/{id}/confirmadminremove")
+	public String confirmDeleteJobPost(@PathVariable String id, JobAdditionalRemarks additionalRemarks) {
+		System.out.println("Delete id:" + id);
+		JobPost jobPost = jobPostService.findJobPostById(id);
+		User user = userService.findById(Long.parseLong("4"));
+		jobPostService.delete(jobPost, additionalRemarks, user);
+		return "redirect:/jobpost/list";
 	}
 }

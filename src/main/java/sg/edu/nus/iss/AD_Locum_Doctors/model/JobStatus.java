@@ -13,7 +13,6 @@ public enum JobStatus {
 	CANCELLED("Cancelled"),
 	DELETED("Deleted"),
 	REMOVED("Removed (By Admin)");
-
 	@Getter
 	public String value;
 }
