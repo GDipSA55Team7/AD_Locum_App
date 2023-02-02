@@ -38,24 +38,15 @@
 								<div class="card-body">
 									<form action="#" th:action="@{'/editUser'}" th:object="${user}" method="post">
 										<input type="hidden" th:field="*{id}" />
-										<div class="mb-3 form-group">
-											<label class="form-label">Organization</label>
-											<select name="organization" th:field="*{organization.id}"
-												class="form-control">
-												<option th:each="organization : ${organizationList}"
-													th:value="${organization.id}" th:text="${organization.name}">
-												</option>
-											</select>
-										</div>
 										<div class="row">
 											<div class="mb-3 col">
 												<label class="form-label">User Name</label>
-												<input th:field="*{username}" type="text" class="form-control">
+												<input th:field="*{username}" type="text" class="form-control" readonly>
 											</div>
-											<div class="mb-3 col">
-												<label class="form-label">Name</label>
-												<input th:field="*{name}" type="text" class="form-control">
-											</div>
+										</div>
+										<div class="mb-3 form-group">
+											<label class="form-label">Name</label>
+											<input th:field="*{name}" type="text" class="form-control">
 										</div>
 										<div class="mb-3 form-group">
 											<label class="form-label">Email</label>
@@ -79,6 +70,7 @@
 											</select>
 										</div>
 										<button type="submit" class="btn btn-info">Save</button>
+										<a th:href="@{/password_reset/{userID}/email_trigger (userID=${user.id})}" class="btn btn-info">Send Reset Password</a>
                                         <a href="/UserList" class="btn btn-info">Back</a>
 									</form>
 								</div>
