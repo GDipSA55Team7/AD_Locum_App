@@ -94,8 +94,7 @@ public class JobPostController {
 				JobStatus.ACCEPTED,
 				JobStatus.COMPLETED_PENDING_PAYMENT,
 				JobStatus.COMPLETED_PAYMENT_PROCESSED,
-				JobStatus.CANCELLED,
-				JobStatus.DELETED));
+				JobStatus.CANCELLED));
 
 		List<JobAdditionalRemarks> remarksList = jobAdditionalRemarksRepo.findAll().stream()
 				.filter(x -> x.getJobPost().getId() == jobPost.getId())
@@ -120,7 +119,8 @@ public class JobPostController {
 	}
 
 	@PostMapping("/update")
-	public String updateJobPost(JobPost jobPost, Model model) {
+	public String updateJobPost(JobPost jobPost, Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
 		String id = jobPost.getId().toString();
 		JobPost toUpdateJobPost = jobPostService.findJobPostById(id);
 		toUpdateJobPost.setActualStartDateTime(jobPost.getActualStartDateTime());
@@ -128,7 +128,15 @@ public class JobPostController {
 		toUpdateJobPost.setAdditionalRemarks(jobPost.getAdditionalRemarks());
 		toUpdateJobPost.setStatus(jobPost.getStatus());
 		jobPostService.saveJobPost(toUpdateJobPost);
-
+		if (!jobPost.getAdditionalRemarks().equals("")) {
+			JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
+			additionalRemarks.setCategory(RemarksCategory.CANCELLATION);
+			additionalRemarks.setDate(LocalDate.now());
+			additionalRemarks.setJobPost(toUpdateJobPost);
+			additionalRemarks.setUser(user);
+			additionalRemarks.setRemarks(toUpdateJobPost.getAdditionalRemarks());
+			jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
+		}
 		return "redirect:/jobpost/" + jobPost.getId();
 	}
 
