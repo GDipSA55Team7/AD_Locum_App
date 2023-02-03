@@ -50,7 +50,6 @@ public class JobPostController {
 	public String jobPostListPage(Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		List<JobPost> jobPosts = new ArrayList<>();
-
 		switch (user.getRole().getName()) {
 			case "System_Admin":
 				jobPosts = jobPostService.findAll();
@@ -90,12 +89,23 @@ public class JobPostController {
 	public String viewJobPost(@PathVariable String id, Model model, HttpSession session) {
 		JobPost jobPost = jobPostService.findJobPostById(id);
 		model.addAttribute("jobPost", jobPost);
+		model.addAttribute("statusList",
+				List.of(JobStatus.OPEN, JobStatus.PENDING_CONFIRMATION_BY_CLINIC, JobStatus.ACCEPTED,
+						JobStatus.COMPLETED_PENDING_PAYMENT, JobStatus.COMPLETED_PAYMENT_PROCESSED, JobStatus.CANCELLED,
+						JobStatus.DELETED));
+		User user = (User) session.getAttribute("user");
+		switch (user.getRole().getName()) {
+		case "System_Admin":
+			if (jobPost.getStatus().equals(JobStatus.OPEN)) {
+				return "admin_jobpost_view";
+			}
+			return "admin_accepted_jobpost_view";			
+		default:
 		model.addAttribute("statusList", List.of(
 				JobStatus.ACCEPTED,
 				JobStatus.COMPLETED_PENDING_PAYMENT,
 				JobStatus.COMPLETED_PAYMENT_PROCESSED,
 				JobStatus.CANCELLED));
-
 		List<JobAdditionalRemarks> remarksList = jobAdditionalRemarksRepo.findAll().stream()
 				.filter(x -> x.getJobPost().getId() == jobPost.getId())
 				.sorted(Comparator.comparing(JobAdditionalRemarks::getDate).reversed()).toList();
@@ -107,8 +117,8 @@ public class JobPostController {
 			return "jobpost-view";
 		} else if (jobPost.getStatus().equals(JobStatus.PENDING_CONFIRMATION_BY_CLINIC)) {
 			return "jobpost-locum";
+     }
 		}
-		return "jobpost-accepted-view";
 	}
 
 	@GetMapping("/{id}/delete")

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+	layout:decorate="~{fragments/layout}">
+
+<head th:replace="fragments/layout.html :: html_head" />
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+		<div th:replace="fragments/layout.html :: nav_menu" />
+		<div th:replace="fragments/layout.html :: sidebar" />
+
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<div class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1 class="m-0">View Job Posting</h1>
+						</div><!-- /.col -->
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<li class="breadcrumb-item"><a href="#">Home</a></li>
+								<li class="breadcrumb-item"><a th:href="@{/jobpost/list}">Job Posts</a></li>
+								<li class="breadcrumb-item active">View Job Posting</li>
+							</ol>
+						</div>
+					</div><!-- /.row -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content-header -->
+
+			<!-- Main content -->
+			<div class="content">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-md-9">
+							<div class="card">
+								<div class="card-body">
+									<form th:action="@{'/jobpost/update'}" th:object="${jobPost}" method="post">
+										<input type = "hidden" th:field="*{id}"/>
+										<div class="mb-3 form-group">
+											<label class="form-label">Description</label>
+											<input th:field="*{description}" type="text" class="form-control"
+												th:value="*{description}" readonly>
+										</div>
+										<div class="row">
+											<div class="mb-3 col">
+												<label class="form-label">Start Date & Time</label>
+												<input type="text" class="form-control"
+													th:value="*{getStartDateTimeString}" readonly />
+											</div>
+											<div class="mb-3 col">
+												<label class="form-label">End Date & Time</label>
+												<input type="text" class="form-control"
+													th:value="*{getEndDateTimeString}" readonly />
+											</div>
+										</div>
+										<div class="mb-3 form-group">
+											<label class="form-label">Clinic</label>
+											<input th:field="*{clinic.name}" type="text" class="form-control"
+												th:value="*{clinic.name}" readonly>
+										</div>
+										<div class="row">
+											<div class="mb-3 form-group col-auto">
+												<label class="form-label">Rate/hour</label>
+												<div class="input-group">
+													<div class="input-group-prepend">
+														<span class="input-group-text">$</span>
+													</div>
+													<input th:field="*{ratePerHour}" type="number" min="0" step="0.01"
+														class="form-control" th:value="*{ratePerHour}" readonly />
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="mb-3 col">
+												<label class="form-label">Status</label>
+												<input th:field="*{status}" type="text"
+													   class="form-control" readonly/>
+											</div>
+										</div>
+										<div class="row" id="actual_start_end_date">
+											<div class="mb-3 col">
+												<label class="form-label">Actual Start Date & Time</label>
+												<input th:field="*{actualStartDateTime}" type="datetime-local"
+													   class="form-control"/>
+												<div id="startDateTime-feedback" class="invalid-feedback d-block">
+												</div>
+											</div>
+											<div class="mb-3 col">
+												<label class="form-label">Actual End Date & Time</label>
+												<input th:field="*{actualEndDateTime}" type="datetime-local"
+													   class="form-control"/>
+												<div id="endDateTime-feedback" class="invalid-feedback d-block">
+												</div>
+											</div>
+										</div>
+										<div class="row" id="additionalRemarks">
+											<div class="mb3 col-12">
+												<label class="form-label">Remarks</label>
+												<input th:field="*{additionalRemarks}" type="text" class="form-control"
+													   th:value="*{additionalRemarks}">
+											</div>
+										</div>
+										<a th:href="@{/jobpost/list}" class="btn btn-info">Back</a>
+<!--										<a href="/jobpost/list" class="btn btn-info">Back</a>-->
+									</form>
+								</div>
+							</div>
+							<!-- /.col -->
+						</div>
+
+						<div class="col-md-3">
+
+							<!-- Profile Image -->
+							<div class="card card-primary card-outline">
+								<div class="card-body box-profile">
+									<div class="text-center">
+										<img class="profile-user-img img-fluid img-circle"
+											 src="../../dist/img/user4-128x128.jpg"
+											 alt="User profile picture">
+									</div>
+
+									<h3 class="profile-username text-center" th:text="${jobPost.getFreelancer().getName()}"></h3>
+
+									<p class="text-muted text-center">Locum</p>
+
+									<ul class="list-group list-group-unbordered mb-3">
+										<li class="list-group-item">
+											<b>License</b> <a class="float-right" th:text="${jobPost.getFreelancer().getMedicalLicenseNo()}"></a>
+										</li>
+										<li class="list-group-item">
+											<b>Email</b> <a class="float-right" th:text="${jobPost.getFreelancer().getEmail()}"></a>
+										</li>
+										<li class="list-group-item">
+											<b>Contact</b> <a class="float-right" th:text="${jobPost.getFreelancer().getContact()}"></a>
+										</li>
+										<li class="list-group-item">
+											<b>ActualStartDate</b> <a class="float-right" th:text="${jobPost.getActualStartDateTime()}"></a>
+										</li>
+										<li class="list-group-item">
+											<b>ActualEndDate</b> <a class="float-right" th:text="${jobPost.getActualEndDateTime()}"></a>
+										</li>
+									</ul>
+
+
+								</div>
+
+							</div>
+							<!-- /.card -->
+						</div>
+
+					</div>
+
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content -->
+		</div>
+		<div th:replace="fragments/layout.html :: footer" />
+		<div th:replace="fragments/layout.html :: script" />
+		<script>
+			$( "#status" )
+					.change(function () {
+						var str = "";
+						$( "select option:selected" ).each(function() {
+							str += $( this ).text();
+						});
+						$("#actual_start_end_date").hide()
+						$("#additionalRemarks").hide()
+						if(str === "COMPLETED_PENDING_PAYMENT")
+						{
+							$("#actual_start_end_date").show()
+							$("#additionalRemarks").show()
+						}
+
+
+					})
+					.change();
+		</script>
+	</div>
+</body>
+
+</html>
