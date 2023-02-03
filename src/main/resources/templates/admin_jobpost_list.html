@@ -61,6 +61,7 @@
 												<tr>
 													<th>S/N</th>
 													<th>Job Description</th>
+													<th>Organization</th>
 													<th>Clinic Location</th>
 													<th>Status</th>
 													<th>Date/Time</th>
@@ -72,6 +73,7 @@
 												<tr th:each="jp : ${jobPosts}" class="listRecord">
 													<td th:text="${jp.id}">Job Post Id</td>
 													<td th:text="${jp.description}">Job Description</td>
+													<td th:text="${jp.clinic.Organization.name}">Job Description</td>
 													<td th:text="${jp.clinic.name}">Clinic Location</td>
 
 													<td>
