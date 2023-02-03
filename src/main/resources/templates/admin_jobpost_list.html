@@ -46,9 +46,11 @@
 
 								</div>
 								<div class="p-2">
+								<!--
 									<form th:action="@{/jobpost/create}">
 										<button type="submit" class="btn btn-info">Add Job Post</button>
 									</form>
+								-->
 								</div>
 							</div>
 							<div class="card">
@@ -87,10 +89,12 @@
 															<a th:case="'OPEN'"
 																th:href="@{/jobpost/}+${jp.id}+@{/adminremove}">Remove Job
 																Post</a>
+															 <!-- 
 															<a th:case="'PENDING_CONFIRMATION_BY_CLINIC'"
 																th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel Job Post</a>
 															<a th:case="'ACCEPTED'"
 																th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel Job Post</a>
+																-->
 														</div>
 													</td>
 												</tr>

@@ -16,5 +16,7 @@ public class ResetPasswordChecker {
 	private String id = UUID.randomUUID().toString();
 
     private Long userID;
+    
+    private Boolean valid = true;
 
 }

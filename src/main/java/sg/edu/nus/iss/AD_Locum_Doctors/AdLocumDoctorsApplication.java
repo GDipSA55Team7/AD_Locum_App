@@ -138,7 +138,7 @@ public class AdLocumDoctorsApplication {
 
 			User testUser5 = new User();
 			testUser5.setName("Ben");
-			testUser5.setEmail("ben@rmg.com.sg");
+			testUser5.setEmail("shanfu87@yahoo.com");
 			testUser5.setUsername("ben");
 			testUser5.setPassword("password123");
 			testUser5.setContact("93339333");

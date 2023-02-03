@@ -96,10 +96,20 @@ public class JobPost {
 		return endDateTime.format(formatter);
 	}
 
-	public double computeTotalRate() {
+	public double computeEstimatedTotalRate() {
 		Long minutes = ChronoUnit.MINUTES.between(startDateTime, endDateTime);
 		Double convertToHour = ((double) minutes) / 60;
 		Double totalRate = ratePerHour * convertToHour;
+		return totalRate;
+	}
+	
+	public double computeActualTotalRate() {
+		Long minutes = ChronoUnit.MINUTES.between(startDateTime, endDateTime);
+		Double convertToHour = ((double) minutes) / 60;
+		Double totalRate = ratePerHour * convertToHour;
+		for (AdditionalFeeDetails row : additionalFeeDetails){
+			totalRate += row.getAdditionalFeesAmount();
+		}
 		return totalRate;
 	}
 }

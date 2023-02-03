@@ -45,13 +45,13 @@ public class JobPostController {
 		List<JobPost> jobPosts = new ArrayList<>();
 		if (user != null) {
 			switch (user.getRole().getName()) {
-				case "System_Admin":
-					jobPosts = jobPostService.findAll();
-					model.addAttribute("jobPosts", jobPosts);
-					return "admin_jobpost_list";
-				default:
-					jobPosts = jobPostService.findJobPostsCreatedByUser(user);
-					return "jobpost-list";
+			case "System_Admin":
+				jobPosts = jobPostService.findAll();
+				model.addAttribute("jobPosts", jobPosts);
+				return "admin_jobpost_list";
+			default:
+				jobPosts = jobPostService.findJobPostsCreatedByUser(user);
+				return "jobpost-list";
 			}
 			// model.addAttribute("jobPosts", jobPosts);
 		}
@@ -78,25 +78,29 @@ public class JobPostController {
 	}
 
 	@GetMapping("/{id}")
-	public String viewJobPost(@PathVariable String id, Model model) {
+	public String viewJobPost(@PathVariable String id, Model model, HttpSession session) {
 		JobPost jobPost = jobPostService.findJobPostById(id);
 		model.addAttribute("jobPost", jobPost);
-		model.addAttribute("statusList", List.of(
-				JobStatus.OPEN,
-				JobStatus.PENDING_CONFIRMATION_BY_CLINIC,
-				JobStatus.ACCEPTED,
-				JobStatus.COMPLETED_PENDING_PAYMENT,
-				JobStatus.COMPLETED_PAYMENT_PROCESSED,
-				JobStatus.CANCELLED,
-				JobStatus.DELETED));
-
-		AdditionalFeeDetailsForm additional = new AdditionalFeeDetailsForm();
-		additional.setJobPostId(Long.parseLong(id));
-		model.addAttribute("additional", additional);
-		if (jobPost.getStatus().equals(JobStatus.OPEN)) {
-			return "jobpost-view";
+		model.addAttribute("statusList",
+				List.of(JobStatus.OPEN, JobStatus.PENDING_CONFIRMATION_BY_CLINIC, JobStatus.ACCEPTED,
+						JobStatus.COMPLETED_PENDING_PAYMENT, JobStatus.COMPLETED_PAYMENT_PROCESSED, JobStatus.CANCELLED,
+						JobStatus.DELETED));
+		User user = (User) session.getAttribute("user");
+		switch (user.getRole().getName()) {
+		case "System_Admin":
+			if (jobPost.getStatus().equals(JobStatus.OPEN)) {
+				return "admin_jobpost_view";
+			}
+			return "admin_accepted_jobpost_view";			
+		default:
+			AdditionalFeeDetailsForm additional = new AdditionalFeeDetailsForm();
+			additional.setJobPostId(Long.parseLong(id));
+			model.addAttribute("additional", additional);
+			if (jobPost.getStatus().equals(JobStatus.OPEN)) {
+				return "jobpost-view";
+			}
+			return "jobpost-accepted-view";
 		}
-		return "jobpost-accepted-view";
 	}
 
 	@GetMapping("/{id}/cancel")
@@ -152,7 +156,7 @@ public class JobPostController {
 		model.addAttribute("additionalRemarks", new JobAdditionalRemarks());
 		return "admin_jobpost_delete";
 	}
-	
+
 	@PostMapping("/{id}/confirmadminremove")
 	public String confirmDeleteJobPost(@PathVariable String id, JobAdditionalRemarks additionalRemarks) {
 		System.out.println("Delete id:" + id);
