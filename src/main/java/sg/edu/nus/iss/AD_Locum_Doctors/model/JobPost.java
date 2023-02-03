@@ -127,4 +127,8 @@ public class JobPost {
 		}
 		return totalRate;
 	}
+
+	public String getActualTotalRateString() {
+		return String.format("%.2f", computeActualTotalRate());
+	}
 }

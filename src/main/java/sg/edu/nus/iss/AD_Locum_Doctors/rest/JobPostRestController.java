@@ -124,7 +124,7 @@ public class JobPostRestController {
         jobPostDTO.setEndDateTime(jobPost.getEndDateTime().toString());
         jobPostDTO.setClinic(jobPost.getClinic());
         jobPostDTO.setStatus(jobPost.getStatus());
-        jobPostDTO.setTotalRate(jobPost.computeTotalRate());
+        jobPostDTO.setTotalRate(jobPost.computeEstimatedTotalRate());
         jobPostDTO.setRatePerHour(jobPost.getRatePerHour());
         jobPostDTO.setClinicUser(jobPost.getClinicUser());
         jobPostDTO.setClinic(jobPost.getClinic());
