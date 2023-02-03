@@ -111,14 +111,20 @@ public class JobPost {
 		return dateTime.format(formatter);
 	}
 
-	public double computeTotalRate() {
+	public double computeEstimatedTotalRate() {
 		Long minutes = ChronoUnit.MINUTES.between(startDateTime, endDateTime);
 		Double convertToHour = ((double) minutes) / 60;
 		Double totalRate = ratePerHour * convertToHour;
 		return totalRate;
 	}
 
-	public String getComputedRateString() {
-		return String.format("%.2f", computeTotalRate());
+	public double computeActualTotalRate() {
+		Long minutes = ChronoUnit.MINUTES.between(startDateTime, endDateTime);
+		Double convertToHour = ((double) minutes) / 60;
+		Double totalRate = ratePerHour * convertToHour;
+		for (AdditionalFeeDetails row : additionalFeeDetails) {
+			totalRate += row.getAdditionalFeesAmount();
+		}
+		return totalRate;
 	}
 }

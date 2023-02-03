@@ -53,7 +53,6 @@ public class JobPostController {
 	public String jobPostListPage(Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		List<JobPost> jobPosts = new ArrayList<>();
-
 		switch (user.getRole().getName()) {
 			case "System_Admin":
 				jobPosts = jobPostService.findAll();
