@@ -96,7 +96,7 @@ public class JobPostController {
 		model.addAttribute("jobPost", jobPost);
 		List<JobAdditionalRemarks> remarksList = jobAdditionalRemarksRepo.findAll().stream()
 				.filter(x -> x.getJobPost().getId() == jobPost.getId())
-				.sorted(Comparator.comparing(JobAdditionalRemarks::getDate).reversed()).toList();
+				.sorted(Comparator.comparing(JobAdditionalRemarks::getId).reversed()).toList();
 		model.addAttribute("remarksList", remarksList);
 		AdditionalFeeDetailsForm additional = new AdditionalFeeDetailsForm();
 		additional.setJobPostId(Long.parseLong(id));

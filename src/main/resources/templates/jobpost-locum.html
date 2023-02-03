@@ -224,7 +224,8 @@
 						</div>
 						</form>
 
-						<div class="col-xl-9" th:if="${jobPost.getAdditionalFeeDetails().size() > 0}">
+						<div class="col-xl-9"
+							th:unless="${jobPost.status.name != 'COMPLETED_PAYMENT_PROCESSED' AND jobPost.getAdditionalFeeDetails().size() < 0}">
 							<div class="card card-danger card-outline">
 								<div class="card-header">
 									<h3 class="card-title">Additional Fees</h3>
@@ -256,7 +257,8 @@
 									</form>
 								</div>
 
-								<div class="card-body table-responsive p-0">
+								<div th:if="${jobPost.getAdditionalFeeDetails().size() > 0}"
+									class="card-body table-responsive p-0">
 									<table class="table table-bordered table-hover text-nowrap"
 										style="border-top:1px solid rgba(0,0,0,.125);">
 										<thead>
