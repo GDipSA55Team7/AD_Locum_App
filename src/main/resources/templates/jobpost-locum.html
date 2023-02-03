@@ -225,7 +225,7 @@
 						</form>
 
 						<div class="col-xl-9"
-							th:unless="${jobPost.status.name != 'COMPLETED_PAYMENT_PROCESSED' AND jobPost.getAdditionalFeeDetails().size() < 0}">
+							th:unless="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED' AND jobPost.getAdditionalFeeDetails().size() == 0}">
 							<div class="card card-danger card-outline">
 								<div class="card-header">
 									<h3 class="card-title">Additional Fees</h3>
