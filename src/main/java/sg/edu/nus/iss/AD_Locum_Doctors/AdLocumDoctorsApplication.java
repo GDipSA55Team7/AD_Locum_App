@@ -185,6 +185,7 @@ public class AdLocumDoctorsApplication {
 
 			JobPost jp1 = new JobPost();
 			jp1.setClinic(c1);
+			jp1.setTitle("Looking for Locum Doctor");
 			jp1.setDescription("Looking for locum doctor for Punggol Family clinic");
 			jp1.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
 			jp1.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));

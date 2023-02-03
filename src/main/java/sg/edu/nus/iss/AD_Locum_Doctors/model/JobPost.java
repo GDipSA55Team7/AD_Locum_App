@@ -104,6 +104,9 @@ public class JobPost {
 	}
 
 	public String getDateTimeString(LocalDateTime dateTime) {
+		if (dateTime == null) {
+			return "";
+		}
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
 		return dateTime.format(formatter);
 	}

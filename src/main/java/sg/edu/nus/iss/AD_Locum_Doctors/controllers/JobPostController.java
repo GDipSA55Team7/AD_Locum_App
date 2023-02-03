@@ -1,6 +1,5 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.controllers;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -25,6 +24,7 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.AdditionalFeeDetailsService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostAdditionalRemarksService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
@@ -45,6 +45,9 @@ public class JobPostController {
 
 	@Autowired
 	private JobAdditionalRemarksRepository jobAdditionalRemarksRepo;
+
+	@Autowired
+	private JobPostAdditionalRemarksService addRemarksService;
 
 	@GetMapping("/list")
 	public String jobPostListPage(Model model, HttpSession session) {
@@ -91,12 +94,6 @@ public class JobPostController {
 		JobPost jobPost = jobPostService.findJobPostById(id);
 		jobPost.setAdditionalRemarks("");
 		model.addAttribute("jobPost", jobPost);
-		model.addAttribute("statusList", List.of(
-				JobStatus.ACCEPTED,
-				JobStatus.COMPLETED_PENDING_PAYMENT,
-				JobStatus.COMPLETED_PAYMENT_PROCESSED,
-				JobStatus.CANCELLED));
-
 		List<JobAdditionalRemarks> remarksList = jobAdditionalRemarksRepo.findAll().stream()
 				.filter(x -> x.getJobPost().getId() == jobPost.getId())
 				.sorted(Comparator.comparing(JobAdditionalRemarks::getDate).reversed()).toList();
@@ -106,12 +103,8 @@ public class JobPostController {
 		model.addAttribute("additional", additional);
 		if (jobPost.getStatus().equals(JobStatus.OPEN) || jobPost.getStatus().equals(JobStatus.CANCELLED)) {
 			return "jobpost-view";
-		} else if (jobPost.getStatus().equals(JobStatus.PENDING_CONFIRMATION_BY_CLINIC)
-				|| jobPost.getStatus().equals(JobStatus.ACCEPTED)
-				|| jobPost.getStatus().equals(JobStatus.COMPLETED_PENDING_PAYMENT)) {
-			return "jobpost-locum";
 		}
-		return "jobpost-accepted-view";
+		return "jobpost-locum";
 	}
 
 	@GetMapping("/{id}/delete")
@@ -131,15 +124,8 @@ public class JobPostController {
 		toUpdateJobPost.setAdditionalRemarks(jobPost.getAdditionalRemarks());
 		toUpdateJobPost.setStatus(jobPost.getStatus());
 		jobPostService.saveJobPost(toUpdateJobPost);
-		if (!jobPost.getAdditionalRemarks().equals("")) {
-			JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
-			additionalRemarks.setCategory(RemarksCategory.CANCELLATION);
-			additionalRemarks.setDate(LocalDate.now());
-			additionalRemarks.setJobPost(toUpdateJobPost);
-			additionalRemarks.setUser(user);
-			additionalRemarks.setRemarks(toUpdateJobPost.getAdditionalRemarks());
-			jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
-		}
+		addRemarksService.createJobPostAdditionalRemarks(RemarksCategory.GENERAL, user, toUpdateJobPost,
+				jobPost.getAdditionalRemarks());
 		return "redirect:/jobpost/" + jobPost.getId();
 	}
 
@@ -151,16 +137,8 @@ public class JobPostController {
 		jp.setStatus(JobStatus.CANCELLED);
 		jp.setAdditionalRemarks(jobPost.getAdditionalRemarks());
 		jobPostService.saveJobPost(jp);
-
-		if (!jobPost.getAdditionalRemarks().equals("")) {
-			JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
-			additionalRemarks.setCategory(RemarksCategory.CANCELLATION);
-			additionalRemarks.setDate(LocalDate.now());
-			additionalRemarks.setJobPost(jp);
-			additionalRemarks.setUser(user);
-			additionalRemarks.setRemarks(jp.getAdditionalRemarks());
-			jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
-		}
+		addRemarksService.createJobPostAdditionalRemarks(RemarksCategory.CANCELLATION, user, jp,
+				jobPost.getAdditionalRemarks());
 		return "redirect:/jobpost/" + id;
 	}
 
@@ -172,15 +150,8 @@ public class JobPostController {
 		jp.setStatus(JobStatus.ACCEPTED);
 		jp.setAdditionalRemarks(jobPost.getAdditionalRemarks());
 		jobPostService.saveJobPost(jp);
-		if (!jobPost.getAdditionalRemarks().equals("")) {
-			JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
-			additionalRemarks.setCategory(RemarksCategory.GENERAL);
-			additionalRemarks.setDate(LocalDate.now());
-			additionalRemarks.setJobPost(jp);
-			additionalRemarks.setUser(user);
-			additionalRemarks.setRemarks(jp.getAdditionalRemarks());
-			jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
-		}
+		addRemarksService.createJobPostAdditionalRemarks(RemarksCategory.ACCEPTION, user, jp,
+				jobPost.getAdditionalRemarks());
 		return "redirect:/jobpost/" + id;
 	}
 
@@ -194,15 +165,21 @@ public class JobPostController {
 		jp.setActualEndDateTime(jobPost.getActualEndDateTime());
 		jp.setAdditionalRemarks(jobPost.getAdditionalRemarks());
 		jobPostService.saveJobPost(jp);
-		if (!jobPost.getAdditionalRemarks().equals("")) {
-			JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
-			additionalRemarks.setCategory(RemarksCategory.COMPLETED_JOB);
-			additionalRemarks.setDate(LocalDate.now());
-			additionalRemarks.setJobPost(jp);
-			additionalRemarks.setUser(user);
-			additionalRemarks.setRemarks(jp.getAdditionalRemarks());
-			jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
-		}
+		addRemarksService.createJobPostAdditionalRemarks(RemarksCategory.COMPLETED_JOB, user, jp,
+				jobPost.getAdditionalRemarks());
+		return "redirect:/jobpost/" + id;
+	}
+
+	@PostMapping(value = "/update", params = "payment-processed")
+	public String setPaymentProcessedJobPostForm(JobPost jobPost, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		String id = jobPost.getId().toString();
+		JobPost jp = jobPostService.findJobPostById(id);
+		jp.setStatus(JobStatus.COMPLETED_PAYMENT_PROCESSED);
+		jp.setAdditionalRemarks(jobPost.getAdditionalRemarks());
+		jobPostService.saveJobPost(jp);
+		addRemarksService.createJobPostAdditionalRemarks(RemarksCategory.PROCESSED_PAYMENT, user, jp,
+				jobPost.getAdditionalRemarks());
 		return "redirect:/jobpost/" + id;
 	}
 

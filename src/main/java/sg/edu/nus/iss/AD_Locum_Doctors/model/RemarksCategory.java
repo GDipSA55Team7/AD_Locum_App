@@ -8,6 +8,7 @@ public enum RemarksCategory {
 	
 	GENERAL("General"), 
 	DELETION("Deletion"), 
+	ACCEPTION("Accepted Locum"), 
 	CANCELLATION("Cancellation"), 
 	REMOVED("Removed By Admin"), 
 	COMPLETED_JOB("Completed_Job"), 
