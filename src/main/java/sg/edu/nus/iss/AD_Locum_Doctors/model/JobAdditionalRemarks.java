@@ -2,6 +2,7 @@ package sg.edu.nus.iss.AD_Locum_Doctors.model;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,10 +23,11 @@ public class JobAdditionalRemarks {
 
 	private RemarksCategory category;
 
-	private String remarks;
+	private String remarks = "";
 
 	private LocalDate date;
 
+	@JsonIgnore
 	@ManyToOne
 	private JobPost jobPost;
 

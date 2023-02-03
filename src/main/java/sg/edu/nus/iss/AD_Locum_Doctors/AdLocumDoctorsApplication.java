@@ -1,5 +1,6 @@
 package sg.edu.nus.iss.AD_Locum_Doctors;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +12,17 @@ import org.springframework.context.annotation.Bean;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.AdditionalFeeDetails;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Organization;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.RemarksCategory;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Role;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.AdditionalFeeDetailsRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.AverageCompensationRateRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.ClinicRepository;
+import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobPostRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.OrganizationRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.RoleRepository;
@@ -39,7 +43,8 @@ public class AdLocumDoctorsApplication {
 			OrganizationRepository organizationRepo,
 			RoleRepository roleRepo,
 			UserRepository userRepo,
-			AdditionalFeeDetailsRepository additionalFeeDetailsRepository) {
+			AdditionalFeeDetailsRepository additionalFeeDetailsRepository,
+			JobAdditionalRemarksRepository jobRemarksRepo) {
 
 		return args -> {
 
@@ -62,34 +67,47 @@ public class AdLocumDoctorsApplication {
 			Role r5 = new Role();
 			r5.setName("System_Admin");
 			roleRepo.saveAndFlush(r5);
-	
+
+			Organization org1 = new Organization();
+			org1.setName("Raffles Medical Group Ltd");
+			org1.setUEN("198901967K");
+			organizationRepo.saveAndFlush(org1);
+			Organization org_sc = new Organization();
+			org_sc.setName("SC Organization");
+			org_sc.setUEN("222901967A");
+			organizationRepo.saveAndFlush(org_sc);
+			Organization org_pg = new Organization();
+			org_pg.setName("PG Organization");
+			org_pg.setUEN("333901967B");
+			organizationRepo.saveAndFlush(org_pg);
+
 			Clinic c1 = new Clinic();
 			c1.setName("Punggol Family Clinic");
 			c1.setAddress("Punggol");
 			c1.setPostalCode("S123456");
+			c1.setOrganization(org_pg);
 			clinicRepo.saveAndFlush(c1);
 
 			Clinic c2 = new Clinic();
 			c2.setName("SilverCross Clinic (Yishun)");
 			c2.setAddress("Yishun");
 			c2.setPostalCode("S654321");
+			c2.setOrganization(org_sc);
 			clinicRepo.saveAndFlush(c2);
-
-			Organization org1 = new Organization();
-			org1.setName("Raffles Medical Group Ltd");
-			org1.setUEN("198901967K");
 
 			Clinic c3 = new Clinic();
 			c3.setName("Raffles Medical (Lot1 Shoppers Mall)");
 			c3.setAddress("21 CHOA CHU KANG AVE 4 LOT 1 SHOPPERS' MALL #B1-07A SINGAPORE 689812");
 			c3.setPostalCode("689812");
 			c3.setOrganization(org1);
+			clinicRepo.saveAndFlush(c3);
 
 			Clinic c4 = new Clinic();
 			c4.setName("Raffles Medical (Loyang Point)");
 			c4.setAddress("BLK 259 PASIR RIS STREET 21 LOYANG POINT #02-33");
 			c4.setPostalCode("510259");
 			c4.setOrganization(org1);
+			clinicRepo.saveAndFlush(c4);
 
 			Clinic c5 = new Clinic();
 			c5.setName("Raffles Medical (Raffles City Shopping Centre)");
@@ -98,6 +116,7 @@ public class AdLocumDoctorsApplication {
 			org1.setName("Raffles Medical Group Ltd");
 			org1.setUEN("198901967K");
 			c5.setOrganization(org1);
+			clinicRepo.saveAndFlush(c5);
 
 			List<Clinic> rafflesClinics = new ArrayList<>();
 			rafflesClinics.add(c3);
@@ -170,32 +189,39 @@ public class AdLocumDoctorsApplication {
 			jp1.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
 			jp1.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
 			jp1.setRatePerHour(100);
+			jp1.setClinicUser(testUser3);
 			jp1.setFreelancer(testUser1);
 			jp1.setStatus(JobStatus.OPEN);
 			jobPostRepo.saveAndFlush(jp1);
 
 			JobPost jp2 = new JobPost();
 			jp2.setClinic(c2);
-			jp2.setDescription("Looking for locum physiotherapist");
+			jp2.setTitle("Looking for locum physiotherapist");
+			jp2.setDescription("Looking for locum physiotherapist to perform the following ...");
 			jp2.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
 			jp2.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
-			jp2.setStatus(JobStatus.PENDING_CONFIRMATION_BY_CLINIC);
+			jp2.setStatus(JobStatus.OPEN);
 			jp2.setRatePerHour(88.8);
+			jp2.setClinicUser(testUser3);
 			jp2.setFreelancer(testUser1);
 			jobPostRepo.saveAndFlush(jp2);
 
 			JobPost jp3 = new JobPost();
 			jp3.setClinic(c2);
+			jp3.setTitle("Looking for locum occupational therapist");
 			jp3.setDescription("Looking for locum occupational therapist");
 			jp3.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
 			jp3.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
-			jp3.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
+			jp3.setStatus(JobStatus.CANCELLED);
+			jp3.setClinicUser(testUser3);
 			jp3.setFreelancer(testUser1);
 			jp3.setRatePerHour(88.8);
+			jp3.setAdditionalRemarks("cancelled");
 			jobPostRepo.saveAndFlush(jp3);
 
 			JobPost jp4 = new JobPost();
 			jp4.setClinic(c3);
+			jp4.setTitle("Urgent Request for RMG @ Lot 1");
 			jp4.setDescription("Raffles Medical Group in Lot1 looking for locum urgently!");
 			jp4.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
 			jp4.setEndDateTime(LocalDateTime.of(2023, 01, 11, 20, 30, 0));
@@ -217,6 +243,7 @@ public class AdLocumDoctorsApplication {
 
 			JobPost jp6 = new JobPost();
 			jp6.setClinic(c5);
+			jp6.setTitle("Urgent Request for RMG @ Raffles City");
 			jp6.setDescription("Raffles Medical Group in Raffles City Shopping Centre looking for locum urgently!");
 			jp6.setStartDateTime(LocalDateTime.of(2023, 01, 20, 18, 30, 0));
 			jp6.setEndDateTime(LocalDateTime.of(2023, 01, 20, 20, 30, 0));
@@ -227,7 +254,8 @@ public class AdLocumDoctorsApplication {
 
 			JobPost jp7 = new JobPost();
 			jp7.setClinic(c5);
-			jp7.setDescription("Raffles Medical Group in Lot1 looking for locum urgently!");
+			jp7.setTitle("Urgent Request for RMG @ Raffles City");
+			jp7.setDescription("Raffles Medical Group in Raffles City looking for locum urgently!");
 			jp7.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
 			jp7.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
 			jp7.setRatePerHour(100);
@@ -235,6 +263,42 @@ public class AdLocumDoctorsApplication {
 			jp7.setClinicUser(testUser3);
 			jp7.setStatus(JobStatus.PENDING_CONFIRMATION_BY_CLINIC);
 			jobPostRepo.saveAndFlush(jp7);
+
+			JobPost jp8 = new JobPost();
+			jp8.setClinic(c5);
+			jp8.setTitle("Urgent Request for RMG @ Raffles City");
+			jp8.setDescription("Looking for locum urgently!");
+			jp8.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
+			jp8.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
+			jp8.setRatePerHour(100);
+			jp8.setFreelancer(testUser2);
+			jp8.setClinicUser(testUser3);
+			jp8.setStatus(JobStatus.DELETED);
+			jobPostRepo.saveAndFlush(jp8);
+
+			JobPost jp9 = new JobPost();
+			jp9.setClinic(c5);
+			jp9.setTitle("Urgent Request for RMG @ Raffles City");
+			jp9.setDescription("Looking for locum urgently!");
+			jp9.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
+			jp9.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
+			jp9.setRatePerHour(100);
+			jp9.setFreelancer(testUser2);
+			jp9.setClinicUser(testUser3);
+			jp9.setStatus(JobStatus.REMOVED);
+			jobPostRepo.saveAndFlush(jp9);
+
+			JobPost jp10 = new JobPost();
+			jp10.setClinic(c5);
+			jp10.setTitle("Urgent Request for RMG @ Raffles City");
+			jp10.setDescription("Looking for locum urgently!");
+			jp10.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
+			jp10.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
+			jp10.setRatePerHour(100);
+			jp10.setFreelancer(testUser2);
+			jp10.setClinicUser(testUser3);
+			jp10.setStatus(JobStatus.COMPLETED_PAYMENT_PROCESSED);
+			jobPostRepo.saveAndFlush(jp10);
 
 			AdditionalFeeDetails afdJob3 = new AdditionalFeeDetails();
 			afdJob3.setJobPost(jp3);
@@ -247,6 +311,22 @@ public class AdLocumDoctorsApplication {
 			afdJob3_1.setDescription("Transport");
 			afdJob3_1.setAdditionalFeesAmount(60);
 			additionalFeeDetailsRepository.saveAndFlush(afdJob3_1);
+
+			JobAdditionalRemarks jp1_remark_1 = new JobAdditionalRemarks();
+			jp1_remark_1.setJobPost(jp1);
+			jp1_remark_1.setUser(testUser1);
+			jp1_remark_1.setCategory(RemarksCategory.CANCELLATION);
+			jp1_remark_1.setDate(LocalDate.of(2021, 2, 1));
+			jp1_remark_1.setRemarks("Cancelled due to ...");
+			jobRemarksRepo.saveAndFlush(jp1_remark_1);
+
+			JobAdditionalRemarks jp1_remark_2 = new JobAdditionalRemarks();
+			jp1_remark_2.setJobPost(jp1);
+			jp1_remark_2.setUser(testUser2);
+			jp1_remark_2.setCategory(RemarksCategory.CANCELLATION);
+			jp1_remark_2.setDate(LocalDate.of(2021, 2, 2));
+			jp1_remark_2.setRemarks("Cancelled due to ...");
+			jobRemarksRepo.saveAndFlush(jp1_remark_2);
 		};
 	}
 }

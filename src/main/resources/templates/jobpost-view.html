@@ -37,11 +37,24 @@
 							<div class="card">
 								<div class="card-body">
 									<form action="#" th:object="${jobPost}" method="post">
+										<div class="form-row">
+											<div class="form-group col">
+												<label class="form-label">Title</label>
+												<input th:field="*{title}" type="text" class="form-control"
+													th:value="*{title}" readonly>
+											</div>
+											<div class="form-group col">
+												<label class="form-label">Status</label>
+												<input id="*{status}" type="text" class="form-control"
+													th:value="*{status.value}" readonly>
+											</div>
+										</div>
 										<div class="mb-3 form-group">
 											<label class="form-label">Description</label>
-											<input th:field="*{description}" type="text" class="form-control"
-												th:value="*{description}" readonly>
+											<textarea th:field="*{description}" type="text" class="form-control"
+												th:value="*{description}" readonly></textarea>
 										</div>
+
 										<div class="row">
 											<div class="mb-3 col">
 												<label class="form-label">Start Date & Time</label>
@@ -66,8 +79,9 @@
 													<div class="input-group-prepend">
 														<span class="input-group-text">$</span>
 													</div>
-													<input th:field="*{ratePerHour}" type="number" min="0" step="0.01"
-														class="form-control" th:value="*{ratePerHour}" readonly />
+													<input id="${jobPost.ratePerHour}" type="number" min="0" step="0.01"
+														class="form-control"
+														th:value="${jobPost.getRatePerHour2dpString}" readonly />
 												</div>
 											</div>
 											<div class="mb-3 form-group col-auto">
@@ -76,15 +90,49 @@
 													<div class="input-group-prepend">
 														<span class="input-group-text">$</span>
 													</div>
-													<input th:field="*{totalRate}" type="text" class="form-control"
-														th:value="*{totalRate}" readonly />
+													<input id="totalRate" type="text" class="form-control"
+														th:value="${jobPost.getComputedRateString()}" readonly />
 												</div>
 											</div>
 										</div>
-										<a href="/jobpost/list" class="btn btn-info">Back</a>
+										<div class="mb-3 form-group d-flex flex-row">
+											<a href="/jobpost/list" class="btn btn-info mr-auto">Back</a>
+											<a th:if="${jobPost.status.name == 'OPEN'}"
+												th:href="@{/jobpost/}+${jobPost.id}+@{/delete}"
+												class="btn btn-danger">Delete</a>
+										</div>
 									</form>
 								</div>
 							</div>
+
+							<!-- additional start -->
+							<div th:if="${remarksList.size() > 0}" class="card">
+								<div class="card-header">
+									<h3 class="card-title">Remarks History</h3>
+								</div>
+								<div class="card-body table-responsive p-0">
+									<table class="table table-hover text-nowrap">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Author</th>
+												<th>Date</th>
+												<th>Category</th>
+												<th>Remarks</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="r : ${remarksList}">
+												<td th:text="${r.id}"></td>
+												<td th:text="${r.user.name}"></td>
+												<td th:text="${r.date}"></td>
+												<td th:text="${r.category.value}"></td>
+												<td th:text="${r.remarks}"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div><!-- additional end -->
 						</div>
 						<!-- /.col -->
 					</div>

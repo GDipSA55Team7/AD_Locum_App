@@ -36,12 +36,20 @@
 						<div class="col-md-9">
 							<div class="card">
 								<div class="card-body">
-									<form th:action="@{'/jobpost/update'}" th:object="${jobPost}" method="post">
+									<form action="#" th:action="@{'/jobpost/update'}" th:object="${jobPost}"
+										method="post">
 										<input type="hidden" th:field="*{id}" />
-										<div class="form-group col">
-											<label class="form-label">Title</label>
-											<input th:field="*{title}" type="text" class="form-control"
-												th:value="*{title}" readonly>
+										<div class="row">
+											<div class="mb-3 form-group col">
+												<label class="form-label">Title</label>
+												<input th:field="*{title}" type="text" class="form-control"
+													th:value="*{title}" readonly>
+											</div>
+											<div class="mb-3 form-group col">
+												<label class="form-label">Status</label>
+												<input id="currentStatus" type="text" class="form-control"
+													th:value="*{status.value}" readonly>
+											</div>
 										</div>
 										<div class="mb-3 form-group">
 											<label class="form-label">Description</label>
@@ -65,6 +73,7 @@
 											<input th:field="*{clinic.name}" type="text" class="form-control"
 												th:value="*{clinic.name}" readonly>
 										</div>
+
 										<div class="row">
 											<div class="mb-3 form-group col-auto">
 												<label class="form-label">Rate/hour</label>
@@ -72,108 +81,43 @@
 													<div class="input-group-prepend">
 														<span class="input-group-text">$</span>
 													</div>
-													<input th:field="*{ratePerHour}" type="number" min="0" step="0.01"
-														class="form-control" th:value="*{ratePerHour}" readonly />
+													<input id="${jobPost.ratePerHour}" type="number" min="0" step="0.01"
+														class="form-control"
+														th:value="${jobPost.getRatePerHour2dpString}" readonly />
+												</div>
+											</div>
+											<div class="mb-3 form-group col-auto">
+												<label class="form-label">Total Rate</label>
+												<div class="input-group">
+													<div class="input-group-prepend">
+														<span class="input-group-text">$</span>
+													</div>
+													<input id="totalRate" type="text" class="form-control"
+														th:value="${jobPost.getComputedRateString()}" readonly />
 												</div>
 											</div>
 										</div>
-										<div class="row">
-											<div class="mb-3 col">
-												<label class="form-label">Status</label>
-												<select id="status" th:field="*{status}" class="form-control" required>
-													<!--													<option value="" selected hidden>Please select a clinic</option>-->
-													<option th:each="c : ${statusList}" th:value="${c}" th:text="${c}"
-														th:selected="${jobPost.getStatus()}">
-														Status</option>
-												</select>
-											</div>
-										</div>
-										<div class="row" id="actual_start_end_date">
-											<div class="mb-3 col">
-												<label class="form-label">Actual Start Date & Time</label>
-												<input th:field="*{actualStartDateTime}" type="datetime-local"
-													class="form-control" />
-												<div id="startDateTime-feedback" class="invalid-feedback d-block">
-												</div>
-											</div>
-											<div class="mb-3 col">
-												<label class="form-label">Actual End Date & Time</label>
-												<input th:field="*{actualEndDateTime}" type="datetime-local"
-													class="form-control" />
-												<div id="endDateTime-feedback" class="invalid-feedback d-block">
-												</div>
-											</div>
-										</div>
-										<div class="row" id="additionalRemarks">
-											<div class="mb3 col-12">
+
+										<div class="form-row" id="additionalRemarks">
+											<div class="mb3 form-group col-12">
 												<label class="form-label">Remarks</label>
-												<input th:field="*{additionalRemarks}" type="text" class="form-control"
-													th:value="*{additionalRemarks}">
+												<input th:field="*{additionalRemarks}" type="text" class="form-control">
 											</div>
 										</div>
-										<button type="submit" class="btn btn-info">Save</button>
-										<!--										<a href="/jobpost/list" class="btn btn-info">Back</a>-->
+
+										<div class="mb-3 form-group d-flex flex-row">
+											<a href="/jobpost/list" class="btn btn-info mr-auto">Back</a>
+
+											<button type="submit" name="cancel-locum" value="cancel-locum"
+												class="btn btn-outline-warning mr-2">Cancel
+												Locum</button>
+
+											<button type="submit" name="confirm-locum" value="confirm-locum"
+												class="btn btn-info">Confirm Locum</button>
+										</div>
 									</form>
 								</div>
 							</div>
-							<!-- additional start -->
-							<div class="">
-								<div class="card">
-									<div class="card-header">
-										<h3 class="card-title">Additional Fees</h3>
-									</div>
-									<!-- /.card-header -->
-									<div class="card-body">
-										<table class="table table-bordered">
-											<thead>
-												<tr>
-													<th style="width: 10px">#</th>
-													<th>Description</th>
-													<th>Amount</th>
-													<th>Action</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr th:each="additional: ${jobPost.getAdditionalFeeDetails()}">
-													<td>1</td>
-													<td th:text="${additional.getDescription()}" />
-													<td th:text="${additional.getAdditionalFeesAmount()}" />
-													<td></td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-									<!-- /.card-body -->
-								</div>
-							</div>
-
-							<div class="">
-								<div class="card">
-									<div class="card-header">
-										<h3 class="card-title">Add Additional Fees</h3>
-									</div>
-									<div class="card-body">
-										<form th:action="@{'/jobpost/additional'}" th:object="${additional}"
-											method="post">
-											<input type="hidden" th:field="*{jobPostId}"
-												th:value="${additional.jobPostId}" />
-											<div class="mb-3 form-group">
-												<label class="form-label">Description</label>
-												<input th:field="*{description}" type="text" class="form-control"
-													th:value="*{description}">
-											</div>
-											<div class="mb-3 form-group">
-												<label class="form-label">Amount</label>
-												<input th:field="*{additionalFeesAmount}" type="text"
-													class="form-control" th:value="*{additionalFeesAmount}">
-											</div>
-											<button type="submit" class="btn btn-info">Create</button>
-											<!--										<a href="/jobpost/list" class="btn btn-info">Back</a>-->
-										</form>
-									</div>
-								</div>
-							</div>
-							<!-- /.col -->
 
 							<!-- additional start -->
 							<div th:if="${remarksList.size() > 0}" class="card">
@@ -207,7 +151,6 @@
 						</div>
 
 						<div class="col-md-3">
-
 							<!-- Profile Image -->
 							<div class="card card-primary card-outline">
 								<div class="card-body box-profile">
@@ -234,19 +177,8 @@
 											<b>Contact</b> <a class="float-right"
 												th:text="${jobPost.getFreelancer().getContact()}"></a>
 										</li>
-										<li class="list-group-item">
-											<b>ActualStartDate</b> <a class="float-right"
-												th:text="${jobPost.getActualStartDateTime()}"></a>
-										</li>
-										<li class="list-group-item">
-											<b>ActualEndDate</b> <a class="float-right"
-												th:text="${jobPost.getActualEndDateTime()}"></a>
-										</li>
 									</ul>
-
-
 								</div>
-
 							</div>
 							<!-- /.card -->
 						</div>
@@ -259,24 +191,6 @@
 		</div>
 		<div th:replace="fragments/layout.html :: footer" />
 		<div th:replace="fragments/layout.html :: script" />
-		<script>
-			$("#status")
-				.change(function () {
-					var str = "";
-					$("select option:selected").each(function () {
-						str += $(this).text();
-					});
-					$("#actual_start_end_date").hide()
-					$("#additionalRemarks").hide()
-					if (str === "COMPLETED_PENDING_PAYMENT") {
-						$("#actual_start_end_date").show()
-						$("#additionalRemarks").show()
-					}
-
-
-				})
-				.change();
-		</script>
 	</div>
 </body>
 

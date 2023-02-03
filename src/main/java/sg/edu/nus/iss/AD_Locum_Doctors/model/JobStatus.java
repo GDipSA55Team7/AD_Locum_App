@@ -15,6 +15,4 @@ public enum JobStatus {
 	REMOVED("Removed (By Admin)");
 	@Getter
 	public String value;
-	
-	
 }

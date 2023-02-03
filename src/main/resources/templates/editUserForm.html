@@ -38,6 +38,7 @@
 								<div class="card-body">
 									<form action="#" th:action="@{'/editUser'}" th:object="${user}" method="post">
 										<input type="hidden" th:field="*{id}" />
+										<input type="hidden" th:field="*{role.id}" />
 										<div class="mb-3 form-group">
 											<label class="form-label">Organization</label>
 											<select name="organization" th:field="*{organization.id}"
@@ -50,7 +51,7 @@
 										<div class="row">
 											<div class="mb-3 col">
 												<label class="form-label">User Name</label>
-												<input th:field="*{username}" type="text" class="form-control">
+												<input th:field="*{username}" readonly type="text" class="form-control">
 											</div>
 											<div class="mb-3 col">
 												<label class="form-label">Name</label>
@@ -66,9 +67,13 @@
 											<input th:field="*{contact}" type="text" class="form-control">
 										</div>
 										<div class="mb-3 form-group">
+											<label class="form-label">Role</label>
+											<input th:value="*{role.name}" readonly type="text" class="form-control">
+										</div>
+										<!-- <div class="mb-3 form-group">
 											<label class="form-label">Medical License No</label>
 											<input th:field="*{medicalLicenseNo}" type="text" class="form-control">
-										</div>
+										</div> -->
 										<button type="submit" class="btn btn-info">Save</button>
 									</form>
 								</div>

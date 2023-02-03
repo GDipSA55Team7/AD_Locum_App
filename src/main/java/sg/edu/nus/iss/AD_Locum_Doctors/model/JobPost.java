@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -31,7 +32,9 @@ public class JobPost {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String description;
+	private String title = "";
+
+	private String description = "";
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
@@ -51,8 +54,6 @@ public class JobPost {
 
 	private double ratePerHour;
 
-	private double totalRate;
-
 	private JobStatus status = JobStatus.OPEN;
 
 	@JsonIgnore
@@ -68,15 +69,17 @@ public class JobPost {
 	@JoinColumn(name = "clinic_id")
 	private Clinic clinic;
 
-	@OneToMany(mappedBy = "jobPost")
-	private List<JobAdditionalRemarks> jobAdditionalRemarks;
-
+	@JsonIgnore
 	@OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL)
-	private List<AdditionalFeeDetails> additionalFeeDetails;
+	private List<JobAdditionalRemarks> jobAdditionalRemarks = new ArrayList<>();
 
-	private String additionalRemarks;
+	@JsonIgnore
+	@OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL)
+	private List<AdditionalFeeDetails> additionalFeeDetails = new ArrayList<>();
 
-	private String paymentReferenceNumber;
+	private String additionalRemarks = "";
+
+	private String paymentReferenceNumber = "";
 
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
@@ -84,6 +87,10 @@ public class JobPost {
 
 	public String getRatePerHourString() {
 		return "$" + String.format("%.2f", ratePerHour) + "/h";
+	}
+
+	public String getRatePerHour2dpString() {
+		return String.format("%.2f", ratePerHour);
 	}
 
 	public String getStartDateTimeString() {

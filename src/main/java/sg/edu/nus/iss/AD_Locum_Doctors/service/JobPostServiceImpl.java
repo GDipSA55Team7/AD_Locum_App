@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
@@ -16,6 +17,7 @@ import sg.edu.nus.iss.AD_Locum_Doctors.repository.ClinicRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobPostRepository;
 
+@Transactional
 @Service
 public class JobPostServiceImpl implements JobPostService {
 	@Autowired
@@ -26,9 +28,11 @@ public class JobPostServiceImpl implements JobPostService {
 
 	@Autowired
 	private ClinicRepository clinicRepo;
+
 	@Autowired
 	private UserService userService;
 
+	@Override
 	public List<JobPost> findAll() {
 		return jobPostRepo.findAll();
 	}
@@ -41,9 +45,20 @@ public class JobPostServiceImpl implements JobPostService {
 	@Override
 	public List<JobPost> findJobHistory(String userId) {
 		return jobPostRepo.findByIdAndStatusOrStatus(userId, JobStatus.COMPLETED_PENDING_PAYMENT,
-				JobStatus.COMPLETED_PAYMENT_PROCESSED);
+				JobStatus.COMPLETED_PAYMENT_PROCESSED, JobStatus.CANCELLED);
 	}
 
+	@Override
+	public List<JobPost> findJobApplied(String userId) {
+		return jobPostRepo.findByStatus(JobStatus.PENDING_CONFIRMATION_BY_CLINIC);
+	}
+
+	@Override
+	public List<JobPost> findJobConfirmed(String userId) {
+		return jobPostRepo.findByIdAndStatus(userId, JobStatus.ACCEPTED);
+	}
+
+	@Override
 	public JobPost findJobPostById(String id) {
 		return jobPostRepo.findById(Long.parseLong(id)).orElse(null);
 	}
@@ -66,12 +81,13 @@ public class JobPostServiceImpl implements JobPostService {
 	}
 
 	@Override
-	public void setStatus(JobPost jobPost, JobStatus status, String userId) {
+	public void setStatus(JobPost jobPost, JobStatus status, String userId, JobAdditionalRemarks addRemarks) {
 		User freelancer = userService.findById(Long.valueOf(userId));
 
 		switch (status) {
 			case OPEN -> {
 				jobPost.setStatus(JobStatus.OPEN);
+				jobPost.setFreelancer(null);
 			}
 			case PENDING_CONFIRMATION_BY_CLINIC -> {
 				jobPost.setStatus(JobStatus.PENDING_CONFIRMATION_BY_CLINIC);
@@ -97,33 +113,41 @@ public class JobPostServiceImpl implements JobPostService {
 			}
 		}
 		jobPostRepo.save(jobPost);
+		if (addRemarks != null) {
+			jobAdditionalRemarksRepo.save(addRemarks);
+		}
 	}
 
+	@Override
 	public JobPost createJobPost(JobPostForm jobPostForm, User user) {
 		JobPost newJobPost = new JobPost();
 		newJobPost.setClinicUser(user);
+		newJobPost.setTitle(jobPostForm.getTitle());
 		newJobPost.setDescription(jobPostForm.getDescription());
 		newJobPost.setStartDateTime(jobPostForm.getStartDateTime());
 		newJobPost.setEndDateTime(jobPostForm.getEndDateTime());
 		newJobPost.setRatePerHour(jobPostForm.getRatePerHour());
-		// newJobPost.setTotalRate(jobPostForm.getTotalRate());
 		newJobPost.setClinic(clinicRepo.findById(jobPostForm.getClinicId()).get());
 		return jobPostRepo.saveAndFlush(newJobPost);
 	}
 
+	@Override
 	public void cancel(JobPost jobPost) {
 		jobPost.setStatus(JobStatus.CANCELLED);
 		jobPostRepo.save(jobPost);
 	}
 
+	@Override
 	public void delete(JobPost jobPost) {
 		jobPostRepo.delete(jobPost);
 	}
 
+	@Override
 	public List<JobPost> findJobPostsCreatedByUser(User user) {
 		return jobPostRepo.findByClinicUser(user);
 	}
 
+	@Override
 	public void cancel(JobPost jobpost, JobAdditionalRemarks additionalRemarks, User user) {
 		jobpost.setStatus(JobStatus.CANCELLED);
 		jobPostRepo.saveAndFlush(jobpost);
@@ -134,6 +158,7 @@ public class JobPostServiceImpl implements JobPostService {
 		jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
 	}
 
+	@Override
 	public void delete(JobPost jobpost, JobAdditionalRemarks additionalRemarks, User user) {
 		jobpost.setStatus(JobStatus.REMOVED);
 		jobPostRepo.saveAndFlush(jobpost);
