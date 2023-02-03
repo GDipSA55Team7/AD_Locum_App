@@ -31,7 +31,7 @@ public class CommonController {
 	
 	@InitBinder("passwordForm")
 	private void initAdminTriggeredPasswordResetValidator(WebDataBinder binder) {
-        binder.setValidator(this.adminTriggeredPasswordResetValidator);
+        binder.addValidators(this.adminTriggeredPasswordResetValidator);
 	}
 	
 	@Autowired
