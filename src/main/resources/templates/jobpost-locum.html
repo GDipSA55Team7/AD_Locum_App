@@ -187,22 +187,25 @@
 								<div class="card-body table-responsive p-0">
 									<div class="card-body">
 
-										<div class="row" id="actual_start_end_date">
-											<div class="mb-3 col">
-												<label class="form-label">Actual Start Date & Time</label>
-												<input th:field="${jobPost.actualStartDateTime}" type="datetime-local"
-													class="form-control" />
-												<div id="startDateTime-feedback" class="invalid-feedback d-block">
-												</div>
-											</div>
-											<div class="mb-3 col">
-												<label class="form-label">Actual End Date & Time</label>
-												<input th:field="${jobPost.actualEndDateTime}" type="datetime-local"
-													class="form-control" />
-												<div id="endDateTime-feedback" class="invalid-feedback d-block">
+										<div class="row">
+											<div class='col'>
+												<div class="form-group">
+													<label class="form-label">Actual Start to End Date & Time</label>
+													<div class="input-group">
+														<div class="input-group-prepend">
+															<div class="input-group-text"><i class="fa fa-calendar"></i>
+															</div>
+														</div>
+														<input type="text" class="form-control" name="datetimes" />
+													</div>
+													<input th:field="${jobPost.actualStartDateTime}" type="text"
+														class="form-control" id="datetimes1" value="" hidden />
+													<input th:field="${jobPost.actualEndDateTime}" type="text"
+														class="form-control" id="datetimes2" value="" hidden />
 												</div>
 											</div>
 										</div>
+
 										<div class="row" id="additionalRemarks">
 											<div class="mb3 col-12">
 												<label class="form-label">Remarks</label>
@@ -317,6 +320,20 @@
 		<div th:replace="fragments/layout.html :: footer" />
 		<div th:replace="fragments/layout.html :: script" />
 	</div>
+
+	<script>
+		$('input[name="datetimes"]').daterangepicker({
+			"timePicker": true,
+			"timePickerIncrement": 30,
+			"autoApply": true,
+			locale: {
+				format: 'MM/DD/YYYY hh:mm A'
+			}
+		}, function (start, end, label) {
+			$('#datetimes1').val(start.format('DD-MM-YYYY HH:mm'));
+			$('#datetimes2').val(end.format('DD-MM-YYYY HH:mm'));
+		});
+	</script>
 </body>
 
 </html>
