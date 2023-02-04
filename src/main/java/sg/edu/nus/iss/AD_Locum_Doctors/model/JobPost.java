@@ -52,6 +52,10 @@ public class JobPost {
 	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
 	private LocalDateTime actualEndDateTime;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+	private LocalDateTime dateModified;
+
 	private double ratePerHour;
 
 	private JobStatus status = JobStatus.OPEN;

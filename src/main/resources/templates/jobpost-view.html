@@ -14,10 +14,16 @@
 			<div class="content-header">
 				<div class="container-fluid">
 					<div class="row mb-2">
-						<div class="col-sm-6">
+						<div class="col-auto">
 							<h1 class="m-0">View Job Posting</h1>
 						</div><!-- /.col -->
-						<div class="col-sm-6">
+						<div class="col-auto d-flex justify-content-center">
+							<button th:if="${jobPost.status.name == 'OPEN'}" class="bg-lightblue btn btn-block btn-xs my-auto"
+								th:text="${jobPost.status.value}"></button>
+							<button th:if="${jobPost.status.name == 'CANCELLED'}"
+								class="bg-gray btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></button>
+						</div><!-- /.col -->
+						<div class="col">
 							<ol class="breadcrumb float-sm-right">
 								<li class="breadcrumb-item"><a href="#">Home</a></li>
 								<li class="breadcrumb-item"><a th:href="@{/jobpost/list}">Job Posts</a></li>
@@ -38,15 +44,13 @@
 								<div class="card-body">
 									<form action="#" th:object="${jobPost}" method="post">
 										<div class="form-row">
+
+										</div>
+										<div class="form-row">
 											<div class="form-group col">
 												<label class="form-label">Title</label>
 												<input th:field="*{title}" type="text" class="form-control"
 													th:value="*{title}" readonly>
-											</div>
-											<div class="form-group col">
-												<label class="form-label">Status</label>
-												<input id="*{status}" type="text" class="form-control"
-													th:value="*{status.value}" readonly>
 											</div>
 										</div>
 										<div class="mb-3 form-group">

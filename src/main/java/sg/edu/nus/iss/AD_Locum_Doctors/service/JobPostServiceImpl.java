@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,7 @@ public class JobPostServiceImpl implements JobPostService {
 		return jobPostRepo.findById(Long.parseLong(id)).orElse(null);
 	}
 
+	@Override
 	public List<JobPost> findJobPostsWithOutstandingPayment(Long userOrgId) {
 		return jobPostRepo.findJobPostsWithOutstandingPayment(userOrgId);
 	}
@@ -72,10 +74,12 @@ public class JobPostServiceImpl implements JobPostService {
 		jobPostRepo.saveAndFlush(jobPost);
 	}
 
+	@Override
 	public List<JobPost> findPaidJobPosts(Long userOrgId) {
 		return jobPostRepo.findPaidJobPosts(userOrgId);
 	}
 
+	@Override
 	public List<JobPost> findPaidandUnpaidJobPosts(Long userOrgId) {
 		return jobPostRepo.findPaidAndUnpaidJobPosts(userOrgId);
 	}
@@ -121,6 +125,7 @@ public class JobPostServiceImpl implements JobPostService {
 	@Override
 	public JobPost createJobPost(JobPostForm jobPostForm, User user) {
 		JobPost newJobPost = new JobPost();
+		newJobPost.setDateModified(LocalDateTime.now());
 		newJobPost.setClinicUser(user);
 		newJobPost.setTitle(jobPostForm.getTitle());
 		newJobPost.setDescription(jobPostForm.getDescription());
@@ -133,6 +138,7 @@ public class JobPostServiceImpl implements JobPostService {
 
 	@Override
 	public void cancel(JobPost jobPost) {
+		jobPost.setDateModified(LocalDateTime.now());
 		jobPost.setStatus(JobStatus.CANCELLED);
 		jobPostRepo.save(jobPost);
 	}
@@ -149,6 +155,7 @@ public class JobPostServiceImpl implements JobPostService {
 
 	@Override
 	public void cancel(JobPost jobpost, JobAdditionalRemarks additionalRemarks, User user) {
+		jobpost.setDateModified(LocalDateTime.now());
 		jobpost.setStatus(JobStatus.CANCELLED);
 		jobPostRepo.saveAndFlush(jobpost);
 		additionalRemarks.setCategory(RemarksCategory.CANCELLATION);
@@ -160,6 +167,7 @@ public class JobPostServiceImpl implements JobPostService {
 
 	@Override
 	public void delete(JobPost jobpost, JobAdditionalRemarks additionalRemarks, User user) {
+		jobpost.setDateModified(LocalDateTime.now());
 		jobpost.setStatus(JobStatus.REMOVED);
 		jobPostRepo.saveAndFlush(jobpost);
 		additionalRemarks.setCategory(RemarksCategory.DELETION);

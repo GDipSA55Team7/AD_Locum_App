@@ -184,11 +184,12 @@ public class AdLocumDoctorsApplication {
 			userRepo.saveAndFlush(testUser7);
 
 			JobPost jp1 = new JobPost();
+			jp1.setDateModified(LocalDateTime.of(2023, 01, 1, 18, 30, 0));
 			jp1.setClinic(c1);
 			jp1.setTitle("Looking for Locum Doctor");
 			jp1.setDescription("Looking for locum doctor for Punggol Family clinic");
-			jp1.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
-			jp1.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
+			jp1.setStartDateTime(LocalDateTime.of(2023, 02, 22, 18, 30, 0));
+			jp1.setEndDateTime(LocalDateTime.of(2023, 02, 22, 20, 30, 0));
 			jp1.setRatePerHour(100);
 			jp1.setClinicUser(testUser3);
 			jp1.setFreelancer(testUser1);
@@ -196,11 +197,12 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp1);
 
 			JobPost jp2 = new JobPost();
+			jp2.setDateModified(LocalDateTime.of(2023, 01, 1, 18, 30, 0));
 			jp2.setClinic(c2);
 			jp2.setTitle("Looking for locum physiotherapist");
 			jp2.setDescription("Looking for locum physiotherapist to perform the following ...");
-			jp2.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
-			jp2.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
+			jp2.setStartDateTime(LocalDateTime.of(2023, 02, 25, 18, 30, 0));
+			jp2.setEndDateTime(LocalDateTime.of(2023, 02, 25, 20, 30, 0));
 			jp2.setStatus(JobStatus.OPEN);
 			jp2.setRatePerHour(88.8);
 			jp2.setClinicUser(testUser3);
@@ -208,10 +210,11 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp2);
 
 			JobPost jp3 = new JobPost();
+			jp3.setDateModified(LocalDateTime.of(2023, 01, 1, 18, 30, 0));
 			jp3.setClinic(c2);
 			jp3.setTitle("Looking for locum occupational therapist");
 			jp3.setDescription("Looking for locum occupational therapist");
-			jp3.setStartDateTime(LocalDateTime.of(2023, 01, 11, 18, 30, 0));
+			jp3.setStartDateTime(LocalDateTime.of(2023, 02, 28, 18, 30, 0));
 			jp3.setEndDateTime(LocalDateTime.of(2023, 02, 28, 20, 30, 0));
 			jp3.setStatus(JobStatus.CANCELLED);
 			jp3.setClinicUser(testUser3);
@@ -221,6 +224,7 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp3);
 
 			JobPost jp4 = new JobPost();
+			jp4.setDateModified(LocalDateTime.of(2023, 01, 3, 18, 30, 0));
 			jp4.setClinic(c3);
 			jp4.setTitle("Urgent Request for RMG @ Lot 1");
 			jp4.setDescription("Raffles Medical Group in Lot1 looking for locum urgently!");
@@ -235,6 +239,7 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp4);
 
 			JobPost jp5 = new JobPost();
+			jp5.setDateModified(LocalDateTime.of(2023, 01, 1, 18, 30, 0));
 			jp5.setClinic(c4);
 			jp5.setDescription("Raffles Medical Group in Loyang Point looking for locum urgently!");
 			jp5.setStartDateTime(LocalDateTime.of(2023, 01, 15, 18, 30, 0));
@@ -245,6 +250,7 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp5);
 
 			JobPost jp6 = new JobPost();
+			jp6.setDateModified(LocalDateTime.of(2023, 01, 1, 18, 30, 0));
 			jp6.setClinic(c5);
 			jp6.setTitle("Urgent Request for RMG @ Raffles City");
 			jp6.setDescription("Raffles Medical Group in Raffles City Shopping Centre looking for locum urgently!");
@@ -256,6 +262,7 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp6);
 
 			JobPost jp7 = new JobPost();
+			jp7.setDateModified(LocalDateTime.of(2023, 01, 5, 18, 30, 0));
 			jp7.setClinic(c5);
 			jp7.setTitle("Urgent Request for RMG @ Raffles City");
 			jp7.setDescription("Raffles Medical Group in Raffles City looking for locum urgently!");
@@ -268,6 +275,7 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp7);
 
 			JobPost jp8 = new JobPost();
+			jp8.setDateModified(LocalDateTime.of(2023, 01, 1, 18, 30, 0));
 			jp8.setClinic(c5);
 			jp8.setTitle("Urgent Request for RMG @ Raffles City");
 			jp8.setDescription("Looking for locum urgently!");
@@ -280,6 +288,7 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp8);
 
 			JobPost jp9 = new JobPost();
+			jp9.setDateModified(LocalDateTime.of(2023, 01, 1, 18, 30, 0));
 			jp9.setClinic(c5);
 			jp9.setTitle("Urgent Request for RMG @ Raffles City");
 			jp9.setDescription("Looking for locum urgently!");
@@ -292,6 +301,7 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp9);
 
 			JobPost jp10 = new JobPost();
+			jp10.setDateModified(LocalDateTime.of(2023, 01, 2, 18, 30, 0));
 			jp10.setClinic(c5);
 			jp10.setTitle("Urgent Request for RMG @ Raffles City");
 			jp10.setDescription("Looking for locum urgently!");
@@ -304,6 +314,7 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp10);
 
 			JobPost jp11 = new JobPost();
+			jp11.setDateModified(LocalDateTime.of(2023, 01, 4, 18, 30, 0));
 			jp11.setClinic(c5);
 			jp11.setTitle("Urgent Request for RMG @ Raffles City");
 			jp11.setDescription("Looking for locum urgently!");

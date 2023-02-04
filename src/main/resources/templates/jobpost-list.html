@@ -60,9 +60,10 @@
 													<th>S/N</th>
 													<th>Job Title</th>
 													<th>Clinic Location</th>
-													<th>Status</th>
 													<th>Date/Time</th>
 													<th>Fees</th>
+													<th>Status</th>
+													<th>Date Modified</th>
 													<th>Actions</th>
 												</tr>
 											</thead>
@@ -71,17 +72,15 @@
 													<td th:text="${jp.id}">Job Post Id</td>
 													<td th:text="${jp.title}">Job Title</td>
 													<td th:text="${jp.clinic.name}">Clinic Location</td>
-
-													<td>
-														<span th:text="${jp.status.value}"></span>
-													</td>
 													<td>
 														<span th:text="${jp.getStartDateTimeString()}"></span> to<br>
 														<span th:text="${jp.getEndDateTimeString()}"></span>
-
 													</td>
 													<td th:text="${jp.getRatePerHourString}">Fees</td>
-
+													<td> <span th:text="${jp.status.value}"></span> </td>
+													<td> <span
+															th:text="${jp.getDateTimeString(jp.dateModified)}"></span>
+													</td>
 													<td align="center">
 														<a th:href="@{/jobpost/}+${jp.id}">
 															<div
