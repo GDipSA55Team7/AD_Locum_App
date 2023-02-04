@@ -26,4 +26,9 @@ public class AdditionalFeeDetailsServiceImpl implements AdditionalFeeDetailsServ
         additionalFeeDetails.setJobPost(jobPost);
         additionalFeeDetailsRepository.saveAndFlush(additionalFeeDetails);
     }
+
+    @Override
+    public void delete(AdditionalFeeDetails additionalFeeDetails) {
+        additionalFeeDetailsRepository.delete(additionalFeeDetails);
+    }
 }

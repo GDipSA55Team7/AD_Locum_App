@@ -14,14 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpSession;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.AdditionalFeeDetailsForm;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.RemarksCategory;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.AdditionalFeeDetailsService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
@@ -96,8 +89,8 @@ public class JobPostController {
 				.filter(x -> x.getJobPost().getId() == jobPost.getId())
 				.sorted(Comparator.comparing(JobAdditionalRemarks::getDateTime).reversed()).toList();
 		model.addAttribute("remarksList", remarksList);
-		AdditionalFeeDetailsForm additional = new AdditionalFeeDetailsForm();
-		additional.setJobPostId(Long.parseLong(id));
+		ManyAdditionalFeeDetailsForm additional = new ManyAdditionalFeeDetailsForm();
+		additional.setJobPostId(jobPost.getId().toString());
 		model.addAttribute("additional", additional);
 		if (jobPost.getStatus().equals(JobStatus.OPEN) || jobPost.getStatus().equals(JobStatus.CANCELLED)) {
 			return "jobpost-view";
@@ -182,11 +175,36 @@ public class JobPostController {
 	}
 
 	@PostMapping("/additional")
-	public String createJobPostAdditional(AdditionalFeeDetailsForm additionalFeeDetailsForm) {
-		JobPost jobPost = jobPostService.findJobPostById(additionalFeeDetailsForm.getJobPostId().toString());
-		additionalFeeDetailsService.createAdditionalFeeDetail(additionalFeeDetailsForm, jobPost);
+	public String createManyJobPostAdditional(ManyAdditionalFeeDetailsForm manyAdditionalFeeDetailsForm)
+	{
+		List<AdditionalFeeDetails> manyFeeDetails = manyAdditionalFeeDetailsForm.getAdditionalFeeDetails();
+		String jobPost_id = manyAdditionalFeeDetailsForm.getJobPostId();
+		JobPost jobPost = jobPostService.findJobPostById(jobPost_id);
+
+		if(manyFeeDetails != null)
+		{
+			int i = 0;
+			while (i < manyFeeDetails.size()) {
+				if(manyFeeDetails.get(i).getDescription() != null && manyFeeDetails.get(i).getAdditionalFeesAmount() > 0)
+				{
+					manyFeeDetails.get(i).setJobPost(jobPost);
+				}
+				i++;
+			}
+			jobPost.setAdditionalFeeDetails(manyFeeDetails);
+		}
+
+		jobPostService.saveJobPost(jobPost);
 
 		return "redirect:/jobpost/" + jobPost.getId();
+	}
+
+
+	@GetMapping("/{post_id}/additional/{id}/delete")
+	public String deleteAdditionalFee(@PathVariable String post_id,@PathVariable String id) {
+		AdditionalFeeDetails feeDetails = additionalFeeDetailsService.getAdditionalFeeDetailsById(id);
+		additionalFeeDetailsService.delete(feeDetails);
+		return "redirect:/jobpost/" + post_id;
 	}
 
 	@GetMapping("/{id}/adminremove")

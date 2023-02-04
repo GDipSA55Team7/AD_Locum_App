@@ -7,4 +7,6 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
 public interface AdditionalFeeDetailsService {
     AdditionalFeeDetails getAdditionalFeeDetailsById(String id);
     void createAdditionalFeeDetail(AdditionalFeeDetailsForm form, JobPost jobPost);
+
+    void delete(AdditionalFeeDetails additionalFeeDetails);
 }

@@ -244,29 +244,17 @@
 									<h3 class="card-title">Additional Fees</h3>
 									<div class="card-tools">
 										<!-- Collapse Button -->
-										<button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-												class="fas fa-minus"></i></button>
+										<button type="button" class="btn btn-tool"><i
+												class="fas fa-plus" th:onclick="'javascript:addToFeeList();'"></i></button>
 									</div>
 									<!-- /.card-tools -->
 								</div>
 								<!-- /.card-header -->
-								<div class="card-body" th:if="${jobPost.status.name != 'COMPLETED_PAYMENT_PROCESSED'}">
-									<h4>Add Fee</h4>
-									<form th:action="@{'/jobpost/additional'}" th:object="${additional}" method="post">
-										<input type="hidden" th:field="*{jobPostId}"
-											th:value="${additional.jobPostId}" />
-										<div class="mb-3 form-group">
-											<label class="form-label">Description</label>
-											<input th:field="*{description}" type="text" class="form-control"
-												th:value="*{description}">
-										</div>
-										<div class="mb-3 form-group">
-											<label class="form-label">Amount</label>
-											<input th:field="*{additionalFeesAmount}" type="text" class="form-control"
-												th:value="*{additionalFeesAmount}">
-										</div>
-										<button type="submit" name="add-fee" value="add-fee"
-											class="btn btn-info">Add</button>
+								<div class="card-body" id="additional_card_body">
+									<form th:action="@{'/jobpost/additional'}" th:object="${additional}" method="post" id="additinonalFeeDetails">
+										<input th:field="*{jobPostId}" th:value="${jobPost.id}" hidden />
+
+
 									</form>
 								</div>
 
@@ -283,11 +271,11 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr th:each="additional: ${jobPost.getAdditionalFeeDetails()}">
-												<td>1</td>
+											<tr th:each="additional, loop: ${jobPost.getAdditionalFeeDetails()}">
+												<td th:text="${loop.index+1}"></td>
 												<td th:text="${additional.getDescription()}" />
 												<td th:text="${additional.getAdditionalFeesAmount()}" />
-												<td></td>
+												<td><a th:href="@{'/jobpost/' + ${jobPost.id} + '/additional/'+${additional.id}+'/delete'}">Delete</a></td>
 											</tr>
 										</tbody>
 									</table>
@@ -348,7 +336,34 @@
 			$('#datetimes1').val(start.format('DD-MM-YYYY HH:mm'));
 			$('#datetimes2').val(end.format('DD-MM-YYYY HH:mm'));
 		});
-	</script>
+
+		$("#additional_card_body").hide();
+
+		//dynamic fields
+		var index = 0;
+
+		function addToFeeList() {
+			$("#additional_card_body").show();
+			$("#addAdditionalButton").remove();
+			$(
+					`
+				<div class="row">
+					<div class ="mb-3 col">
+						<label class="form-label">Description</label>
+						<input id="additionalFeeDetails${index}.description" name="additionalFeeDetails[${index}].description" type="text" class="form-control" required/>
+					</div>
+					<div class="mb-3 col">
+						<label class="form-label">Fee</label>
+						<input id="additionalFeeDetails${index}.additionalFeesAmount" name="additionalFeeDetails[${index}].additionalFeesAmount" type="number" class="form-control" required/>
+					</div>
+				</div>
+				<button type="submit" name="add-fee" value="add-fee" class="btn btn-info" id="addAdditionalButton">Add</button>`
+			).appendTo('#additinonalFeeDetails');
+
+			index++;
+		}
+
+		</script>
 </body>
 
 </html>
