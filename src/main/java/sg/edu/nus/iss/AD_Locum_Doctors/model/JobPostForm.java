@@ -45,7 +45,7 @@ public class JobPostForm {
 		try {
 			startTimeHourInt = Integer.parseInt(startTimeHour);
 			startTimeMinInt = Integer.parseInt(startTimeMin);
-			if (startTimeAmPm.equals("PM")) {
+			if (startTimeAmPm.equals("PM") && startTimeHourInt != 12) {
 				startTimeHourInt += 12;
 			}
 		} catch (NumberFormatException ex) {
@@ -67,7 +67,7 @@ public class JobPostForm {
 		try {
 			endTimeHourInt = Integer.parseInt(endTimeHour);
 			endTimeMinInt = Integer.parseInt(endTimeMin);
-			if (endTimeAmPm.equals("PM")) {
+			if (endTimeAmPm.equals("PM") && endTimeHourInt != 12) {
 				endTimeHourInt += 12;
 			}
 		} catch (NumberFormatException ex) {
