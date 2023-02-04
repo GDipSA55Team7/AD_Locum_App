@@ -2,7 +2,10 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
 	layout:decorate="~{fragments/layout}">
 
-<head th:replace="fragments/layout.html :: html_head" />
+<head>
+
+	<head th:replace="fragments/layout.html :: html_head" />
+</head>
 
 <body class="hold-transition sidebar-mini">
 	<div class="wrapper">
@@ -32,12 +35,65 @@
 			<div class="content">
 				<div class="container-fluid">
 					<div class="row">
-						<div class="col-12">
+						<div class="col-lg-6">
 							<div class="card">
-								<div class="card-body">
-
+								<div class="card-header">
+									<h3 class="card-title">Default Card Example</h3>
+									<div class="card-tools">
+										<!-- Buttons, labels, and many other things can be placed here! -->
+										View All
+									</div>
+									<!-- /.card-tools -->
 								</div>
+								<!-- /.card-header -->
+								<div class="card-body">
+									The body of the card
+								</div>
+								<!-- /.card-body -->
 							</div>
+							<!-- /.card -->
+						</div>
+						<!-- /.col -->
+
+						<div class="col-lg-6">
+							<div class="card">
+								<div class="card-header">
+									<h3 class="card-title">Recent Activities</h3>
+								</div>
+								<!-- /.card-header -->
+								<div class="card-body">
+									<!-- Main node for this component -->
+									<div class="timeline">
+										<!-- Timeline time label -->
+										<div th:each="row : ${recentActivities}" th:remove="tag">
+											<div class="time-label">
+												<span class="bg-green btn-xs" th:text="${row.key}"></span>
+											</div>
+											<div th:each="v : ${row.value}">
+												<i class="fas fa-envelope bg-blue"></i>
+												<!-- Timeline item -->
+												<div class="timeline-item">
+													<!-- Time -->
+													<span class="time"><i class="fas fa-clock"></i> <span
+															th:text="${v.getTimeOnlyString}"></span></span>
+													<!-- Header. -->
+													<h2 class="timeline-header" style="font-weight: bold;"><span
+															th:text="${v.category.value}"></span>
+														<a th:href="@{/jobpost/}+${v.jobPost.id}"
+															th:text="${' #' + v.jobPost.id + ': ' + v.jobPost.title}"></a>
+													</h2>
+												</div>
+											</div>
+										</div>
+										<div>
+											<i class="fas fa-clock bg-gray"></i>
+											<div class="col" style="margin-left:60px;">
+												<a th:href="@{/jobpost/list}">View more</a>
+											</div>
+										</div>
+									</div>
+								</div><!-- /.card-body -->
+							</div><!-- /.card -->
 						</div>
 						<!-- /.col -->
 					</div>

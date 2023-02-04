@@ -1,6 +1,6 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class JobPostAdditionalRemarksServiceImpl implements JobPostAdditionalRem
 	public void createJobPostAdditionalRemarks(RemarksCategory category, User user, JobPost jobPost, String remarks) {
 		JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
 		additionalRemarks.setCategory(category);
-		additionalRemarks.setDate(LocalDate.now());
+		additionalRemarks.setDateTime(LocalDateTime.now());
 		additionalRemarks.setJobPost(jobPost);
 		additionalRemarks.setUser(user);
 		additionalRemarks.setRemarks(jobPost.getAdditionalRemarks());

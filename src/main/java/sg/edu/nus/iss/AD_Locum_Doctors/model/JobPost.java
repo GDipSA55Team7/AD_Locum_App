@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -51,10 +52,6 @@ public class JobPost {
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
 	private LocalDateTime actualEndDateTime;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
-	private LocalDateTime dateModified;
 
 	private double ratePerHour;
 
@@ -107,11 +104,33 @@ public class JobPost {
 		return endDateTime.format(formatter);
 	}
 
+	public LocalDateTime getDateTimeModified() {
+		List<JobAdditionalRemarks> remarks = this.getJobAdditionalRemarks().stream()
+				.sorted(Comparator.comparing(JobAdditionalRemarks::getDateTime).reversed()).toList();
+		if (remarks.size() > 0) {
+			return remarks.get(0).getDateTime();
+		}
+		return null;
+	}
+
+	public LocalDate getDateTimeModifiedDateOnly() {
+		return LocalDate.of(getDateTimeModified().getYear(), getDateTimeModified().getMonth(),
+				getDateTimeModified().getDayOfMonth());
+	}
+
 	public String getDateTimeString(LocalDateTime dateTime) {
 		if (dateTime == null) {
 			return "";
 		}
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
+		return dateTime.format(formatter);
+	}
+
+	public String getTimeString(LocalDateTime dateTime) {
+		if (dateTime == null) {
+			return "";
+		}
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm a");
 		return dateTime.format(formatter);
 	}
 

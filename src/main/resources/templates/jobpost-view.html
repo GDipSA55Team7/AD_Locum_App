@@ -129,7 +129,7 @@
 											<tr th:each="r : ${remarksList}">
 												<td th:text="${r.id}"></td>
 												<td th:text="${r.user.name}"></td>
-												<td th:text="${r.date}"></td>
+												<td th:text="${r.getDateTimeString}"></td>
 												<td th:text="${r.category.value}"></td>
 												<td th:text="${r.remarks}"></td>
 											</tr>

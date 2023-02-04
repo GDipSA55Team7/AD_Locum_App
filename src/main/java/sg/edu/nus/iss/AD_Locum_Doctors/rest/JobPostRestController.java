@@ -1,6 +1,6 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.rest;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,7 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostApiDTO;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.RemarksCategory;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
@@ -70,7 +75,7 @@ public class JobPostRestController {
                     JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
                     additionalRemarks.setCategory(RemarksCategory.CANCELLATION);
                     additionalRemarks.setRemarks("Application Cancelled");
-                    additionalRemarks.setDate(LocalDate.now());
+                    additionalRemarks.setDateTime(LocalDateTime.now());
                     additionalRemarks.setJobPost(jobPost);
                     additionalRemarks.setUser(user);
                     jobPostService.setStatus(jobPost, JobStatus.OPEN, userId, additionalRemarks);

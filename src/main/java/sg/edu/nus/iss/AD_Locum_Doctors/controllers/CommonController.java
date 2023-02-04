@@ -56,9 +56,9 @@ public class CommonController {
 		switch (u.getRole().getName()) {
 			case "System_Admin":
 				return "redirect:/system-admin";
-			case "Clinic_Admin":
-				return "redirect:/clinic-admin";
 			case "Clinic_Main_Admin":
+				return "redirect:/dashboard/clinic-admin";
+			case "Clinic_Admin":
 				return "redirect:/clinic-admin";
 			case "Clinic_User":
 				return "redirect:/clinic-user";

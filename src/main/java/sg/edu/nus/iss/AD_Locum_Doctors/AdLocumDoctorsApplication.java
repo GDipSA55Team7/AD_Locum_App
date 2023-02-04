@@ -1,6 +1,5 @@
 package sg.edu.nus.iss.AD_Locum_Doctors;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -184,7 +183,6 @@ public class AdLocumDoctorsApplication {
 			userRepo.saveAndFlush(testUser7);
 
 			JobPost jp1 = new JobPost();
-			jp1.setDateModified(LocalDateTime.of(2023, 01, 1, 18, 30, 0));
 			jp1.setClinic(c1);
 			jp1.setTitle("Looking for Locum Doctor");
 			jp1.setDescription("Looking for locum doctor for Punggol Family clinic");
@@ -197,7 +195,6 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp1);
 
 			JobPost jp2 = new JobPost();
-			jp2.setDateModified(LocalDateTime.of(2023, 01, 1, 18, 30, 0));
 			jp2.setClinic(c2);
 			jp2.setTitle("Looking for locum physiotherapist");
 			jp2.setDescription("Looking for locum physiotherapist to perform the following ...");
@@ -210,7 +207,6 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp2);
 
 			JobPost jp3 = new JobPost();
-			jp3.setDateModified(LocalDateTime.of(2023, 01, 1, 18, 30, 0));
 			jp3.setClinic(c2);
 			jp3.setTitle("Looking for locum occupational therapist");
 			jp3.setDescription("Looking for locum occupational therapist");
@@ -224,7 +220,6 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp3);
 
 			JobPost jp4 = new JobPost();
-			jp4.setDateModified(LocalDateTime.of(2023, 01, 3, 18, 30, 0));
 			jp4.setClinic(c3);
 			jp4.setTitle("Urgent Request for RMG @ Lot 1");
 			jp4.setDescription("Raffles Medical Group in Lot1 looking for locum urgently!");
@@ -239,30 +234,29 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp4);
 
 			JobPost jp5 = new JobPost();
-			jp5.setDateModified(LocalDateTime.of(2023, 01, 1, 18, 30, 0));
 			jp5.setClinic(c4);
 			jp5.setDescription("Raffles Medical Group in Loyang Point looking for locum urgently!");
 			jp5.setStartDateTime(LocalDateTime.of(2023, 01, 15, 18, 30, 0));
 			jp5.setEndDateTime(LocalDateTime.of(2023, 01, 15, 22, 30, 0));
 			jp5.setRatePerHour(100);
+			jp5.setClinicUser(testUser5);
 			jp5.setFreelancer(testUser2);
 			jp5.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jobPostRepo.saveAndFlush(jp5);
 
 			JobPost jp6 = new JobPost();
-			jp6.setDateModified(LocalDateTime.of(2023, 01, 1, 18, 30, 0));
 			jp6.setClinic(c5);
 			jp6.setTitle("Urgent Request for RMG @ Raffles City");
 			jp6.setDescription("Raffles Medical Group in Raffles City Shopping Centre looking for locum urgently!");
 			jp6.setStartDateTime(LocalDateTime.of(2023, 01, 20, 18, 30, 0));
 			jp6.setEndDateTime(LocalDateTime.of(2023, 01, 20, 20, 30, 0));
 			jp6.setRatePerHour(100);
+			jp6.setClinicUser(testUser5);
 			jp6.setFreelancer(testUser2);
 			jp6.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jobPostRepo.saveAndFlush(jp6);
 
 			JobPost jp7 = new JobPost();
-			jp7.setDateModified(LocalDateTime.of(2023, 01, 5, 18, 30, 0));
 			jp7.setClinic(c5);
 			jp7.setTitle("Urgent Request for RMG @ Raffles City");
 			jp7.setDescription("Raffles Medical Group in Raffles City looking for locum urgently!");
@@ -275,7 +269,6 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp7);
 
 			JobPost jp8 = new JobPost();
-			jp8.setDateModified(LocalDateTime.of(2023, 01, 1, 18, 30, 0));
 			jp8.setClinic(c5);
 			jp8.setTitle("Urgent Request for RMG @ Raffles City");
 			jp8.setDescription("Looking for locum urgently!");
@@ -288,7 +281,6 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp8);
 
 			JobPost jp9 = new JobPost();
-			jp9.setDateModified(LocalDateTime.of(2023, 01, 1, 18, 30, 0));
 			jp9.setClinic(c5);
 			jp9.setTitle("Urgent Request for RMG @ Raffles City");
 			jp9.setDescription("Looking for locum urgently!");
@@ -301,7 +293,6 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp9);
 
 			JobPost jp10 = new JobPost();
-			jp10.setDateModified(LocalDateTime.of(2023, 01, 2, 18, 30, 0));
 			jp10.setClinic(c5);
 			jp10.setTitle("Urgent Request for RMG @ Raffles City");
 			jp10.setDescription("Looking for locum urgently!");
@@ -314,7 +305,6 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp10);
 
 			JobPost jp11 = new JobPost();
-			jp11.setDateModified(LocalDateTime.of(2023, 01, 4, 18, 30, 0));
 			jp11.setClinic(c5);
 			jp11.setTitle("Urgent Request for RMG @ Raffles City");
 			jp11.setDescription("Looking for locum urgently!");
@@ -342,7 +332,7 @@ public class AdLocumDoctorsApplication {
 			jp1_remark_1.setJobPost(jp1);
 			jp1_remark_1.setUser(testUser1);
 			jp1_remark_1.setCategory(RemarksCategory.CANCELLATION);
-			jp1_remark_1.setDate(LocalDate.of(2021, 2, 1));
+			jp1_remark_1.setDateTime(LocalDateTime.of(2021, 2, 1, 1, 0, 0));
 			jp1_remark_1.setRemarks("Cancelled due to ...");
 			jobRemarksRepo.saveAndFlush(jp1_remark_1);
 
@@ -350,9 +340,41 @@ public class AdLocumDoctorsApplication {
 			jp1_remark_2.setJobPost(jp1);
 			jp1_remark_2.setUser(testUser2);
 			jp1_remark_2.setCategory(RemarksCategory.CANCELLATION);
-			jp1_remark_2.setDate(LocalDate.of(2021, 2, 2));
+			jp1_remark_2.setDateTime(LocalDateTime.of(2021, 2, 2, 1, 0, 0));
 			jp1_remark_2.setRemarks("Cancelled due to ...");
 			jobRemarksRepo.saveAndFlush(jp1_remark_2);
+
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
+					LocalDateTime.of(2021, 2, 12, 11, 0, 0), jp1, testUser3));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
+					LocalDateTime.of(2021, 2, 12, 1, 0, 0), jp2, testUser3));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CANCELLATION, "",
+					LocalDateTime.of(2021, 2, 12, 12, 0, 0), jp3, testUser3));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.COMPLETED_JOB, "",
+					LocalDateTime.of(2021, 2, 12, 2, 0, 0), jp4, testUser3));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
+					LocalDateTime.of(2021, 2, 20, 12, 0, 0), jp5, testUser5));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
+					LocalDateTime.of(2021, 2, 20, 3, 0, 0), jp6, testUser5));
+
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PENDING, "",
+					LocalDateTime.of(2021, 2, 20, 14, 0, 0), jp7, testUser3));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
+					LocalDateTime.of(2021, 2, 20, 13, 0, 0), jp7, testUser3));
+
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
+					LocalDateTime.of(2021, 2, 21, 1, 0, 0), jp8, testUser3));
+
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.REMOVED, "",
+					LocalDateTime.of(2021, 2, 21, 3, 0, 0), jp9, testUser3));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
+					LocalDateTime.of(2021, 2, 21, 2, 0, 0), jp9, testUser3));
+
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PROCESSED_PAYMENT, "",
+					LocalDateTime.of(2021, 2, 21, 13, 0, 0), jp10, testUser3));
+
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.ACCEPTION, "",
+					LocalDateTime.of(2021, 2, 21, 13, 0, 0), jp11, testUser3));
 		};
 	}
 }

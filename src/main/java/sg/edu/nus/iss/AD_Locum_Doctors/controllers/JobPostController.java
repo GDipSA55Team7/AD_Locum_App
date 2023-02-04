@@ -1,6 +1,5 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.controllers;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -64,7 +63,7 @@ public class JobPostController {
 				jobPosts = jobPostService.findJobPostsCreatedByUser(user).stream()
 						.filter(x -> !x.getStatus().equals(JobStatus.DELETED))
 						.filter(x -> !x.getStatus().equals(JobStatus.REMOVED))
-						.sorted(Comparator.comparing(JobPost::getDateModified).reversed())
+						.sorted(Comparator.comparing(JobPost::getDateTimeModified).reversed())
 						.collect(Collectors.toList());
 				model.addAttribute("jobPosts", jobPosts);
 				return "jobpost-list";
@@ -95,7 +94,7 @@ public class JobPostController {
 		model.addAttribute("jobPost", jobPost);
 		List<JobAdditionalRemarks> remarksList = jobAdditionalRemarksRepo.findAll().stream()
 				.filter(x -> x.getJobPost().getId() == jobPost.getId())
-				.sorted(Comparator.comparing(JobAdditionalRemarks::getId).reversed()).toList();
+				.sorted(Comparator.comparing(JobAdditionalRemarks::getDateTime).reversed()).toList();
 		model.addAttribute("remarksList", remarksList);
 		AdditionalFeeDetailsForm additional = new AdditionalFeeDetailsForm();
 		additional.setJobPostId(Long.parseLong(id));
@@ -118,7 +117,6 @@ public class JobPostController {
 		User user = (User) session.getAttribute("user");
 		String id = jobPost.getId().toString();
 		JobPost toUpdateJobPost = jobPostService.findJobPostById(id);
-		toUpdateJobPost.setDateModified(LocalDateTime.now());
 		toUpdateJobPost.setActualStartDateTime(jobPost.getActualStartDateTime());
 		toUpdateJobPost.setActualEndDateTime(jobPost.getActualEndDateTime());
 		toUpdateJobPost.setAdditionalRemarks(jobPost.getAdditionalRemarks());
@@ -134,7 +132,6 @@ public class JobPostController {
 		User user = (User) session.getAttribute("user");
 		String id = jobPost.getId().toString();
 		JobPost jp = jobPostService.findJobPostById(id);
-		jp.setDateModified(LocalDateTime.now());
 		jp.setStatus(JobStatus.CANCELLED);
 		jp.setAdditionalRemarks(jobPost.getAdditionalRemarks());
 		jobPostService.saveJobPost(jp);
@@ -148,7 +145,6 @@ public class JobPostController {
 		User user = (User) session.getAttribute("user");
 		String id = jobPost.getId().toString();
 		JobPost jp = jobPostService.findJobPostById(id);
-		jp.setDateModified(LocalDateTime.now());
 		jp.setStatus(JobStatus.ACCEPTED);
 		jp.setAdditionalRemarks(jobPost.getAdditionalRemarks());
 		jobPostService.saveJobPost(jp);
@@ -162,7 +158,6 @@ public class JobPostController {
 		User user = (User) session.getAttribute("user");
 		String id = jobPost.getId().toString();
 		JobPost jp = jobPostService.findJobPostById(id);
-		jp.setDateModified(LocalDateTime.now());
 		jp.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 		jp.setActualStartDateTime(jobPost.getActualStartDateTime());
 		jp.setActualEndDateTime(jobPost.getActualEndDateTime());
@@ -178,7 +173,6 @@ public class JobPostController {
 		User user = (User) session.getAttribute("user");
 		String id = jobPost.getId().toString();
 		JobPost jp = jobPostService.findJobPostById(id);
-		jp.setDateModified(LocalDateTime.now());
 		jp.setStatus(JobStatus.COMPLETED_PAYMENT_PROCESSED);
 		jp.setAdditionalRemarks(jobPost.getAdditionalRemarks());
 		jobPostService.saveJobPost(jp);

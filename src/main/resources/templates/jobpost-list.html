@@ -79,7 +79,7 @@
 													<td th:text="${jp.getRatePerHourString}">Fees</td>
 													<td> <span th:text="${jp.status.value}"></span> </td>
 													<td> <span
-															th:text="${jp.getDateTimeString(jp.dateModified)}"></span>
+															th:text="${jp.getDateTimeString(jp.getDateTimeModified)}"></span>
 													</td>
 													<td align="center">
 														<a th:href="@{/jobpost/}+${jp.id}">
