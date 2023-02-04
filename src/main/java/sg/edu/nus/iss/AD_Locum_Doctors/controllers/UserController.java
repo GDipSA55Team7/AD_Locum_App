@@ -58,6 +58,7 @@ public class UserController {
         loadReference();
         Long userRoleID = user.getRole().getId();
         System.out.print(userRoleID);
+        model.addAttribute("currentUserId", user.getId());
         if (userRoleID == 5) {
             List<User> users = userService.findAll();
             model.addAttribute("userList", users);

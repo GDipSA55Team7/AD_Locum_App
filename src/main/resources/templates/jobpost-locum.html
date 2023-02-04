@@ -14,14 +14,29 @@
 			<div class="content-header">
 				<div class="container-fluid">
 					<div class="row mb-2">
-						<div class="col-sm-6">
-							<h1 class="m-0">View Job Posting</h1>
+						<div class="col-auto">
+							<h1 class="m-0"
+								th:text="${jobPost.status.name == 'ACCEPTED' ? 'Update Job Posting' : 'View Job Posting'}">
+								Update Job Posting</h1>
 						</div><!-- /.col -->
-						<div class="col-sm-6">
+						<div class="col-auto d-flex justify-content-center">
+							<p style="pointer-events:none" th:if="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
+								class="bg-warning btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></p>
+							<p style="pointer-events:none" th:if="${jobPost.status.name == 'ACCEPTED'}"
+								class="bg-success btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}">
+							</p>
+							<p style="pointer-events:none" type="button" th:if="${jobPost.status.name == 'COMPLETED_PENDING_PAYMENT'}"
+								class="bg-danger btn btn-block btn-xs my-auto"
+								th:text="${jobPost.status.value}"></p>
+							<p style="pointer-events:none" th:if="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+								class="bg-navy btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></p>
+						</div><!-- /.col -->
+						<div class="col">
 							<ol class="breadcrumb float-sm-right">
 								<li class="breadcrumb-item"><a href="#">Home</a></li>
 								<li class="breadcrumb-item"><a th:href="@{/jobpost/list}">Job Posts</a></li>
-								<li class="breadcrumb-item active">View Job Posting</li>
+								<li th:text="${jobPost.status.name == 'ACCEPTED' ? 'Update Job Posting' : 'View Job Posting'}"
+									class="breadcrumb-item active"></li>
 							</ol>
 						</div>
 					</div><!-- /.row -->
@@ -31,9 +46,10 @@
 
 			<!-- Main content -->
 			<div class="content">
+
 				<div class="container-fluid">
 					<div class="row">
-						<div class="col-md-9">
+						<div class="col">
 							<div class="card">
 								<div class="card-body">
 									<form action="#" th:action="@{'/jobpost/update'}" th:object="${jobPost}"
@@ -45,10 +61,11 @@
 												<input th:field="*{title}" type="text" class="form-control"
 													th:value="*{title}" readonly>
 											</div>
-											<div class="mb-3 form-group col">
-												<label class="form-label">Status</label>
-												<input id="currentStatus" type="text" class="form-control"
-													th:value="*{status.value}" readonly>
+											<div class="mb-3 form-group col-auto">
+												<label class="form-label">Date Modified</label>
+												<input id="dateTimeModified" type="text" class="form-control"
+													th:value="${jobPost.getDateTimeString(jobPost.dateTimeModified)}"
+													readonly>
 											</div>
 										</div>
 										<div class="mb-3 form-group">
@@ -93,61 +110,25 @@
 														<span class="input-group-text">$</span>
 													</div>
 													<input id="totalRate" type="text" class="form-control"
-														th:value="${jobPost.getComputedRateString()}" readonly />
+														th:value="${jobPost.getActualTotalRateString()}" readonly />
 												</div>
 											</div>
 										</div>
 
-										<div class="form-row" id="additionalRemarks">
+										<div class="form-row"
+											th:unless="${jobPost.status.name == 'ACCEPTED' OR jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}">
 											<div class="mb3 form-group col-12">
 												<label class="form-label">Remarks</label>
-												<input th:field="*{additionalRemarks}" type="text" class="form-control">
+												<input th:field="${jobPost.additionalRemarks}" type="text"
+													class="form-control">
 											</div>
 										</div>
-
-										<div class="mb-3 form-group d-flex flex-row">
-											<a href="/jobpost/list" class="btn btn-info mr-auto">Back</a>
-
-											<button type="submit" name="cancel-locum" value="cancel-locum"
-												class="btn btn-outline-warning mr-2">Cancel
-												Locum</button>
-
-											<button type="submit" name="confirm-locum" value="confirm-locum"
-												class="btn btn-info">Confirm Locum</button>
-										</div>
-									</form>
+										<button th:if="${jobPost.status.name == 'COMPLETED_PENDING_PAYMENT'}"
+											type="submit" name="payment-processed" value="payment-processed"
+											class="btn btn-info col">Set
+											as Completed (Payment Processed)</button>
 								</div>
 							</div>
-
-							<!-- additional start -->
-							<div th:if="${remarksList.size() > 0}" class="card">
-								<div class="card-header">
-									<h3 class="card-title">Remarks History</h3>
-								</div>
-								<div class="card-body table-responsive p-0">
-									<table class="table table-hover text-nowrap">
-										<thead>
-											<tr>
-												<th>ID</th>
-												<th>Author</th>
-												<th>Date</th>
-												<th>Category</th>
-												<th>Remarks</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr th:each="r : ${remarksList}">
-												<td th:text="${r.id}"></td>
-												<td th:text="${r.user.name}"></td>
-												<td th:text="${r.date}"></td>
-												<td th:text="${r.category.value}"></td>
-												<td th:text="${r.remarks}"></td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div><!-- additional end -->
-
 						</div>
 
 						<div class="col-md-3">
@@ -177,14 +158,164 @@
 											<b>Contact</b> <a class="float-right"
 												th:text="${jobPost.getFreelancer().getContact()}"></a>
 										</li>
+										<li th:if="${jobPost.status.name == 'COMPLETED_PENDING_PAYMENT' OR jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+											class="list-group-item">
+											<b>Actual Start Date & Time</b> <a class="float-right"
+												th:text="${jobPost.getDateTimeString(jobPost.getActualStartDateTime())}"></a>
+										</li>
+										<li th:if="${jobPost.status.name == 'COMPLETED_PENDING_PAYMENT' OR jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+											class="list-group-item">
+											<b>Actual End Date & Time</b> <a class="float-right"
+												th:text="${jobPost.getDateTimeString(jobPost.getActualEndDateTime())}"></a>
+										</li>
 									</ul>
+									<button th:if="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
+										type="submit" name="confirm-locum" value="confirm-locum"
+										class="btn btn-info col mb-3">Confirm
+										Locum
+									</button>
+									<button
+										th:if="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC' OR jobPost.status.name == 'ACCEPTED'}"
+										type="submit" name="cancel-locum" value="cancel-locum"
+										class="btn btn-outline-warning col mb-3">Cancel
+										Locum
+									</button>
+
+									<a href="/jobpost/list">
+										<< Back to Job Postings</a>
+
 								</div>
 							</div>
 							<!-- /.card -->
 						</div>
-
 					</div>
 
+					<div class="row">
+						<!-- start -->
+						<div class=" col-xl-9">
+							<div th:if="${jobPost.status.name == 'ACCEPTED'}" class="card">
+								<div class="card-header">
+									<h3 class="card-title">Set Job Completion Details</h3>
+								</div>
+								<div class="card-body table-responsive p-0">
+									<div class="card-body">
+
+										<div class="row">
+											<div class='col'>
+												<div class="form-group">
+													<label class="form-label">Actual Start to End Date & Time</label>
+													<div class="input-group">
+														<div class="input-group-prepend">
+															<div class="input-group-text"><i class="fa fa-calendar"></i>
+															</div>
+														</div>
+														<input type="text" class="form-control" name="datetimes" />
+													</div>
+													<input th:field="${jobPost.actualStartDateTime}" type="text"
+														class="form-control" id="datetimes1" value="" hidden />
+													<input th:field="${jobPost.actualEndDateTime}" type="text"
+														class="form-control" id="datetimes2" value="" hidden />
+												</div>
+											</div>
+										</div>
+
+										<div class="row" id="additionalRemarks">
+											<div class="mb3 col-12">
+												<label class="form-label">Remarks</label>
+												<input th:field="${jobPost.additionalRemarks}" type="text"
+													class="form-control">
+											</div>
+										</div>
+
+										<button th:if="${jobPost.status.name == 'ACCEPTED'}" type="submit"
+											name="pending-payment" value="pending-payment"
+											class="btn btn-info col mt-3">Set
+											as Completed (Pending Payment)</button>
+									</div>
+								</div>
+							</div><!-- end -->
+						</div>
+						</form>
+
+						<div class="col-xl-9"
+							th:unless="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED' AND jobPost.getAdditionalFeeDetails().size() == 0}">
+							<div class="card card-danger card-outline">
+								<div class="card-header d-flex justify-content-between">
+									<h3 class="card-title my-auto">Additional Fees</h3>
+									<div class="card-tools ml-auto">
+										<!-- Collapse Button -->
+										<button type="button" class="btn btn-outline-danger" th:onclick="'javascript:addToFeeList();'"><i
+												class="fas fa-plus" ></i> Add Fee</button>
+									</div>
+									<!-- /.card-tools -->
+								</div>
+								<!-- /.card-header -->
+								<div class="card-body" id="additional_card_body">
+									<form th:action="@{'/jobpost/additional'}" th:object="${additional}" method="post" id="additinonalFeeDetails">
+										<input th:field="*{jobPostId}" th:value="${jobPost.id}" hidden />
+
+
+									</form>
+								</div>
+
+								<div th:if="${jobPost.getAdditionalFeeDetails().size() > 0}"
+									class="card-body table-responsive p-0">
+									<table class="table table-bordered table-hover text-nowrap"
+										style="border-top:1px solid rgba(0,0,0,.125);">
+										<thead>
+											<tr>
+												<th style="width: 10px">#</th>
+												<th>Description</th>
+												<th>Amount</th>
+												<th>Action</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="additional, loop: ${jobPost.getAdditionalFeeDetails()}">
+												<td th:text="${loop.index+1}"></td>
+												<td th:text="${additional.getDescription()}" />
+												<td th:text="${additional.getAdditionalFeesAmount()}" />
+												<td><a th:href="@{'/jobpost/' + ${jobPost.id} + '/additional/'+${additional.id}+'/delete'}">Delete</a></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<!-- /.card-body -->
+							</div>
+						</div>
+						<!-- /.card -->
+
+						<!-- remarks start -->
+						<div class="col-xl-9">
+							<div th:if="${remarksList.size() > 0}" class="card">
+								<div class="card-header">
+									<h3 class="card-title">Remarks History</h3>
+								</div>
+								<div class="card-body table-responsive p-0">
+									<table class="table table-hover text-nowrap">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>User</th>
+												<th>Date</th>
+												<th>Category</th>
+												<th>Remarks</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="r : ${remarksList}">
+												<td th:text="${r.id}"></td>
+												<td th:text="${r.user.name}"></td>
+												<td th:text="${r.getDateTimeString}"></td>
+												<td th:text="${r.category.value}"></td>
+												<td th:text="${r.remarks}"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div><!-- additional end -->
+					</div>
 				</div><!-- /.container-fluid -->
 			</div>
 			<!-- /.content -->
@@ -192,6 +323,47 @@
 		<div th:replace="fragments/layout.html :: footer" />
 		<div th:replace="fragments/layout.html :: script" />
 	</div>
+
+	<script>
+		$('input[name="datetimes"]').daterangepicker({
+			"timePicker": true,
+			"timePickerIncrement": 30,
+			"autoApply": true,
+			locale: {
+				format: 'MM/DD/YYYY hh:mm A'
+			}
+		}, function (start, end, label) {
+			$('#datetimes1').val(start.format('DD-MM-YYYY HH:mm'));
+			$('#datetimes2').val(end.format('DD-MM-YYYY HH:mm'));
+		});
+
+		$("#additional_card_body").hide();
+
+		//dynamic fields
+		var index = 0;
+
+		function addToFeeList() {
+			$("#additional_card_body").show();
+			$("#addAdditionalButton").remove();
+			$(
+					`
+				<div class="row">
+					<div class ="mb-3 col">
+						<label class="form-label">Description</label>
+						<input id="additionalFeeDetails${index}.description" name="additionalFeeDetails[${index}].description" type="text" class="form-control" required/>
+					</div>
+					<div class="mb-3 col">
+						<label class="form-label">Fee</label>
+						<input id="additionalFeeDetails${index}.additionalFeesAmount" name="additionalFeeDetails[${index}].additionalFeesAmount" type="number" class="form-control" required/>
+					</div>
+				</div>
+				<button type="submit" name="add-fee" value="add-fee" class="btn btn-info" id="addAdditionalButton">Add</button>`
+			).appendTo('#additinonalFeeDetails');
+
+			index++;
+		}
+
+		</script>
 </body>
 
 </html>

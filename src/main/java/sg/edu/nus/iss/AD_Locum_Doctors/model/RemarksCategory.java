@@ -5,14 +5,17 @@ import lombok.Getter;
 
 @AllArgsConstructor
 public enum RemarksCategory {
-	
-	GENERAL("General"), 
-	DELETION("Deletion"), 
-	CANCELLATION("Cancellation"), 
-	REMOVED("Removed By Admin"), 
-	COMPLETED_JOB("Completed_Job"), 
-	PROCESSED_PAYMENT("Processed_Payment");
-	
+
+	GENERAL("General"),
+	CREATED("Created"),
+	DELETION("Deleted"),
+	PENDING("Pending Confirmation"),
+	ACCEPTION("Accepted Locum"),
+	CANCELLATION("Cancelled"),
+	REMOVED("Removed By Admin"),
+	COMPLETED_JOB("Completed Job"),
+	PROCESSED_PAYMENT("Processed Payment");
+
 	@Getter
 	public String value;
 }

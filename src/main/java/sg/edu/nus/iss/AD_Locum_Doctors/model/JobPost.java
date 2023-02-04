@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -103,14 +104,54 @@ public class JobPost {
 		return endDateTime.format(formatter);
 	}
 
-	public double computeTotalRate() {
+	public LocalDateTime getDateTimeModified() {
+		List<JobAdditionalRemarks> remarks = this.getJobAdditionalRemarks().stream()
+				.sorted(Comparator.comparing(JobAdditionalRemarks::getDateTime).reversed()).toList();
+		if (remarks.size() > 0) {
+			return remarks.get(0).getDateTime();
+		}
+		return null;
+	}
+
+	public LocalDate getDateTimeModifiedDateOnly() {
+		return LocalDate.of(getDateTimeModified().getYear(), getDateTimeModified().getMonth(),
+				getDateTimeModified().getDayOfMonth());
+	}
+
+	public String getDateTimeString(LocalDateTime dateTime) {
+		if (dateTime == null) {
+			return "";
+		}
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
+		return dateTime.format(formatter);
+	}
+
+	public String getTimeString(LocalDateTime dateTime) {
+		if (dateTime == null) {
+			return "";
+		}
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm a");
+		return dateTime.format(formatter);
+	}
+
+	public double computeEstimatedTotalRate() {
 		Long minutes = ChronoUnit.MINUTES.between(startDateTime, endDateTime);
 		Double convertToHour = ((double) minutes) / 60;
 		Double totalRate = ratePerHour * convertToHour;
 		return totalRate;
 	}
 
-	public String getComputedRateString() {
-		return String.format("%.2f", computeTotalRate());
+	public double computeActualTotalRate() {
+		Long minutes = ChronoUnit.MINUTES.between(startDateTime, endDateTime);
+		Double convertToHour = ((double) minutes) / 60;
+		Double totalRate = ratePerHour * convertToHour;
+		for (AdditionalFeeDetails row : additionalFeeDetails) {
+			totalRate += row.getAdditionalFeesAmount();
+		}
+		return totalRate;
+	}
+
+	public String getActualTotalRateString() {
+		return String.format("%.2f", computeActualTotalRate());
 	}
 }

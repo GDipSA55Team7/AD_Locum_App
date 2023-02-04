@@ -1,6 +1,6 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +27,9 @@ public class JobPostServiceImpl implements JobPostService {
 
 	@Autowired
 	private JobAdditionalRemarksRepository jobAdditionalRemarksRepo;
+
+	@Autowired
+	private JobPostAdditionalRemarksService remarksService;
 
 	@Autowired
 	private ClinicRepository clinicRepo;
@@ -65,6 +68,7 @@ public class JobPostServiceImpl implements JobPostService {
 		return jobPostRepo.findById(Long.parseLong(id)).orElse(null);
 	}
 
+	@Override
 	public List<JobPost> findJobPostsWithOutstandingPayment(Long userOrgId) {
 		return jobPostRepo.findJobPostsWithOutstandingPayment(userOrgId);
 	}
@@ -74,10 +78,12 @@ public class JobPostServiceImpl implements JobPostService {
 		jobPostRepo.saveAndFlush(jobPost);
 	}
 
+	@Override
 	public List<JobPost> findPaidJobPosts(Long userOrgId) {
 		return jobPostRepo.findPaidJobPosts(userOrgId);
 	}
 
+	@Override
 	public List<JobPost> findPaidandUnpaidJobPosts(Long userOrgId) {
 		return jobPostRepo.findPaidAndUnpaidJobPosts(userOrgId);
 	}
@@ -130,7 +136,10 @@ public class JobPostServiceImpl implements JobPostService {
 		newJobPost.setEndDateTime(jobPostForm.getEndDateTime());
 		newJobPost.setRatePerHour(jobPostForm.getRatePerHour());
 		newJobPost.setClinic(clinicRepo.findById(jobPostForm.getClinicId()).get());
-		return jobPostRepo.saveAndFlush(newJobPost);
+		newJobPost = jobPostRepo.saveAndFlush(newJobPost);
+		remarksService.createJobPostAdditionalRemarks(RemarksCategory.CREATED, user, newJobPost,
+				newJobPost.getAdditionalRemarks());
+		return newJobPost;
 	}
 
 	@Override
@@ -154,7 +163,7 @@ public class JobPostServiceImpl implements JobPostService {
 		jobpost.setStatus(JobStatus.CANCELLED);
 		jobPostRepo.saveAndFlush(jobpost);
 		additionalRemarks.setCategory(RemarksCategory.CANCELLATION);
-		additionalRemarks.setDate(LocalDate.now());
+		additionalRemarks.setDateTime(LocalDateTime.now());
 		additionalRemarks.setJobPost(jobpost);
 		additionalRemarks.setUser(user);
 		jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
@@ -165,7 +174,7 @@ public class JobPostServiceImpl implements JobPostService {
 		jobpost.setStatus(JobStatus.REMOVED);
 		jobPostRepo.saveAndFlush(jobpost);
 		additionalRemarks.setCategory(RemarksCategory.DELETION);
-		additionalRemarks.setDate(LocalDate.now());
+		additionalRemarks.setDateTime(LocalDateTime.now());
 		additionalRemarks.setJobPost(jobpost);
 		additionalRemarks.setUser(user);
 		jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);

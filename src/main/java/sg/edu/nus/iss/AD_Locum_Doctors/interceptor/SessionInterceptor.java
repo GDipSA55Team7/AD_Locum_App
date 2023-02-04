@@ -36,7 +36,7 @@ public class SessionInterceptor implements HandlerInterceptor {
 						response.sendRedirect("/system-admin");
 						break;
 					case "Clinic_Main_Admin":
-						response.sendRedirect("/clinic-admin");
+						response.sendRedirect("/dashboard/clinic-admin");
 						break;
 					case "Clinic_Admin":
 						response.sendRedirect("/clinic-admin");

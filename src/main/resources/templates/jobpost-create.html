@@ -238,7 +238,7 @@
 		var endTimeHour = parseInt(endTimeHourElem.value);
 		var endTimeMin = parseInt(endTimeMinElem.value);
 		var endTimeAmPm = endTimeAmPmElem.value;
-		if (endTimeAmPm == "PM") {
+		if (endTimeAmPm == "PM" && endTimeHour != 12) {
 			endDate.setHours(endTimeHour + 12, endTimeMin, 0);
 		} else {
 			endDate.setHours(endTimeHour, endTimeMin, 0);

@@ -46,9 +46,11 @@
 
 								</div>
 								<div class="p-2">
+								<!--
 									<form th:action="@{/jobpost/create}">
 										<button type="submit" class="btn btn-info">Add Job Post</button>
 									</form>
+								-->
 								</div>
 							</div>
 							<div class="card">
@@ -59,6 +61,7 @@
 												<tr>
 													<th>S/N</th>
 													<th>Job Description</th>
+													<th>Organization</th>
 													<th>Clinic Location</th>
 													<th>Status</th>
 													<th>Date/Time</th>
@@ -70,6 +73,7 @@
 												<tr th:each="jp : ${jobPosts}" class="listRecord">
 													<td th:text="${jp.id}">Job Post Id</td>
 													<td th:text="${jp.description}">Job Description</td>
+													<td th:text="${jp.clinic.Organization.name}">Job Description</td>
 													<td th:text="${jp.clinic.name}">Clinic Location</td>
 
 													<td>
@@ -87,10 +91,12 @@
 															<a th:case="'OPEN'"
 																th:href="@{/jobpost/}+${jp.id}+@{/adminremove}">Remove Job
 																Post</a>
+															 <!-- 
 															<a th:case="'PENDING_CONFIRMATION_BY_CLINIC'"
 																th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel Job Post</a>
 															<a th:case="'ACCEPTED'"
 																th:href="@{/jobpost/}+${jp.id}+@{/cancel}">Cancel Job Post</a>
+																-->
 														</div>
 													</td>
 												</tr>

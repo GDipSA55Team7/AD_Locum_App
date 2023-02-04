@@ -92,7 +92,7 @@
 															<span th:text="${jp.getEndDateTimeString()}"></span>
 														</td>
 														<td th:text="${'Dr ' + jp.getFreelancer().getName() + ' (' + jp.getFreelancer().getMedicalLicenseNo() + ')'}">Name</td>
-														<td th:text="${'$' + jp.computeTotalRate()}">Total Fees</td>
+														<td th:text="${'$' + jp.computeEstimatedTotalRate()}">Total Fees</td>
 														<td align="center">
 															<div th:switch="${#strings.toString(jp.status)}">
 																<a th:case="'OPEN'"
