@@ -20,6 +20,8 @@ public class JobPostApiDTO {
     private double ratePerHour;
 
     private double totalRate;
+    
+    private String additionalFeeListString;
 
     private JobStatus status;
 
@@ -28,4 +30,7 @@ public class JobPostApiDTO {
     private User freelancer;
 
     private Clinic clinic;
+    
+
+    
 }

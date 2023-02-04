@@ -42,4 +42,6 @@ public interface JobPostService {
 	void delete(JobPost jobPost, JobAdditionalRemarks additionalRemarks, User user);
 
 	void setStatus(JobPost jobPost, JobStatus status, String userId, JobAdditionalRemarks additionalRemarks);
+
+	String convertAdditionalFeesToString(JobPost jobPost);
 }

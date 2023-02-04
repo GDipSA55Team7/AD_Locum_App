@@ -86,6 +86,7 @@ public class AdLocumDoctorsApplication {
 			c1.setAddress("Punggol");
 			c1.setPostalCode("S123456");
 			c1.setOrganization(org_pg);
+			c1.setHCICode("21M0064");
 			clinicRepo.saveAndFlush(c1);
 
 			Clinic c2 = new Clinic();
@@ -93,12 +94,14 @@ public class AdLocumDoctorsApplication {
 			c2.setAddress("Yishun");
 			c2.setPostalCode("S654321");
 			c2.setOrganization(org_sc);
+			c2.setHCICode("20M0355");
 			clinicRepo.saveAndFlush(c2);
 
 			Clinic c3 = new Clinic();
 			c3.setName("Raffles Medical (Lot1 Shoppers Mall)");
 			c3.setAddress("21 CHOA CHU KANG AVE 4 LOT 1 SHOPPERS' MALL #B1-07A SINGAPORE 689812");
 			c3.setPostalCode("689812");
+			c3.setHCICode("15M0364");
 			c3.setOrganization(org1);
 			clinicRepo.saveAndFlush(c3);
 
@@ -106,6 +109,7 @@ public class AdLocumDoctorsApplication {
 			c4.setName("Raffles Medical (Loyang Point)");
 			c4.setAddress("BLK 259 PASIR RIS STREET 21 LOYANG POINT #02-33");
 			c4.setPostalCode("510259");
+			c4.setHCICode("17M0142");
 			c4.setOrganization(org1);
 			clinicRepo.saveAndFlush(c4);
 
@@ -113,6 +117,7 @@ public class AdLocumDoctorsApplication {
 			c5.setName("Raffles Medical (Raffles City Shopping Centre)");
 			c5.setAddress("252 NORTH BRIDGE ROAD RAFFLES CITY SHOPPING CENTRE #02-17");
 			c5.setPostalCode("179103");
+			c5.setHCICode("21M0229");
 			org1.setName("Raffles Medical Group Ltd");
 			org1.setUEN("198901967K");
 			c5.setOrganization(org1);
