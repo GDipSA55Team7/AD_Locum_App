@@ -13,6 +13,8 @@ public class JobPostApiDTO {
 
     private String description;
 
+    private String title;
+
     private String startDateTime;
 
     private String endDateTime;
