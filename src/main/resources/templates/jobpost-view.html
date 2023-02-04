@@ -18,9 +18,9 @@
 							<h1 class="m-0">View Job Posting</h1>
 						</div><!-- /.col -->
 						<div class="col-auto d-flex justify-content-center">
-							<button th:if="${jobPost.status.name == 'OPEN'}" class="bg-lightblue btn btn-block btn-xs my-auto"
+							<button style="pointer-events:none" th:if="${jobPost.status.name == 'OPEN'}" class="bg-lightblue btn btn-block btn-xs my-auto"
 								th:text="${jobPost.status.value}"></button>
-							<button th:if="${jobPost.status.name == 'CANCELLED'}"
+							<button style="pointer-events:none" th:if="${jobPost.status.name == 'CANCELLED'}"
 								class="bg-gray btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></button>
 						</div><!-- /.col -->
 						<div class="col">

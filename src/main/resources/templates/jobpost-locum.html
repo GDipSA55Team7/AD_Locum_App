@@ -20,15 +20,15 @@
 								Update Job Posting</h1>
 						</div><!-- /.col -->
 						<div class="col-auto d-flex justify-content-center">
-							<p th:if="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
+							<p style="pointer-events:none" th:if="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
 								class="bg-warning btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></p>
-							<p th:if="${jobPost.status.name == 'ACCEPTED'}"
+							<p style="pointer-events:none" th:if="${jobPost.status.name == 'ACCEPTED'}"
 								class="bg-success btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}">
 							</p>
-							<button type="button" th:if="${jobPost.status.name == 'COMPLETED_PENDING_PAYMENT'}"
+							<p style="pointer-events:none" type="button" th:if="${jobPost.status.name == 'COMPLETED_PENDING_PAYMENT'}"
 								class="bg-danger btn btn-block btn-xs my-auto"
-								th:text="${jobPost.status.value}"></button>
-							<p th:if="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+								th:text="${jobPost.status.value}"></p>
+							<p style="pointer-events:none" th:if="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
 								class="bg-navy btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></p>
 						</div><!-- /.col -->
 						<div class="col">

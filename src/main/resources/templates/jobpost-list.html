@@ -77,7 +77,33 @@
 														<span th:text="${jp.getEndDateTimeString()}"></span>
 													</td>
 													<td th:text="${jp.getRatePerHourString}">Fees</td>
-													<td> <span th:text="${jp.status.value}"></span> </td>
+													<td>
+														<p style="pointer-events:none"
+															th:if="${jp.status.name == 'OPEN'}"
+															class="bg-lightblue btn btn-block btn-sm my-auto"
+															th:text="${jp.status.value}"></p>
+														<p style="pointer-events:none"
+															th:if="${jp.status.name == 'CANCELLED'}"
+															class="bg-gray btn btn-block btn-sm my-auto"
+															th:text="${jp.status.value}"></p>
+														<p style="pointer-events:none"
+															th:if="${jp.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
+															class="bg-warning btn btn-block btn-sm my-auto"
+															th:text="${jp.status.value}"></p>
+														<p style="pointer-events:none"
+															th:if="${jp.status.name == 'ACCEPTED'}"
+															class="bg-success btn btn-block btn-sm my-auto"
+															th:text="${jp.status.value}">
+														</p>
+														<p style="pointer-events:none" type="button"
+															th:if="${jp.status.name == 'COMPLETED_PENDING_PAYMENT'}"
+															class="bg-danger btn btn-block btn-sm my-auto"
+															th:text="${jp.status.value}"></p>
+														<p style="pointer-events:none"
+															th:if="${jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+															class="bg-navy btn btn-block btn-sm my-auto"
+															th:text="${jp.status.value}"></p>
+													</td>
 													<td> <span
 															th:text="${jp.getDateTimeString(jp.getDateTimeModified)}"></span>
 													</td>
