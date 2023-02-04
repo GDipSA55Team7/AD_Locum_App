@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import sg.edu.nus.iss.AD_Locum_Doctors.model.AdditionalFeeDetails;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
@@ -154,5 +155,25 @@ public class JobPostServiceImpl implements JobPostService {
 		additionalRemarks.setJobPost(jobpost);
 		additionalRemarks.setUser(user);
 		jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
+	}
+
+	@Override
+	public String convertAdditionalFeesToString(JobPost jobPost) {
+ 	   String additionaFeeDetailsJSONString = "";
+       List<AdditionalFeeDetails> additionalDetailsFeeList = jobPost.getAdditionalFeeDetails();
+       if(!additionalDetailsFeeList.isEmpty()) {
+           for(Integer i = 0 ;  i < additionalDetailsFeeList.size() ; i++) {
+          	 double feeAmt =  additionalDetailsFeeList.get(i).getAdditionalFeesAmount(); 
+          	 String feeAmtTo2DP = String.format("%.2f",feeAmt);
+        	 String feeDescription =  additionalDetailsFeeList.get(i).getDescription();
+        	 additionaFeeDetailsJSONString += feeAmtTo2DP;
+        	 additionaFeeDetailsJSONString += ",";
+        	 additionaFeeDetailsJSONString += feeDescription;
+            if(i != additionalDetailsFeeList.size() - 1) {	 
+           	 additionaFeeDetailsJSONString += ";";
+            }
+          }
+       }
+       return additionaFeeDetailsJSONString;
 	}
 }

@@ -39,8 +39,7 @@ public class FreeLancerRestController {
 			if (newFreeLancerDTO.getErrorsFieldString().isEmpty()) {
 				return new ResponseEntity<>(newFreeLancerDTO, HttpStatus.CREATED);
 			}
-			// return errorString to client indicate supplied
-			// fields(username,Email,medicalLicenseNo) are non-unique
+			// return errorString to client indicate input fields(username,Email,medicalLicenseNo) are non-unique
 			else {
 				return new ResponseEntity<>(newFreeLancerDTO, HttpStatus.NOT_ACCEPTABLE);
 			}

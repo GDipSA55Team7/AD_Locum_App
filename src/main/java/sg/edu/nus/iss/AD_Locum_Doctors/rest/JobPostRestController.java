@@ -117,19 +117,21 @@ public class JobPostRestController {
     }
 
     private JobPostApiDTO setJobPostDTO(JobPost jobPost) {
-        JobPostApiDTO jobPostDTO = new JobPostApiDTO();
-        jobPostDTO.setId(jobPost.getId());
-        jobPostDTO.setDescription(jobPost.getDescription());
-        jobPostDTO.setStartDateTime(jobPost.getStartDateTime().toString());
-        jobPostDTO.setEndDateTime(jobPost.getEndDateTime().toString());
-        jobPostDTO.setClinic(jobPost.getClinic());
-        jobPostDTO.setStatus(jobPost.getStatus());
-        jobPostDTO.setTotalRate(jobPost.getTotalRate());
-        jobPostDTO.setRatePerHour(jobPost.getRatePerHour());
-        jobPostDTO.setClinicUser(jobPost.getClinicUser());
-        jobPostDTO.setClinic(jobPost.getClinic());
-        jobPostDTO.setFreelancer(jobPost.getFreelancer());
-
+    	
+    	  JobPostApiDTO jobPostDTO = new JobPostApiDTO();
+	      jobPostDTO.setId(jobPost.getId());
+	      jobPostDTO.setDescription(jobPost.getDescription());
+	      jobPostDTO.setStartDateTime(jobPost.getStartDateTime().toString());
+	      jobPostDTO.setEndDateTime(jobPost.getEndDateTime().toString());
+	      jobPostDTO.setClinic(jobPost.getClinic());
+	      jobPostDTO.setStatus(jobPost.getStatus());
+	      jobPostDTO.setTotalRate(jobPost.getTotalRate());
+	      jobPostDTO.setAdditionalFeeListString(jobPostService.convertAdditionalFeesToString(jobPost));
+	      jobPostDTO.setRatePerHour(jobPost.getRatePerHour());
+	      jobPostDTO.setClinicUser(jobPost.getClinicUser());
+	      jobPostDTO.setClinic(jobPost.getClinic());
+	      jobPostDTO.setFreelancer(jobPost.getFreelancer());
+    	
         return jobPostDTO;
     }
 
