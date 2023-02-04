@@ -240,12 +240,12 @@
 						<div class="col-xl-9"
 							th:unless="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED' AND jobPost.getAdditionalFeeDetails().size() == 0}">
 							<div class="card card-danger card-outline">
-								<div class="card-header">
-									<h3 class="card-title">Additional Fees</h3>
-									<div class="card-tools">
+								<div class="card-header d-flex justify-content-between">
+									<h3 class="card-title my-auto">Additional Fees</h3>
+									<div class="card-tools ml-auto">
 										<!-- Collapse Button -->
-										<button type="button" class="btn btn-tool"><i
-												class="fas fa-plus" th:onclick="'javascript:addToFeeList();'"></i></button>
+										<button type="button" class="btn btn-outline-danger" th:onclick="'javascript:addToFeeList();'"><i
+												class="fas fa-plus" ></i> Add Fee</button>
 									</div>
 									<!-- /.card-tools -->
 								</div>
