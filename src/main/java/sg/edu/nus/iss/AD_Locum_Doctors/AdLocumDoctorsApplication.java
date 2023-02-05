@@ -114,6 +114,8 @@ public class AdLocumDoctorsApplication {
 
 			Clinic c5 = new Clinic();
 			c5.setName("Raffles Medical (Raffles City Shopping Centre)");
+			c5.setContact("88834567");
+			c5.setEmail("rafflemedical111@gmail.com");
 			c5.setAddress("252 NORTH BRIDGE ROAD RAFFLES CITY SHOPPING CENTRE #02-17");
 			c5.setPostalCode("179103");
 			c5.setHCICode("21M0229");
