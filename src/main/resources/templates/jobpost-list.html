@@ -46,7 +46,7 @@
 
 								</div>
 								<div class="p-2">
-									<form th:action="@{/jobpost/create}">
+									<form th:if="${session.user.role.name != 'System_Admin'}" th:action="@{/jobpost/create}">
 										<button type="submit" class="btn btn-info">Add Job Post</button>
 									</form>
 								</div>
@@ -61,7 +61,7 @@
 													<th>Job Title</th>
 													<th>Clinic Location</th>
 													<th>Date/Time</th>
-													<th>Fees</th>
+													<th>Created By</th>
 													<th>Status</th>
 													<th>Date Modified</th>
 													<th>Actions</th>
@@ -76,32 +76,32 @@
 														<span th:text="${jp.getStartDateTimeString()}"></span> to<br>
 														<span th:text="${jp.getEndDateTimeString()}"></span>
 													</td>
-													<td th:text="${jp.getRatePerHourString}">Fees</td>
+													<td th:text="${jp.clinicUser.name}">Created By</td>
 													<td>
 														<p style="pointer-events:none"
 															th:if="${jp.status.name == 'OPEN'}"
-															class="bg-lightblue btn btn-block btn-sm my-auto"
+															class="bg-lightblue btn btn-sm my-auto"
 															th:text="${jp.status.value}"></p>
 														<p style="pointer-events:none"
-															th:if="${jp.status.name == 'CANCELLED'}"
-															class="bg-gray btn btn-block btn-sm my-auto"
+															th:if="${jp.status.name == 'CANCELLED' OR jp.status.name == 'REMOVED'}"
+															class="bg-gray btn btn-sm my-auto"
 															th:text="${jp.status.value}"></p>
 														<p style="pointer-events:none"
 															th:if="${jp.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
-															class="bg-warning btn btn-block btn-sm my-auto"
+															class="bg-warning btn btn-sm my-auto"
 															th:text="${jp.status.value}"></p>
 														<p style="pointer-events:none"
 															th:if="${jp.status.name == 'ACCEPTED'}"
-															class="bg-success btn btn-block btn-sm my-auto"
+															class="bg-success btn btn-sm my-auto"
 															th:text="${jp.status.value}">
 														</p>
 														<p style="pointer-events:none" type="button"
 															th:if="${jp.status.name == 'COMPLETED_PENDING_PAYMENT'}"
-															class="bg-danger btn btn-block btn-sm my-auto"
+															class="bg-danger btn btn-sm my-auto"
 															th:text="${jp.status.value}"></p>
 														<p style="pointer-events:none"
 															th:if="${jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
-															class="bg-navy btn btn-block btn-sm my-auto"
+															class="bg-navy btn btn-sm my-auto"
 															th:text="${jp.status.value}"></p>
 													</td>
 													<td> <span
