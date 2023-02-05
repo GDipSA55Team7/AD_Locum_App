@@ -289,7 +289,7 @@ public class AdLocumDoctorsApplication {
 			jp9.setRatePerHour(100);
 			jp9.setFreelancer(testUser2);
 			jp9.setClinicUser(testUser3);
-			jp9.setStatus(JobStatus.REMOVED);
+			jp9.setStatus(JobStatus.PENDING_CONFIRMATION_BY_CLINIC);
 			jobPostRepo.saveAndFlush(jp9);
 
 			JobPost jp10 = new JobPost();

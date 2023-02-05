@@ -82,6 +82,7 @@ public class JobPostController {
 
 	@GetMapping("/{id}")
 	public String viewJobPost(@PathVariable String id, Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
 		JobPost jobPost = jobPostService.findJobPostById(id);
 		jobPost.setAdditionalRemarks("");
 		model.addAttribute("jobPost", jobPost);
@@ -92,10 +93,21 @@ public class JobPostController {
 		ManyAdditionalFeeDetailsForm additional = new ManyAdditionalFeeDetailsForm();
 		additional.setJobPostId(jobPost.getId().toString());
 		model.addAttribute("additional", additional);
-		if (jobPost.getStatus().equals(JobStatus.OPEN) || jobPost.getStatus().equals(JobStatus.CANCELLED)) {
-			return "jobpost-view";
+		for (AdditionalFeeDetails a:jobPost.getAdditionalFeeDetails()) {
+			System.out.print(a.getAdditionalFeesAmount());
 		}
-		return "jobpost-locum";
+		switch (user.getRole().getName()) {
+			case "System_Admin":
+				if (jobPost.getStatus().equals(JobStatus.OPEN) || jobPost.getStatus().equals(JobStatus.CANCELLED)) {
+					return "jobpost-view";
+				}
+				return "admin_jobpost_locum_view.html";
+			default:
+				if (jobPost.getStatus().equals(JobStatus.OPEN) || jobPost.getStatus().equals(JobStatus.CANCELLED)) {
+					return "jobpost-view";
+				}
+				return "jobpost-locum";
+		}
 	}
 
 	@GetMapping("/{id}/delete")
@@ -175,18 +187,16 @@ public class JobPostController {
 	}
 
 	@PostMapping("/additional")
-	public String createManyJobPostAdditional(ManyAdditionalFeeDetailsForm manyAdditionalFeeDetailsForm)
-	{
+	public String createManyJobPostAdditional(ManyAdditionalFeeDetailsForm manyAdditionalFeeDetailsForm) {
 		List<AdditionalFeeDetails> manyFeeDetails = manyAdditionalFeeDetailsForm.getAdditionalFeeDetails();
 		String jobPost_id = manyAdditionalFeeDetailsForm.getJobPostId();
 		JobPost jobPost = jobPostService.findJobPostById(jobPost_id);
 
-		if(manyFeeDetails != null)
-		{
+		if (manyFeeDetails != null) {
 			int i = 0;
 			while (i < manyFeeDetails.size()) {
-				if(manyFeeDetails.get(i).getDescription() != null && manyFeeDetails.get(i).getAdditionalFeesAmount() > 0)
-				{
+				if (manyFeeDetails.get(i).getDescription() != null
+						&& manyFeeDetails.get(i).getAdditionalFeesAmount() > 0) {
 					manyFeeDetails.get(i).setJobPost(jobPost);
 				}
 				i++;
@@ -199,9 +209,8 @@ public class JobPostController {
 		return "redirect:/jobpost/" + jobPost.getId();
 	}
 
-
 	@GetMapping("/{post_id}/additional/{id}/delete")
-	public String deleteAdditionalFee(@PathVariable String post_id,@PathVariable String id) {
+	public String deleteAdditionalFee(@PathVariable String post_id, @PathVariable String id) {
 		AdditionalFeeDetails feeDetails = additionalFeeDetailsService.getAdditionalFeeDetailsById(id);
 		additionalFeeDetailsService.delete(feeDetails);
 		return "redirect:/jobpost/" + post_id;
