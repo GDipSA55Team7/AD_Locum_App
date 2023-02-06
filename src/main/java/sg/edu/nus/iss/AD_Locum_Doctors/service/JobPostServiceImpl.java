@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import com.google.firebase.auth.FirebaseToken;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseDeviceToken;
 import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseRepository;
