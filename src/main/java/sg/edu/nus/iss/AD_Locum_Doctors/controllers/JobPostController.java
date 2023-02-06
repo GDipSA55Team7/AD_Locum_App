@@ -47,16 +47,16 @@ public class JobPostController {
 	public String jobPostListPage(Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		List<JobPost> jobPosts = new ArrayList<>();
+		jobPosts = jobPostService.findAll().stream()
+				.sorted(Comparator.comparing(JobPost::getDateTimeModified).reversed())
+				.collect(Collectors.toList());
 		switch (user.getRole().getName()) {
 			case "System_Admin":
-				jobPosts = jobPostService.findAll();
 				model.addAttribute("jobPosts", jobPosts);
 				return "admin_jobpost_list";
 			default:
-				jobPosts = jobPostService.findJobPostsCreatedByUser(user).stream()
-						.filter(x -> !x.getStatus().equals(JobStatus.DELETED))
+				jobPosts = jobPosts.stream().filter(x -> x.getClinic().getOrganization().getId() == user.getOrganization().getId())
 						.filter(x -> !x.getStatus().equals(JobStatus.REMOVED))
-						.sorted(Comparator.comparing(JobPost::getDateTimeModified).reversed())
 						.collect(Collectors.toList());
 				model.addAttribute("jobPosts", jobPosts);
 				return "jobpost-list";
@@ -93,15 +93,12 @@ public class JobPostController {
 		ManyAdditionalFeeDetailsForm additional = new ManyAdditionalFeeDetailsForm();
 		additional.setJobPostId(jobPost.getId().toString());
 		model.addAttribute("additional", additional);
-		for (AdditionalFeeDetails a:jobPost.getAdditionalFeeDetails()) {
+		for (AdditionalFeeDetails a : jobPost.getAdditionalFeeDetails()) {
 			System.out.print(a.getAdditionalFeesAmount());
 		}
 		switch (user.getRole().getName()) {
 			case "System_Admin":
-				if (jobPost.getStatus().equals(JobStatus.OPEN) || jobPost.getStatus().equals(JobStatus.CANCELLED)) {
-					return "jobpost-view";
-				}
-				return "admin_jobpost_locum_view.html";
+				return "jobpost-view";
 			default:
 				if (jobPost.getStatus().equals(JobStatus.OPEN) || jobPost.getStatus().equals(JobStatus.CANCELLED)) {
 					return "jobpost-view";

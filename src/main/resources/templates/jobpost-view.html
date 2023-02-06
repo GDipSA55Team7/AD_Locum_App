@@ -18,10 +18,22 @@
 							<h1 class="m-0">View Job Posting</h1>
 						</div><!-- /.col -->
 						<div class="col-auto d-flex justify-content-center">
-							<button style="pointer-events:none" th:if="${jobPost.status.name == 'OPEN'}" class="bg-lightblue btn btn-block btn-xs my-auto"
-								th:text="${jobPost.status.value}"></button>
-							<button style="pointer-events:none" th:if="${jobPost.status.name == 'CANCELLED'}"
-								class="bg-gray btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></button>
+							<p style="pointer-events:none" th:if="${jobPost.status.name == 'OPEN'}"
+								class="bg-lightblue btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></p>
+							<p style="pointer-events:none" th:if="${jobPost.status.name == 'CANCELLED'}"
+								class="bg-gray btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></p>
+							<p style="pointer-events:none"
+								th:if="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
+								class="bg-warning btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></p>
+							<p style="pointer-events:none" th:if="${jobPost.status.name == 'ACCEPTED'}"
+								class="bg-success btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}">
+							</p>
+							<p style="pointer-events:none" type="button"
+								th:if="${jobPost.status.name == 'COMPLETED_PENDING_PAYMENT'}"
+								class="bg-danger btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></p>
+							<p style="pointer-events:none"
+								th:if="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+								class="bg-navy btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></p>
 						</div><!-- /.col -->
 						<div class="col">
 							<ol class="breadcrumb float-sm-right">
@@ -39,7 +51,7 @@
 			<div class="content">
 				<div class="container-fluid">
 					<div class="row">
-						<div class="col-12">
+						<div class="col-xl-9">
 							<div class="card">
 								<div class="card-body">
 									<form action="#" th:object="${jobPost}" method="post">
@@ -89,7 +101,8 @@
 												</div>
 											</div>
 											<div class="mb-3 form-group col-auto">
-												<label class="form-label">Total Rate</label>
+												<label class="form-label">Actual Earnings (Inclusive of Additional Fees
+													(**if any**))</label>
 												<div class="input-group">
 													<div class="input-group-prepend">
 														<span class="input-group-text">$</span>
@@ -101,16 +114,93 @@
 										</div>
 										<div class="mb-3 form-group d-flex flex-row">
 											<a href="/jobpost/list" class="btn btn-info mr-auto">Back</a>
-											<a th:if="${jobPost.status.name == 'OPEN'}"
+											<a th:if="${jobPost.status.name == 'OPEN' AND session.user.id == jobPost.clinicUser.id}"
 												th:href="@{/jobpost/}+${jobPost.id}+@{/delete}"
 												class="btn btn-danger">Delete</a>
 										</div>
 									</form>
 								</div>
 							</div>
+						</div>
 
-							<!-- additional start -->
-							<div th:if="${remarksList.size() > 0}" class="card">
+						<div th:if="${jobPost.getFreelancer() != null}" class="col-xl-3">
+							<!-- Profile Image -->
+							<div class="card card-primary card-outline">
+								<div class="card-body box-profile">
+									<div class="text-center">
+										<img class="profile-user-img img-fluid img-circle"
+											src="../../dist/img/user4-128x128.jpg" alt="User profile picture">
+									</div>
+
+									<h3 class="profile-username text-center"
+										th:text="${jobPost.getFreelancer().getName()}"></h3>
+
+									<p class="text-muted text-center">Locum</p>
+
+									<ul class="list-group list-group-unbordered mb-3">
+										<li class="list-group-item">
+											<b>License</b> <a class="float-right"
+												th:text="${jobPost.getFreelancer().getMedicalLicenseNo()}"></a>
+										</li>
+										<li class="list-group-item">
+											<b>Email</b> <a class="float-right"
+												th:text="${jobPost.getFreelancer().getEmail()}"></a>
+										</li>
+										<li class="list-group-item">
+											<b>Contact</b> <a class="float-right"
+												th:text="${jobPost.getFreelancer().getContact()}"></a>
+										</li>
+										<li th:if="${jobPost.status.name == 'COMPLETED_PENDING_PAYMENT' OR jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+											class="list-group-item">
+											<b>Actual Start Date & Time</b> <a class="float-right"
+												th:text="${jobPost.getDateTimeString(jobPost.getActualStartDateTime())}"></a>
+										</li>
+										<li th:if="${jobPost.status.name == 'COMPLETED_PENDING_PAYMENT' OR jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+											class="list-group-item">
+											<b>Actual End Date & Time</b> <a class="float-right"
+												th:text="${jobPost.getDateTimeString(jobPost.getActualEndDateTime())}"></a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<!-- /.card -->
+						</div>
+
+						<div class="col-xl-9"
+							th:unless="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED' OR jobPost.getAdditionalFeeDetails().size() == 0}">
+							<div class="card card-danger card-outline">
+								<div class="card-header d-flex justify-content-between">
+									<h3 class="card-title my-auto">Additional Fees</h3>
+								</div>
+								<!-- /.card-header -->
+								<div th:if="${jobPost.getAdditionalFeeDetails().size() > 0}"
+									class="card-body table-responsive p-0">
+									<table class="table table-bordered table-hover text-nowrap"
+										style="border-top:1px solid rgba(0,0,0,.125);">
+										<thead>
+											<tr>
+												<th style="width: 10px">#</th>
+												<th>Description</th>
+												<th>Amount</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="additional, loop: ${jobPost.getAdditionalFeeDetails()}">
+												<td th:text="${loop.index+1}"></td>
+												<td th:text="${additional.getDescription()}" />
+												<td th:text="${additional.getAdditionalFeesAmount()}" />
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<!-- /.card-body -->
+							</div>
+						</div>
+						<!-- /.card -->
+
+						<!-- additional start -->
+						<div th:if="${remarksList.size() > 0}" class="col-xl-9">
+							<div class="card">
 								<div class="card-header">
 									<h3 class="card-title">Remarks History</h3>
 								</div>
@@ -139,6 +229,12 @@
 							</div><!-- additional end -->
 						</div>
 						<!-- /.col -->
+					</div>
+					<div class="row">
+						<div class="col mb-3">
+							<a href="/jobpost/list">
+								<< Back to Job Postings</a>
+						</div>
 					</div>
 				</div><!-- /.container-fluid -->
 			</div>
