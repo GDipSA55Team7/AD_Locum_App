@@ -237,7 +237,7 @@
 						</form>
 
 						<div class="col-xl-9"
-							th:unless="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED' AND jobPost.getAdditionalFeeDetails().size() == 0}">
+							th:unless="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}">
 							<div class="card card-danger card-outline">
 								<div class="card-header d-flex justify-content-between">
 									<h3 class="card-title my-auto">Additional Fees</h3>
