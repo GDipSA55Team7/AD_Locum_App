@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+
 import jakarta.servlet.http.HttpSession;
+import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseService;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.AdditionalFeeDetailsForm;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
@@ -128,6 +130,7 @@ public class JobPostController {
 		toUpdateJobPost.setAdditionalRemarks(jobPost.getAdditionalRemarks());
 		toUpdateJobPost.setStatus(jobPost.getStatus());
 		jobPostService.saveJobPost(toUpdateJobPost);
+		
 		if (!jobPost.getAdditionalRemarks().equals("")) {
 			JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
 			additionalRemarks.setCategory(RemarksCategory.CANCELLATION);
@@ -137,6 +140,9 @@ public class JobPostController {
 			additionalRemarks.setRemarks(toUpdateJobPost.getAdditionalRemarks());
 			jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
 		}
+		
+		jobPostService.pushNotificationToFreeLancer(toUpdateJobPost);
+		
 		return "redirect:/jobpost/" + jobPost.getId();
 	}
 
@@ -158,6 +164,9 @@ public class JobPostController {
 			additionalRemarks.setRemarks(jp.getAdditionalRemarks());
 			jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
 		}
+		
+		jobPostService.pushNotificationToFreeLancer(jp);
+		
 		return "redirect:/jobpost/list";
 	}
 
@@ -178,6 +187,9 @@ public class JobPostController {
 			additionalRemarks.setRemarks(jp.getAdditionalRemarks());
 			jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
 		}
+		
+		jobPostService.pushNotificationToFreeLancer(jp);
+		
 		return "redirect:/jobpost/list";
 	}
 

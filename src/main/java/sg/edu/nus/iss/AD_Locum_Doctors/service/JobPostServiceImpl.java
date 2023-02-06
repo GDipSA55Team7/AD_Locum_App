@@ -7,6 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import com.google.firebase.auth.FirebaseToken;
+
+import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseDeviceToken;
+import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseRepository;
+import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseService;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.AdditionalFeeDetails;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
@@ -33,6 +38,9 @@ public class JobPostServiceImpl implements JobPostService {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private FirebaseRepository firebaseRepo;
 
 	@Override
 	public List<JobPost> findAll() {
@@ -189,5 +197,39 @@ public class JobPostServiceImpl implements JobPostService {
           }
        }
        return additionaFeeDetailsJSONString;
+	}
+
+	@Override
+	public void pushNotificationToFreeLancer(JobPost jobPost) {
+		
+		String newJobStatusMsg = "";
+		
+		switch (jobPost.getStatus()) {
+		   case ACCEPTED:
+			   newJobStatusMsg = "Approved";
+			   break;
+		   case COMPLETED_PENDING_PAYMENT:
+			   newJobStatusMsg = "Completed(Pending_payment)";
+			   break;
+		   case COMPLETED_PAYMENT_PROCESSED:
+			   newJobStatusMsg = "Completed(Payment_processed)";
+			   break;
+		   case CANCELLED:
+			   newJobStatusMsg = "Cancelled";
+			   break;
+		   default:
+		      break;
+		}
+		
+		FirebaseDeviceToken deviceToken = firebaseRepo.findById(1).orElse(null);
+		
+		if(!newJobStatusMsg.equals("") && deviceToken != null) {
+			
+			System.out.println("deviceToken" + deviceToken.getToken());
+			FirebaseService.sendNotification(deviceToken.getToken(),
+					"Status Update for Job Post Id : " + jobPost.getId() , "The status has been updated to " + newJobStatusMsg,
+					newJobStatusMsg,
+					jobPost.getId().toString());
+		}
 	}
 }
