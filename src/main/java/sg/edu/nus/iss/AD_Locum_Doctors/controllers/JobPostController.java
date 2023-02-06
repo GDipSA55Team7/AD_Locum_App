@@ -18,6 +18,7 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.AdditionalFeeDetailsService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.EmailService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostAdditionalRemarksService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
@@ -42,6 +43,9 @@ public class JobPostController {
 
 	@Autowired
 	private JobPostAdditionalRemarksService addRemarksService;
+
+	@Autowired
+	private EmailService emailService;
 
 	@GetMapping("/list")
 	public String jobPostListPage(Model model, HttpSession session) {
@@ -139,6 +143,7 @@ public class JobPostController {
 		jobPostService.saveJobPost(jp);
 		addRemarksService.createJobPostAdditionalRemarks(RemarksCategory.CANCELLATION, user, jp,
 				jobPost.getAdditionalRemarks());
+		sendCancelJobEmail(jobPost);
 		return "redirect:/jobpost/" + id;
 	}
 
@@ -152,6 +157,7 @@ public class JobPostController {
 		jobPostService.saveJobPost(jp);
 		addRemarksService.createJobPostAdditionalRemarks(RemarksCategory.ACCEPTION, user, jp,
 				jobPost.getAdditionalRemarks());
+		sendConfirmEmail(jobPost);
 		return "redirect:/jobpost/" + id;
 	}
 
@@ -228,5 +234,33 @@ public class JobPostController {
 		User user = userService.findById(Long.parseLong("4"));
 		jobPostService.delete(jobPost, additionalRemarks, user);
 		return "redirect:/jobpost/list";
+	}
+
+	private String sendConfirmEmail(JobPost jobpost){
+		jobpost = jobPostService.findJobPostById(jobpost.getId().toString());
+		EmailDetails testEmail = new EmailDetails();
+		User user = userService.findById(jobpost.getFreelancer().getId() );
+		testEmail.setRecipient(user.getEmail());
+		testEmail.setSubject("Confirm Job:" + jobpost.getTitle());
+		String emailMessage = "Dear {0}, \n\nYour application for {1} has been confirmed. \n\nIf this request did not come from you, please inform us immediately.\n\nYours Sincerely,\nSG Locum Administrator"; 
+		String formattedEmail = java.text.MessageFormat.format(emailMessage, user.getName(),jobpost.getTitle());
+		testEmail.setMsgBody(formattedEmail);
+		String status = emailService.sendSimpleMail(testEmail);
+		System.out.println(status);
+		return status;
+	}
+
+	private String sendCancelJobEmail(JobPost jobpost){
+		jobpost = jobPostService.findJobPostById(jobpost.getId().toString());
+		EmailDetails testEmail = new EmailDetails();
+		User user = userService.findById(jobpost.getFreelancer().getId() );
+		testEmail.setRecipient(user.getEmail());
+		testEmail.setSubject("Cancel Job:" + jobpost.getTitle());
+		String emailMessage = "Dear {0}, \n\nYour application for {1} has been cancelled. \n\nIf this request did not come from you, please inform us immediately.\n\nYours Sincerely,\nSG Locum Administrator"; 
+		String formattedEmail = java.text.MessageFormat.format(emailMessage, user.getName(),jobpost.getTitle());
+		testEmail.setMsgBody(formattedEmail);
+		String status = emailService.sendSimpleMail(testEmail);
+		System.out.println(status);
+		return status;
 	}
 }
