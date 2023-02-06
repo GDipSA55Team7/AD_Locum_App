@@ -176,118 +176,80 @@
                             </a>
                         </li>
                     </ul>
-                    <ul th:if="${session.user.role.name == 'Clinic_Admin'}"
+                    <ul th:unless="${session.user.role.name == 'System_Admin'}"
                         class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-                        <li class="nav-header">CLINIC ADMIN</li>
-                        <li class="nav-item">
-                            <a href="/clinic-admin" class="nav-link">
-                                <i class="nav-icon fas fa-home"></i>
-                                <p>
-                                    Home
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/UserList" class="nav-link">
-                                <i class="nav-icon fas fa-users"></i>
-                                <p>
-                                    Manage User
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a th:href="@{/cliniclist}" class="nav-link">
-                                <i class="nav-icon fas fa-clinic-medical"></i>
-                                <p>
-                                    Manage Clinic
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a th:href="@{/jobpost/list}" class="nav-link">
-                                <i class="nav-icon fas fa-briefcase"></i>
-                                <p>
-                                    Manage Job Posting
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a th:href="@{/paymentSummary}" class="nav-link">
-                                <i class="nav-icon fas fa-briefcase"></i>
-                                <p>
-                                    Manage Payment
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-                    <ul th:if="${session.user.role.name == 'Clinic_Main_Admin'}"
-                        class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                        data-accordion="false">
-                        <li class="nav-header">CLINIC MAIN ADMIN</li>
-                        <li class="nav-item">
+
+                        <li th:unless="${session.user.role.name == 'Clinic_User'}" class="nav-item">
                             <a href="/dashboard/clinic-admin" class="nav-link">
-                                <i class="nav-icon fas fa-home"></i>
+                                <i class="nav-icon fas fa-chart-pie"></i>
                                 <p>
                                     Dashboard
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="/UserList" class="nav-link">
-                                <i class="nav-icon fas fa-users"></i>
+                        <li th:if="${session.user.role.name == 'Clinic_User'}" class="nav-item">
+                            <a href="/clinic-user" class="nav-link">
+                                <i class="nav-icon fas fa-chart-pie"></i>
                                 <p>
-                                    Manage User
+                                    Dashboard
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li th:unless="${session.user.role.name == 'Clinic_User'}" class="nav-header">CLINIC</li>
+                        <li th:unless="${session.user.role.name == 'Clinic_User'}" class="nav-item">
                             <a th:href="@{/cliniclist}" class="nav-link">
                                 <i class="nav-icon fas fa-clinic-medical"></i>
                                 <p>
-                                    Manage Clinic
+                                    View Clinics
                                 </p>
                             </a>
                         </li>
+                        <li th:unless="${session.user.role.name == 'Clinic_User'}" class="nav-item">
+                            <a th:href="@{/addClinicForm}" class="nav-link">
+                                <i class="nav-icon fas fa-circle-plus"></i>
+                                <p>
+                                    Add Clinic
+                                </p>
+                            </a>
+                        </li>
+                        <li th:unless="${session.user.role.name == 'Clinic_User'}" class="nav-header">USER</li>
+                        <li th:unless="${session.user.role.name == 'Clinic_User'}" class="nav-item">
+                            <a href="/UserList" class="nav-link">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>
+                                    View Users
+                                </p>
+                            </a>
+                        </li>
+                        <li th:unless="${session.user.role.name == 'Clinic_User'}" class="nav-item">
+                            <a href="/register/addUserForm" class="nav-link">
+                                <i class="nav-icon fas fa-circle-plus"></i>
+                                <p>
+                                    Add User
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-header">JOB POSTING</li>
                         <li class="nav-item">
                             <a th:href="@{/jobpost/list}" class="nav-link">
                                 <i class="nav-icon fas fa-briefcase"></i>
                                 <p>
-                                    Manage Job Posting
+                                    View Job Postings
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a th:href="@{/jobpost/create}" class="nav-link">
+                                <i class="nav-icon fas fa-circle-plus"></i>
+                                <p>
+                                    Add Job Posting
                                 </p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a th:href="@{/paymentSummary}" class="nav-link">
-                                <i class="nav-icon fas fa-briefcase"></i>
-                                <p>
-                                    Manage Payment
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-                    <ul th:if="${session.user.role.name == 'Clinic_User'}" class="nav nav-pills nav-sidebar flex-column"
-                        data-widget="treeview" role="menu" data-accordion="false">
-                        <li class="nav-header">CLINIC USER</li>
-                        <li class="nav-item">
-                            <a href="/clinic-user" class="nav-link">
-                                <i class="nav-icon fas fa-home"></i>
-                                <p>
-                                    Home
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-briefcase"></i>
-                                <p>
-                                    Manage Job Posting
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a th:href="@{/jobpost/list}" class="nav-link">
-                                <i class="nav-icon fas fa-briefcase"></i>
+                                <i class="nav-icon fas fa-file-invoice-dollar"></i>
                                 <p>
                                     Manage Payment
                                 </p>

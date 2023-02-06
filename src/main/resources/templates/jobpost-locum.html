@@ -19,19 +19,21 @@
 								th:text="${jobPost.status.name == 'ACCEPTED' ? 'Update Job Posting' : 'View Job Posting'}">
 								Update Job Posting</h1>
 						</div><!-- /.col -->
-						<div class="col-auto d-flex justify-content-center">
-							<p style="pointer-events:none" th:if="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
+						<div class="col-auto d-flex justify-content-center mr-auto">
+							<p style="pointer-events:none"
+								th:if="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
 								class="bg-warning btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></p>
 							<p style="pointer-events:none" th:if="${jobPost.status.name == 'ACCEPTED'}"
 								class="bg-success btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}">
 							</p>
-							<p style="pointer-events:none" type="button" th:if="${jobPost.status.name == 'COMPLETED_PENDING_PAYMENT'}"
-								class="bg-danger btn btn-block btn-xs my-auto"
-								th:text="${jobPost.status.value}"></p>
-							<p style="pointer-events:none" th:if="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+							<p style="pointer-events:none" type="button"
+								th:if="${jobPost.status.name == 'COMPLETED_PENDING_PAYMENT'}"
+								class="bg-danger btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></p>
+							<p style="pointer-events:none"
+								th:if="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
 								class="bg-navy btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></p>
 						</div><!-- /.col -->
-						<div class="col">
+						<div class="col-auto">
 							<ol class="breadcrumb float-sm-right">
 								<li class="breadcrumb-item"><a href="#">Home</a></li>
 								<li class="breadcrumb-item"><a th:href="@{/jobpost/list}">Job Posts</a></li>
@@ -104,7 +106,8 @@
 												</div>
 											</div>
 											<div class="mb-3 form-group col-auto">
-												<label class="form-label">Total Rate</label>
+												<label class="form-label">Actual Earnings (Inclusive of Additional Fees
+													(**if any**))</label>
 												<div class="input-group">
 													<div class="input-group-prepend">
 														<span class="input-group-text">$</span>
@@ -131,7 +134,7 @@
 							</div>
 						</div>
 
-						<div class="col-md-3">
+						<div th:if="${jobPost.getFreelancer() != null}" class="col-md-3">
 							<!-- Profile Image -->
 							<div class="card card-primary card-outline">
 								<div class="card-body box-profile">
@@ -180,10 +183,6 @@
 										class="btn btn-outline-warning col mb-3">Cancel
 										Locum
 									</button>
-
-									<a href="/jobpost/list">
-										<< Back to Job Postings</a>
-
 								</div>
 							</div>
 							<!-- /.card -->
@@ -192,7 +191,7 @@
 
 					<div class="row">
 						<!-- start -->
-						<div class=" col-xl-9">
+						<div class="col-xl-9">
 							<div th:if="${jobPost.status.name == 'ACCEPTED'}" class="card">
 								<div class="card-header">
 									<h3 class="card-title">Set Job Completion Details</h3>
@@ -238,20 +237,23 @@
 						</form>
 
 						<div class="col-xl-9"
-							th:unless="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED' AND jobPost.getAdditionalFeeDetails().size() == 0}">
+							th:unless="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}">
 							<div class="card card-danger card-outline">
 								<div class="card-header d-flex justify-content-between">
 									<h3 class="card-title my-auto">Additional Fees</h3>
 									<div class="card-tools ml-auto">
 										<!-- Collapse Button -->
-										<button type="button" class="btn btn-outline-danger" th:onclick="'javascript:addToFeeList();'"><i
-												class="fas fa-plus" ></i> Add Fee</button>
+										<button th:unless="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+											type="button" class="btn btn-outline-danger"
+											th:onclick="'javascript:addToFeeList();'"><i class="fas fa-plus"></i> Add
+											Fee</button>
 									</div>
 									<!-- /.card-tools -->
 								</div>
 								<!-- /.card-header -->
 								<div class="card-body" id="additional_card_body">
-									<form th:action="@{'/jobpost/additional'}" th:object="${additional}" method="post" id="additinonalFeeDetails">
+									<form th:action="@{'/jobpost/additional'}" th:object="${additional}" method="post"
+										id="additinonalFeeDetails">
 										<input th:field="*{jobPostId}" th:value="${jobPost.id}" hidden />
 
 
@@ -267,7 +269,8 @@
 												<th style="width: 10px">#</th>
 												<th>Description</th>
 												<th>Amount</th>
-												<th>Action</th>
+												<th th:unless="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}">
+													Action</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -275,7 +278,10 @@
 												<td th:text="${loop.index+1}"></td>
 												<td th:text="${additional.getDescription()}" />
 												<td th:text="${additional.getAdditionalFeesAmount()}" />
-												<td><a th:href="@{'/jobpost/' + ${jobPost.id} + '/additional/'+${additional.id}+'/delete'}">Delete</a></td>
+												<td th:unless="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}">
+													<a
+														th:href="@{'/jobpost/' + ${jobPost.id} + '/additional/'+${additional.id}+'/delete'}">Delete</a>
+												</td>
 											</tr>
 										</tbody>
 									</table>
@@ -316,6 +322,12 @@
 							</div>
 						</div><!-- additional end -->
 					</div>
+					<div class="row">
+						<div class="col mb-3">
+							<a href="/jobpost/list">
+								<< Back to Job Postings</a>
+						</div>
+					</div>
 				</div><!-- /.container-fluid -->
 			</div>
 			<!-- /.content -->
@@ -346,7 +358,7 @@
 			$("#additional_card_body").show();
 			$("#addAdditionalButton").remove();
 			$(
-					`
+				`
 				<div class="row">
 					<div class ="mb-3 col">
 						<label class="form-label">Description</label>
@@ -363,7 +375,7 @@
 			index++;
 		}
 
-		</script>
+	</script>
 </body>
 
 </html>

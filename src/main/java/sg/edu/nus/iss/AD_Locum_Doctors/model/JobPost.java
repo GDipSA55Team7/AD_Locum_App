@@ -99,9 +99,19 @@ public class JobPost {
 		return startDateTime.format(formatter);
 	}
 
+	public String getActualStartDateTimeString() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
+		return actualStartDateTime.format(formatter);
+	}
+
 	public String getEndDateTimeString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
 		return endDateTime.format(formatter);
+	}
+
+	public String getActualEndDateTimeString() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
+		return actualEndDateTime.format(formatter);
 	}
 
 	public LocalDateTime getDateTimeModified() {
@@ -149,6 +159,10 @@ public class JobPost {
 			totalRate += row.getAdditionalFeesAmount();
 		}
 		return totalRate;
+	}
+
+	public String getEstimatedTotalRateString() {
+		return String.format("%.2f", computeEstimatedTotalRate());
 	}
 
 	public String getActualTotalRateString() {
