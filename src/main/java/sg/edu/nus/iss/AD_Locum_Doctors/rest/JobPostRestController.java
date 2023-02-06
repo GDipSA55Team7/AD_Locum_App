@@ -121,6 +121,17 @@ public class JobPostRestController {
         }
     }
 
+    @GetMapping("/allapplied")
+    public ResponseEntity<List<JobPostApiDTO>> findAllJobApplied() {
+        // TODO: may want to restrict by how long ago
+        try {
+            List<JobPost> jobPostList = jobPostService.findAllApplied();
+            return getListResponseEntity(jobPostList);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     private JobPostApiDTO setJobPostDTO(JobPost jobPost) {
 
     	  JobPostApiDTO jobPostDTO = new JobPostApiDTO();

@@ -33,4 +33,8 @@ public interface JobPostRepository extends JpaRepository<JobPost, Long> {
 	@Query("Select j from JobPost j where j.clinic.organization.id = ?1 and (j.status = 3 OR j.status = 4) ORDER BY j.endDateTime DESC")
 	List<JobPost> findPaidAndUnpaidJobPosts(Long userOrgId);
 
+	List<JobPost> findByFreelancerNotNull();
+
+
+
 }

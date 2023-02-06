@@ -88,7 +88,12 @@ public class JobPostServiceImpl implements JobPostService {
 		return jobPostRepo.findPaidAndUnpaidJobPosts(userOrgId);
 	}
 
-	@Override
+    @Override
+    public List<JobPost> findAllApplied() {
+        return jobPostRepo.findByFreelancerNotNull();
+    }
+
+    @Override
 	public void setStatus(JobPost jobPost, JobStatus status, String userId, JobAdditionalRemarks addRemarks) {
 		User freelancer = userService.findById(Long.valueOf(userId));
 
