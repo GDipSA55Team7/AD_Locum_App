@@ -1,9 +1,9 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.controllers;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,12 +13,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+
 import jakarta.servlet.http.HttpSession;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
+import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseService;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.AdditionalFeeDetailsForm;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.RemarksCategory;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.AdditionalFeeDetailsService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
-import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostAdditionalRemarksService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
@@ -40,13 +48,11 @@ public class JobPostController {
 	@Autowired
 	private JobAdditionalRemarksRepository jobAdditionalRemarksRepo;
 
-	@Autowired
-	private JobPostAdditionalRemarksService addRemarksService;
-
 	@GetMapping("/list")
 	public String jobPostListPage(Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		List<JobPost> jobPosts = new ArrayList<>();
+
 		switch (user.getRole().getName()) {
 			case "System_Admin":
 				jobPosts = jobPostService.findAll();
@@ -56,8 +62,7 @@ public class JobPostController {
 				jobPosts = jobPostService.findJobPostsCreatedByUser(user).stream()
 						.filter(x -> !x.getStatus().equals(JobStatus.DELETED))
 						.filter(x -> !x.getStatus().equals(JobStatus.REMOVED))
-						.sorted(Comparator.comparing(JobPost::getDateTimeModified).reversed())
-						.collect(Collectors.toList());
+						.toList();
 				model.addAttribute("jobPosts", jobPosts);
 				return "jobpost-list";
 		}
@@ -66,6 +71,9 @@ public class JobPostController {
 	@GetMapping("/create")
 	public String createJobPostPage(Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
+		if (user == null) {
+			return "redirect:/login";
+		}
 		List<Clinic> clinics = clinicService.findAll().stream()
 				.filter(x -> x.getOrganization().getId() == user.getOrganization().getId()).toList();
 		model.addAttribute("clinics", clinics);
@@ -83,19 +91,26 @@ public class JobPostController {
 	@GetMapping("/{id}")
 	public String viewJobPost(@PathVariable String id, Model model, HttpSession session) {
 		JobPost jobPost = jobPostService.findJobPostById(id);
-		jobPost.setAdditionalRemarks("");
 		model.addAttribute("jobPost", jobPost);
+		model.addAttribute("statusList", List.of(
+				JobStatus.ACCEPTED,
+				JobStatus.COMPLETED_PENDING_PAYMENT,
+				JobStatus.COMPLETED_PAYMENT_PROCESSED,
+				JobStatus.CANCELLED));
+
 		List<JobAdditionalRemarks> remarksList = jobAdditionalRemarksRepo.findAll().stream()
 				.filter(x -> x.getJobPost().getId() == jobPost.getId())
-				.sorted(Comparator.comparing(JobAdditionalRemarks::getDateTime).reversed()).toList();
+				.sorted(Comparator.comparing(JobAdditionalRemarks::getDate).reversed()).toList();
 		model.addAttribute("remarksList", remarksList);
-		ManyAdditionalFeeDetailsForm additional = new ManyAdditionalFeeDetailsForm();
-		additional.setJobPostId(jobPost.getId().toString());
+		AdditionalFeeDetailsForm additional = new AdditionalFeeDetailsForm();
+		additional.setJobPostId(Long.parseLong(id));
 		model.addAttribute("additional", additional);
 		if (jobPost.getStatus().equals(JobStatus.OPEN) || jobPost.getStatus().equals(JobStatus.CANCELLED)) {
 			return "jobpost-view";
+		} else if (jobPost.getStatus().equals(JobStatus.PENDING_CONFIRMATION_BY_CLINIC)) {
+			return "jobpost-locum";
 		}
-		return "jobpost-locum";
+		return "jobpost-accepted-view";
 	}
 
 	@GetMapping("/{id}/delete")
@@ -115,8 +130,19 @@ public class JobPostController {
 		toUpdateJobPost.setAdditionalRemarks(jobPost.getAdditionalRemarks());
 		toUpdateJobPost.setStatus(jobPost.getStatus());
 		jobPostService.saveJobPost(toUpdateJobPost);
-		addRemarksService.createJobPostAdditionalRemarks(RemarksCategory.GENERAL, user, toUpdateJobPost,
-				jobPost.getAdditionalRemarks());
+		
+		if (!jobPost.getAdditionalRemarks().equals("")) {
+			JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
+			additionalRemarks.setCategory(RemarksCategory.CANCELLATION);
+			additionalRemarks.setDate(LocalDate.now());
+			additionalRemarks.setJobPost(toUpdateJobPost);
+			additionalRemarks.setUser(user);
+			additionalRemarks.setRemarks(toUpdateJobPost.getAdditionalRemarks());
+			jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
+		}
+		
+		jobPostService.pushNotificationToFreeLancer(toUpdateJobPost);
+		
 		return "redirect:/jobpost/" + jobPost.getId();
 	}
 
@@ -128,9 +154,20 @@ public class JobPostController {
 		jp.setStatus(JobStatus.CANCELLED);
 		jp.setAdditionalRemarks(jobPost.getAdditionalRemarks());
 		jobPostService.saveJobPost(jp);
-		addRemarksService.createJobPostAdditionalRemarks(RemarksCategory.CANCELLATION, user, jp,
-				jobPost.getAdditionalRemarks());
-		return "redirect:/jobpost/" + id;
+
+		if (!jobPost.getAdditionalRemarks().equals("")) {
+			JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
+			additionalRemarks.setCategory(RemarksCategory.CANCELLATION);
+			additionalRemarks.setDate(LocalDate.now());
+			additionalRemarks.setJobPost(jp);
+			additionalRemarks.setUser(user);
+			additionalRemarks.setRemarks(jp.getAdditionalRemarks());
+			jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
+		}
+		
+		jobPostService.pushNotificationToFreeLancer(jp);
+		
+		return "redirect:/jobpost/list";
 	}
 
 	@PostMapping(value = "/update", params = "confirm-locum")
@@ -141,70 +178,27 @@ public class JobPostController {
 		jp.setStatus(JobStatus.ACCEPTED);
 		jp.setAdditionalRemarks(jobPost.getAdditionalRemarks());
 		jobPostService.saveJobPost(jp);
-		addRemarksService.createJobPostAdditionalRemarks(RemarksCategory.ACCEPTION, user, jp,
-				jobPost.getAdditionalRemarks());
-		return "redirect:/jobpost/" + id;
-	}
-
-	@PostMapping(value = "/update", params = "pending-payment")
-	public String setPendingPaymentJobPostForm(JobPost jobPost, HttpSession session) {
-		User user = (User) session.getAttribute("user");
-		String id = jobPost.getId().toString();
-		JobPost jp = jobPostService.findJobPostById(id);
-		jp.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
-		jp.setActualStartDateTime(jobPost.getActualStartDateTime());
-		jp.setActualEndDateTime(jobPost.getActualEndDateTime());
-		jp.setAdditionalRemarks(jobPost.getAdditionalRemarks());
-		jobPostService.saveJobPost(jp);
-		addRemarksService.createJobPostAdditionalRemarks(RemarksCategory.COMPLETED_JOB, user, jp,
-				jobPost.getAdditionalRemarks());
-		return "redirect:/jobpost/" + id;
-	}
-
-	@PostMapping(value = "/update", params = "payment-processed")
-	public String setPaymentProcessedJobPostForm(JobPost jobPost, HttpSession session) {
-		User user = (User) session.getAttribute("user");
-		String id = jobPost.getId().toString();
-		JobPost jp = jobPostService.findJobPostById(id);
-		jp.setStatus(JobStatus.COMPLETED_PAYMENT_PROCESSED);
-		jp.setAdditionalRemarks(jobPost.getAdditionalRemarks());
-		jobPostService.saveJobPost(jp);
-		addRemarksService.createJobPostAdditionalRemarks(RemarksCategory.PROCESSED_PAYMENT, user, jp,
-				jobPost.getAdditionalRemarks());
-		return "redirect:/jobpost/" + id;
+		if (!jobPost.getAdditionalRemarks().equals("")) {
+			JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
+			additionalRemarks.setCategory(RemarksCategory.GENERAL);
+			additionalRemarks.setDate(LocalDate.now());
+			additionalRemarks.setJobPost(jp);
+			additionalRemarks.setUser(user);
+			additionalRemarks.setRemarks(jp.getAdditionalRemarks());
+			jobAdditionalRemarksRepo.saveAndFlush(additionalRemarks);
+		}
+		
+		jobPostService.pushNotificationToFreeLancer(jp);
+		
+		return "redirect:/jobpost/list";
 	}
 
 	@PostMapping("/additional")
-	public String createManyJobPostAdditional(ManyAdditionalFeeDetailsForm manyAdditionalFeeDetailsForm)
-	{
-		List<AdditionalFeeDetails> manyFeeDetails = manyAdditionalFeeDetailsForm.getAdditionalFeeDetails();
-		String jobPost_id = manyAdditionalFeeDetailsForm.getJobPostId();
-		JobPost jobPost = jobPostService.findJobPostById(jobPost_id);
-
-		if(manyFeeDetails != null)
-		{
-			int i = 0;
-			while (i < manyFeeDetails.size()) {
-				if(manyFeeDetails.get(i).getDescription() != null && manyFeeDetails.get(i).getAdditionalFeesAmount() > 0)
-				{
-					manyFeeDetails.get(i).setJobPost(jobPost);
-				}
-				i++;
-			}
-			jobPost.setAdditionalFeeDetails(manyFeeDetails);
-		}
-
-		jobPostService.saveJobPost(jobPost);
+	public String createJobPostAdditional(AdditionalFeeDetailsForm additionalFeeDetailsForm) {
+		JobPost jobPost = jobPostService.findJobPostById(additionalFeeDetailsForm.getJobPostId().toString());
+		additionalFeeDetailsService.createAdditionalFeeDetail(additionalFeeDetailsForm, jobPost);
 
 		return "redirect:/jobpost/" + jobPost.getId();
-	}
-
-
-	@GetMapping("/{post_id}/additional/{id}/delete")
-	public String deleteAdditionalFee(@PathVariable String post_id,@PathVariable String id) {
-		AdditionalFeeDetails feeDetails = additionalFeeDetailsService.getAdditionalFeeDetailsById(id);
-		additionalFeeDetailsService.delete(feeDetails);
-		return "redirect:/jobpost/" + post_id;
 	}
 
 	@GetMapping("/{id}/adminremove")
