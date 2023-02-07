@@ -324,6 +324,18 @@ public class AdLocumDoctorsApplication {
 			jp11.setStatus(JobStatus.ACCEPTED);
 			jobPostRepo.saveAndFlush(jp11);
 
+			JobPost jp12 = new JobPost();
+			jp12.setClinic(c3);
+			jp12.setTitle("Looking for locum @ RMG Lot 1");
+			jp12.setDescription("Looking for locum doctor");
+			jp12.setStartDateTime(LocalDateTime.of(2023, 02, 22, 18, 30, 0));
+			jp12.setEndDateTime(LocalDateTime.of(2023, 02, 22, 20, 30, 0));
+			jp12.setRatePerHour(100);
+			jp12.setClinicUser(testUser5);
+			jp12.setFreelancer(null);
+			jp12.setStatus(JobStatus.OPEN);
+			jobPostRepo.saveAndFlush(jp12);
+
 			AdditionalFeeDetails afdJob3 = new AdditionalFeeDetails();
 			afdJob3.setJobPost(jp3);
 			afdJob3.setDescription("Swab");

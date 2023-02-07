@@ -14,7 +14,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpSession;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.AdditionalFeeDetails;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.ManyAdditionalFeeDetailsForm;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.RemarksCategory;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.AdditionalFeeDetailsService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostAdditionalRemarksService;
@@ -45,7 +53,8 @@ public class JobPostController {
 				model.addAttribute("jobPosts", jobPosts);
 				return "admin_jobpost_list";
 			default:
-				jobPosts = jobPosts.stream().filter(x -> x.getClinic().getOrganization().getId() == user.getOrganization().getId())
+				jobPosts = jobPosts.stream()
+						.filter(x -> x.getClinic().getOrganization().getId() == user.getOrganization().getId())
 						.filter(x -> !x.getStatus().equals(JobStatus.REMOVED))
 						.collect(Collectors.toList());
 				model.addAttribute("jobPosts", jobPosts);
@@ -95,6 +104,27 @@ public class JobPostController {
 				}
 				return "jobpost-locum";
 		}
+	}
+
+	@GetMapping("/{id}/edit")
+	public String editJobPost(@PathVariable String id, Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		JobPost jobPost = jobPostService.findJobPostById(id);
+		if (jobPost.getStatus().equals(JobStatus.OPEN)
+				&& user.getOrganization().getId() == jobPost.getClinicUser().getOrganization().getId()) {
+			List<Clinic> clinics = clinicService.findAll().stream()
+					.filter(x -> x.getOrganization().getId() == user.getOrganization().getId()).toList();
+			model.addAttribute("clinics", clinics);
+			model.addAttribute("jobPost", jobPost);
+			return "jobpost-edit";
+		}
+		return "redirect:/jobpost/" + id;
+	}
+
+	@PostMapping("/{id}/edit")
+	public String submitEditJobPost(@PathVariable String id, JobPost jobPost, Model model, HttpSession session) {
+		jobPostService.saveJobPost(jobPost);
+		return "redirect:/jobpost/" + id;
 	}
 
 	@GetMapping("/{id}/delete")

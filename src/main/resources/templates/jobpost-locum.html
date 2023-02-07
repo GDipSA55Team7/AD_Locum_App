@@ -339,8 +339,10 @@
 			"timePicker": true,
 			"timePickerIncrement": 30,
 			"autoApply": true,
+			"startDate": Date.now,
+			"endDate": Date.now,
 			locale: {
-				format: 'MM/DD/YYYY hh:mm A'
+				format: 'DD/MM/YYYY hh:mm A'
 			}
 		}, function (start, end, label) {
 			$('#datetimes1').val(start.format('DD-MM-YYYY HH:mm'));
