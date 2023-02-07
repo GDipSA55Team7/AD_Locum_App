@@ -179,6 +179,7 @@ public class AdLocumDoctorsApplication {
 			testUser7.setUsername("ron");
 			testUser7.setPassword("password123");
 			testUser7.setContact("98889888");
+			testUser7.setOrganization(org1);
 			testUser7.setRole(r4);
 			userRepo.saveAndFlush(testUser7);
 

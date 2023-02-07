@@ -31,19 +31,10 @@ public class SessionInterceptor implements HandlerInterceptor {
 				return true;
 			} else {
 				User u = (User) session.getAttribute("user");
-				switch (u.getRole().getName()) {
-					case "System_Admin":
-						response.sendRedirect("/system-admin");
-						break;
-					case "Clinic_Main_Admin":
-						response.sendRedirect("/dashboard/clinic-admin");
-						break;
-					case "Clinic_Admin":
-						response.sendRedirect("/clinic-admin");
-						break;
-					case "Clinic_User":
-						response.sendRedirect("/clinic-user");
-						break;
+				if (u.getRole().getName().equals("System_Admin")) {
+					response.sendRedirect("/system-admin");
+				} else {
+					response.sendRedirect("/dashboard/clinic");
 				}
 				return false;
 			}

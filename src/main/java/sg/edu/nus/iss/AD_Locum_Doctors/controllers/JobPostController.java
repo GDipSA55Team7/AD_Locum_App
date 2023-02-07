@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpSession;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
-import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.AdditionalFeeDetailsService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostAdditionalRemarksService;
@@ -27,19 +26,12 @@ import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 public class JobPostController {
 	@Autowired
 	private JobPostService jobPostService;
-
 	@Autowired
 	private AdditionalFeeDetailsService additionalFeeDetailsService;
-
 	@Autowired
 	private ClinicService clinicService;
-
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private JobAdditionalRemarksRepository jobAdditionalRemarksRepo;
-
 	@Autowired
 	private JobPostAdditionalRemarksService addRemarksService;
 
@@ -47,9 +39,7 @@ public class JobPostController {
 	public String jobPostListPage(Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		List<JobPost> jobPosts = new ArrayList<>();
-		jobPosts = jobPostService.findAll().stream()
-				.sorted(Comparator.comparing(JobPost::getDateTimeModified).reversed())
-				.collect(Collectors.toList());
+		jobPosts = jobPostService.findAll();
 		switch (user.getRole().getName()) {
 			case "System_Admin":
 				model.addAttribute("jobPosts", jobPosts);
@@ -86,7 +76,7 @@ public class JobPostController {
 		JobPost jobPost = jobPostService.findJobPostById(id);
 		jobPost.setAdditionalRemarks("");
 		model.addAttribute("jobPost", jobPost);
-		List<JobAdditionalRemarks> remarksList = jobAdditionalRemarksRepo.findAll().stream()
+		List<JobAdditionalRemarks> remarksList = addRemarksService.findAll().stream()
 				.filter(x -> x.getJobPost().getId() == jobPost.getId())
 				.sorted(Comparator.comparing(JobAdditionalRemarks::getDateTime).reversed()).toList();
 		model.addAttribute("remarksList", remarksList);

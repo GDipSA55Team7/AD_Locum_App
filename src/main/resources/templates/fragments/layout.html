@@ -179,17 +179,8 @@
                     <ul th:unless="${session.user.role.name == 'System_Admin'}"
                         class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-
-                        <li th:unless="${session.user.role.name == 'Clinic_User'}" class="nav-item">
-                            <a href="/dashboard/clinic-admin" class="nav-link">
-                                <i class="nav-icon fas fa-chart-pie"></i>
-                                <p>
-                                    Dashboard
-                                </p>
-                            </a>
-                        </li>
-                        <li th:if="${session.user.role.name == 'Clinic_User'}" class="nav-item">
-                            <a href="/clinic-user" class="nav-link">
+                        <li class="nav-item">
+                            <a href="/dashboard/clinic" class="nav-link">
                                 <i class="nav-icon fas fa-chart-pie"></i>
                                 <p>
                                     Dashboard

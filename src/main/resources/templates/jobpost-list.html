@@ -44,7 +44,8 @@
 								<div class="card card-primary card-outline card-outline-tabs">
 									<div class="card-header p-0 border-bottom-0">
 										<ul class="nav nav-tabs">
-											<li class="nav-item"><a class="nav-link active" th:href="@{/jobpost/list}">Posted by Organization</a></li>
+											<li class="nav-item"><a class="nav-link active"
+													th:href="@{/jobpost/list}">Posted by Organization</a></li>
 											<li class="nav-item"><a class="nav-link" href="">Posted by Me</a></li>
 											<li class="nav-item ml-auto"
 												th:if="${session.user.role.name != 'System_Admin'}"><a class="nav-link"
@@ -80,28 +81,28 @@
 														</td>
 														<td th:text="${jp.clinicUser.name}">Created By</td>
 														<td>
-															<p style="pointer-events:none"
-																th:if="${jp.status.name == 'OPEN'}"
+															<span th:if="${jp.status.name == 'OPEN'}"
 																class="badge bg-lightblue" th:text="${jp.status.value}">
-															</p>
-															<p style="pointer-events:none"
+															</span>
+															<span
 																th:if="${jp.status.name == 'CANCELLED' OR jp.status.name == 'REMOVED'}"
-																class="bg-gray badge" th:text="${jp.status.value}"></p>
-															<p style="pointer-events:none"
+																class="bg-gray badge"
+																th:text="${jp.status.value}"></span>
+															<span
 																th:if="${jp.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
 																class="bg-warning badge" th:text="${jp.status.value}">
-															</p>
-															<p style="pointer-events:none"
-																th:if="${jp.status.name == 'ACCEPTED'}"
+															</span>
+															<span th:if="${jp.status.name == 'ACCEPTED'}"
 																class="bg-success badge" th:text="${jp.status.value}">
-															</p>
-															<p style="pointer-events:none" type="button"
+															</span>
+															<span
 																th:if="${jp.status.name == 'COMPLETED_PENDING_PAYMENT'}"
 																class="bg-danger badge" th:text="${jp.status.value}">
-															</p>
-															<p style="pointer-events:none"
+															</span>
+															<span
 																th:if="${jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
-																class="bg-navy badge" th:text="${jp.status.value}"></p>
+																class="bg-navy badge"
+																th:text="${jp.status.value}"></span>
 														</td>
 														<td> <span
 																th:text="${jp.getDateTimeString(jp.getDateTimeModified)}"></span>

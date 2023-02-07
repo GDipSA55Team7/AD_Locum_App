@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpSession;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.Organization;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostAdditionalRemarksService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
@@ -33,12 +34,14 @@ public class DashboardController {
 
 	static int count = 0;
 
-	@GetMapping("/clinic-admin")
+	@GetMapping("/clinic")
 	public String dashboard(Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
+		Organization org = user.getOrganization();
+		List<JobPost> jobPosts = jobPostService.findAll().stream()
+				.filter(x -> x.getClinicUser().getOrganization().getId() == org.getId()).toList();
 		// Job Postings Status
-		List<JobPost> jobPosts = jobPostService.findAll();
-		List<Integer> AllJobPostStatusData = new ArrayList<>();
+		List<Integer> jobPostCountByStatus = new ArrayList<>();
 		List<JobStatus> jobStatusList = Stream.of(JobStatus.values()).filter(s -> !s.equals(JobStatus.DELETED))
 				.toList();
 		jobStatusList.forEach(s -> {
@@ -49,17 +52,19 @@ public class DashboardController {
 				}
 			});
 			if (count != 0) {
-				AllJobPostStatusData.add(count);
+				jobPostCountByStatus.add(count);
 			}
 		});
 		model.addAttribute("jobStatusList", jobStatusList);
-		model.addAttribute("jobStatusData", AllJobPostStatusData);
-		// Recent Activities
+		model.addAttribute("jobStatusData", jobPostCountByStatus);
+		// Latest Job Posts
+		model.addAttribute("latestJobPosts", jobPosts.stream().limit(8).toList());
+		// User Recent Activities
 		Map<LocalDate, List<JobAdditionalRemarks>> dateTimeToRemarks = remarksService.findAll().stream()
 				.filter(x -> x.getJobPost().getClinicUser().getId() == user.getId())
 				.sorted(Comparator.comparing(JobAdditionalRemarks::getDateTime).reversed()).limit(10)
 				.collect(Collectors.groupingBy(JobAdditionalRemarks::getDateOnly));
 		model.addAttribute("recentActivities", dateTimeToRemarks);
-		return "home-clinic-admin";
+		return "home-clinic";
 	}
 }
