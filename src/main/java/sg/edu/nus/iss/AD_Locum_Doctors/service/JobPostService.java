@@ -47,5 +47,4 @@ public interface JobPostService {
 
 	String convertAdditionalFeesToString(JobPost jobPost);
 	
-	void pushNotificationToFreeLancer(JobPost jobPost);
 }

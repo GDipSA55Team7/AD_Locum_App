@@ -148,6 +148,9 @@ public class JobPostRestController {
 	      jobPostDTO.setClinicUser(jobPost.getClinicUser());
 	      jobPostDTO.setClinic(jobPost.getClinic());
 	      jobPostDTO.setFreelancer(jobPost.getFreelancer());
+	      jobPostDTO.setPaymentDate(String.valueOf(jobPost.getPaymentDate()));
+	      jobPostDTO.setPaymentRefNo(jobPost.getPaymentReferenceNumber());
+	      
 
         return jobPostDTO;
     }

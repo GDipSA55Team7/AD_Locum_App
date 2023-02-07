@@ -1,5 +1,6 @@
 package sg.edu.nus.iss.AD_Locum_Doctors;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -312,6 +313,8 @@ public class AdLocumDoctorsApplication {
 			jp10.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
 			jp10.setActualStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
 			jp10.setActualEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
+			jp10.setPaymentDate( LocalDate.of(2023, 01, 15));
+			jp10.setPaymentReferenceNumber("23011510");
 			jp10.setRatePerHour(100);
 			jp10.setFreelancer(testUser2);
 			jp10.setClinicUser(testUser3);

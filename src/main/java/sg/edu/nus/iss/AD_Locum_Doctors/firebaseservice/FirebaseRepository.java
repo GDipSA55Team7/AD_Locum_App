@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FirebaseRepository extends JpaRepository<FirebaseDeviceToken,Integer> {
 
+	 FirebaseDeviceToken findByLoginUserName(String loginUserName);
 }

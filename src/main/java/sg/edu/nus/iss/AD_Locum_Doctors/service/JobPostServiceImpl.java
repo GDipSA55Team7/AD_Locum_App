@@ -213,37 +213,5 @@ public class JobPostServiceImpl implements JobPostService {
        return additionaFeeDetailsJSONString;
 	}
 
-	@Override
-	public void pushNotificationToFreeLancer(JobPost jobPost) {
-		
-		String newJobStatusMsg = "";
-		
-		switch (jobPost.getStatus()) {
-		   case ACCEPTED:
-			   newJobStatusMsg = "Approved";
-			   break;
-		   case COMPLETED_PENDING_PAYMENT:
-			   newJobStatusMsg = "Completed(Pending_payment)";
-			   break;
-		   case COMPLETED_PAYMENT_PROCESSED:
-			   newJobStatusMsg = "Completed(Payment_processed)";
-			   break;
-		   case CANCELLED:
-			   newJobStatusMsg = "Cancelled";
-			   break;
-		   default:
-		      break;
-		}
-		
-		FirebaseDeviceToken deviceToken = firebaseRepo.findById(1).orElse(null);
-		
-		if(!newJobStatusMsg.equals("") && deviceToken != null) {
-			
-			System.out.println("deviceToken" + deviceToken.getToken());
-			FirebaseService.sendNotification(deviceToken.getToken(),
-					"Status Update for Job Post Id : " + jobPost.getId() , "The status has been updated to " + newJobStatusMsg,
-					newJobStatusMsg,
-					jobPost.getId().toString());
-		}
-	}
+
 }

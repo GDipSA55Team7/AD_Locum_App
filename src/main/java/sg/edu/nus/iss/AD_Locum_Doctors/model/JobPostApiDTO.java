@@ -34,5 +34,7 @@ public class JobPostApiDTO {
     private Clinic clinic;
     
 
+    private String paymentDate;
     
+    private String paymentRefNo;
 }

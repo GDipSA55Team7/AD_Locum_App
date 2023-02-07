@@ -15,12 +15,19 @@ public class FirebaseDeviceToken {
     private int id;
 
     private String token;
+    
+    private String loginUserName;
+    
+    //default should be true
+    private Boolean isLoggedIntoMobileApp;
 
     public FirebaseDeviceToken() {
     }
 
-    public FirebaseDeviceToken(String token) {
+    public FirebaseDeviceToken(String token,String loginUserName,Boolean isLoggedIntoMobileApp ) {
         this.token = token;
+        this.loginUserName = loginUserName;
+        this.isLoggedIntoMobileApp = isLoggedIntoMobileApp;
     }
 
 }
