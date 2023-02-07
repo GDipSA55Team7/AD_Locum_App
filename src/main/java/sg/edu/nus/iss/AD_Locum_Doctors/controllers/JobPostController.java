@@ -62,6 +62,15 @@ public class JobPostController {
 		}
 	}
 
+	@GetMapping("/me")
+	public String jobPostListByUser(Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		List<JobPost> jobPosts = jobPostService.findAll().stream()
+				.filter(x -> x.getClinicUser().getId() == user.getId()).toList();
+		model.addAttribute("jobPosts", jobPosts);
+		return "jobpost-list";
+	}
+
 	@GetMapping("/create")
 	public String createJobPostPage(Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
