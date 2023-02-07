@@ -209,7 +209,37 @@
 		<div th:replace="fragments/layout.html :: footer" />
 		<div th:replace="fragments/layout.html :: script" />
 	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog"
+		aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="staticBackdropLabel">Error</h5>
+				</div>
+				<div class="modal-body">
+					Unable to create a job post as your clinic list is empty.<br>
+					<a th:href="@{/addClinicForm}">Click here to add a clinic.</a>
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-info" th:href="@{/addClinicForm}">Add Clinic</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
 </body>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(document).ready(function () {
+		var clinicList = /*[[${clinics}]]*/ {};
+		if (clinicList.length == 0) {
+			$('#staticBackdrop').modal();
+		}
+	});
+	/*]]>*/
+</script>
 <script>
 	function validateFields() {
 		var startElem = document.getElementById("startDate");
