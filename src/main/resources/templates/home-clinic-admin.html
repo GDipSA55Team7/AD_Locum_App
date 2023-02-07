@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 	<script src="//code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script type="text/javascript" src="../plugins/chart.js/chart.utils.js"></script>
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -40,7 +41,7 @@
 						<div class="col-lg-6">
 							<div class="card">
 								<div class="card-header">
-									<h3 class="card-title">Default Card Example</h3>
+									<h3 class="card-title">Job Postings Status</h3>
 									<div class="card-tools">
 										<!-- Buttons, labels, and many other things can be placed here! -->
 									</div>
@@ -48,7 +49,7 @@
 								</div>
 								<!-- /.card-header -->
 								<div class="card-body">
-									The body of the card
+									<canvas id="job-status-pie"></canvas>
 								</div>
 								<!-- /.card-body -->
 							</div>
@@ -125,6 +126,37 @@
 		<div th:replace="fragments/layout.html :: footer" />
 		<div th:replace="fragments/layout.html :: script" />
 	</div>
+	<script src="../plugins/chart.js/Chart.min.js"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		/* JOBS STATUS - PIE CHART */
+		const ctx = document.getElementById('job-status-pie');
+		var jobStatusList = /*[[${jobStatusList}]]*/ {};
+		var jobStatusData = /*[[${jobStatusData}]]*/ {};
+		var pieOptions = {
+			legend: {
+				position: 'right',
+				labels: {
+					usePointStyle: true,
+					pointStyle: 'circle',
+					padding: 15
+				}
+			}
+		};
+		const jobStatusChart = new Chart(ctx, {
+			type: 'pie',
+			data: {
+				labels: jobStatusList,
+				datasets: [{
+					data: jobStatusData,
+					backgroundColor: COLORS,
+					hoverOffset: 4
+				}]
+			},
+			options: pieOptions
+		});
+		/*]]>*/
+	</script>
 </body>
 
 </html>
