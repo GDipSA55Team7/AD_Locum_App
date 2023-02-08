@@ -36,6 +36,8 @@
 						<div class="col-12">
 							<div class="card">
 								<div class="card-body">
+									<h1 th:value="${testrate}">
+									</h1>
 									<form action="#" th:action="@{'/jobpost/create'}" th:object="${jobPostForm}"
 										method="post">
 
@@ -58,7 +60,7 @@
 														<div class="input-group-prepend">
 															<span class="input-group-text">Start Date</span>
 														</div>
-														<input th:field="*{startDate}" type="date" class="form-control"
+														<input th:field="*{startDate}" id="startDate" type="date" class="form-control"
 															onchange="validateFields()" required />
 													</div>
 													<div id="startDate-feedback" class="invalid-feedback d-block">
@@ -127,7 +129,7 @@
 															<span class="input-group-text">End Time</span>
 														</div>
 														<select th:field="*{endTimeHour}" type="text"
-															class="form-control" onchange="validateFields()" required>
+															class="form-control" onchange="validateFields(); " required>
 															<option value="01">01</option>
 															<option value="02">02</option>
 															<option value="03">03</option>
@@ -181,7 +183,7 @@
 														<span class="input-group-text">$</span>
 													</div>
 													<input th:field="*{ratePerHour}" type="number" min="0" step="0.01"
-														class="form-control" onkeyup="validateFields()" required />
+														class="form-control" onkeyup="validateFields()" oninput="checkTrend()" required />
 													<div class="input-group-append">
 														<span class="input-group-text mt-10">x</span>
 														<span id="totalHours" class="input-group-text">? hours</span>
@@ -191,7 +193,8 @@
 															class="form-control input-group-text" value="?" readonly />
 													</div>
 												</div>
-												<div id="ratePerHour-feedback" class="invalid-feedback d-block">
+												<div id="ratePerHour-trend-feedback"></div>
+												<div id="ratePerHour-feedback" class="invalid-feedback d-block"></div>
 												</div>
 											</div>
 										</div>
@@ -210,7 +213,7 @@
 		<div th:replace="fragments/layout.html :: script" />
 	</div>
 </body>
-<script>
+<script th:inline="javascript">
 	function validateFields() {
 		var startElem = document.getElementById("startDate");
 		var endElem = document.getElementById("endDate");
@@ -313,6 +316,35 @@
 				endDate,
 			),
 			rateElem.valueAsNumber);
+	}
+	
+	function checkTrend(){
+		var userDateInput = document.getElementById("startDate");
+		console.log(userDateInput.value)
+		var rateElem = document.getElementById("ratePerHour");
+		if (userDateInput.value){
+			var converted = new Date(startDate.value);
+			var dayNumber = converted.getDay();
+			var rate_per_hour_feedback = document.getElementById("ratePerHour-trend-feedback");
+			rate_per_hour_feedback.innerHTML = '';
+			var weekdayrate = /*[[${weekdayTrend}]]*/ null;
+			var weekdayrate = parseFloat(weekdayrate);
+			var weekendrate = /*[[${weekendTrend}]]*/ null;
+			var weekendrate = parseFloat(weekendrate);
+			if (dayNumber == 0 || dayNumber == 6){
+				console.log((rateElem.valueAsNumber / weekendrate));
+				if ((rateElem.valueAsNumber / weekendrate) < 0.8 ){
+					rate_per_hour_feedback.innerHTML = 'Your proposed rate is substantially lower than the recent average trending rate for weekend ($' + weekendrate.toFixed(2) + "). You may wish to reconsider again to ensure a higher chance of the job post being filled.";
+					rate_per_hour_feedback.className= "text-danger";
+				}
+			}
+			else{
+				if ((rateElem.valueAsNumber / weekdayrate) < 0.8 ){
+					rate_per_hour_feedback.innerHTML = 'Your proposed rate is substantially lower than the recent average trending rate for weekday ($' + weekdayrate.toFixed(2) + "). You may wish to reconsider again to ensure a higher chance of the job post being filled.";
+					rate_per_hour_feedback.className= "text-danger";
+				}		
+			}
+		}
 	}
 
 	function getDuration(
