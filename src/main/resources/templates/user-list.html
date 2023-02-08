@@ -58,6 +58,7 @@
 													<th>Name</th>
 													<th>Email</th>
 													<th>Contact</th>
+													<th>Is Active</th>
 													<!-- <th>Medical License No.</th> -->
 													<th>Actions</th>
 												</tr>
@@ -68,9 +69,10 @@
 													<td th:text="${user.name}">HCI Code</td>
 													<td th:text="${user.email}">Postal Code</td>
 													<td th:text="${user.contact}">Contact</td>
+													<td th:text="${user.active}">Is Active</td>
 													<!-- <td th:text="${user.medicalLicenseNo}">Medical License No.</td> -->
 													<td align="center">
-														<div><a th:if="${user.id != currentUserId}" th:href="@{/deleteuser/}+${user.id}">Delete</a></div>
+														<div><a th:if="${user.id != currentUserId && user.active == true}" th:href="@{/deleteuser/}+${user.id}">Delete</a></div>
 														<div><a th:href="@{/viewUser/}+${user.id}">View</a></div>
 													</td>
 												</tr>
