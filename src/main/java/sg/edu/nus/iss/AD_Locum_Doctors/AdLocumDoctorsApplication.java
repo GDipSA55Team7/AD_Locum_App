@@ -1,13 +1,20 @@
 package sg.edu.nus.iss.AD_Locum_Doctors;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.Reader;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.jdbc.ScriptRunner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.AdditionalFeeDetails;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
@@ -43,7 +50,8 @@ public class AdLocumDoctorsApplication {
 			RoleRepository roleRepo,
 			UserRepository userRepo,
 			AdditionalFeeDetailsRepository additionalFeeDetailsRepository,
-			JobAdditionalRemarksRepository jobRemarksRepo) {
+			JobAdditionalRemarksRepository jobRemarksRepo,
+			Environment env) {
 
 		return args -> {
 
@@ -394,6 +402,17 @@ public class AdLocumDoctorsApplication {
 
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.ACCEPTION, "",
 					LocalDateTime.of(2021, 2, 21, 13, 0, 0), jp11, testUser3));
+
+			// Seed data for Average Daily Rate
+			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+			String mysqlUrl = "jdbc:mysql://localhost:3306/AD_Locum";
+			Connection con = DriverManager.getConnection(mysqlUrl, env.getProperty("spring.datasource.username"),
+					env.getProperty("spring.datasource.password"));
+			System.out.println("Connection established......");
+			ScriptRunner sr = new ScriptRunner(con);
+			Reader reader = new BufferedReader(new FileReader(
+					"src/main/resources/sql/average_daily_rate.sql"));
+			sr.runScript(reader);
 		};
 	}
 }

@@ -320,7 +320,7 @@
 					callbacks: {
 						label: function (tooltipItem, data) {
 							var label = data.datasets[tooltipItem.datasetIndex].label || '';
-							return label + ' $' + tooltipItem.yLabel;
+							return label + ' $' + tooltipItem.yLabel.toFixed(2);
 						}
 					}
 				}
