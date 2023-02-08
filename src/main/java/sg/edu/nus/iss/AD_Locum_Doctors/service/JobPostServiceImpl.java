@@ -9,11 +9,9 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.RemarksCategory;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
-import sg.edu.nus.iss.AD_Locum_Doctors.repository.ClinicRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobPostRepository;
 
@@ -28,9 +26,6 @@ public class JobPostServiceImpl implements JobPostService {
 
 	@Autowired
 	private JobPostAdditionalRemarksService remarksService;
-
-	@Autowired
-	private ClinicRepository clinicRepo;
 
 	@Autowired
 	private UserService userService;
@@ -125,19 +120,12 @@ public class JobPostServiceImpl implements JobPostService {
 	}
 
 	@Override
-	public JobPost createJobPost(JobPostForm jobPostForm, User user) {
-		JobPost newJobPost = new JobPost();
-		newJobPost.setClinicUser(user);
-		newJobPost.setTitle(jobPostForm.getTitle());
-		newJobPost.setDescription(jobPostForm.getDescription());
-		newJobPost.setStartDateTime(jobPostForm.getStartDateTime());
-		newJobPost.setEndDateTime(jobPostForm.getEndDateTime());
-		newJobPost.setRatePerHour(jobPostForm.getRatePerHour());
-		newJobPost.setClinic(clinicRepo.findById(jobPostForm.getClinicId()).get());
-		newJobPost = jobPostRepo.saveAndFlush(newJobPost);
-		remarksService.createJobPostAdditionalRemarks(RemarksCategory.CREATED, user, newJobPost,
-				newJobPost.getAdditionalRemarks());
-		return newJobPost;
+	public JobPost createJobPost(JobPost jobPost, User user) {
+		jobPost.setClinicUser(user);
+		jobPostRepo.saveAndFlush(jobPost);
+		remarksService.createJobPostAdditionalRemarks(RemarksCategory.CREATED, user, jobPost,
+				jobPost.getAdditionalRemarks());
+		return jobPost;
 	}
 
 	@Override

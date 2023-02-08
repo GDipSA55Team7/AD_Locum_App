@@ -1,12 +1,11 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
+import java.util.List;
+
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
-
-import java.util.List;
 
 public interface JobPostService {
 	List<JobPost> findAll();
@@ -19,7 +18,7 @@ public interface JobPostService {
 
 	List<JobPost> findJobConfirmed(String userId);
 
-	JobPost createJobPost(JobPostForm jobPostForm, User user);
+	JobPost createJobPost(JobPost jobPost, User user);
 
 	JobPost findJobPostById(String id);
 

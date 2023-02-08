@@ -74,7 +74,7 @@ public class JobPostController {
 		List<Clinic> clinics = clinicService.findAll().stream()
 				.filter(x -> x.getOrganization().getId() == user.getOrganization().getId()).toList();
 		model.addAttribute("clinics", clinics);
-		model.addAttribute("jobPostForm", new JobPostForm());
+		model.addAttribute("jobPost", new JobPost());
 		Double weekdayTrend = null;
 		Double weekendTrend = null;
 		try {
@@ -108,9 +108,9 @@ public class JobPostController {
 	}
 
 	@PostMapping("/create")
-	public String createJobPost(JobPostForm jobPostForm, Model model, HttpSession session) {
+	public String createJobPost(JobPost jobPost, Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
-		jobPostService.createJobPost(jobPostForm, user);
+		jobPostService.createJobPost(jobPost, user);
 		return "redirect:/jobpost/list";
 	}
 

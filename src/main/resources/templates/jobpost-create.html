@@ -38,7 +38,7 @@
 								<div class="card-body">
 									<h1 th:value="${testrate}">
 									</h1>
-									<form action="#" th:action="@{'/jobpost/create'}" th:object="${jobPostForm}"
+									<form action="#" th:action="@{'/jobpost/create'}" th:object="${jobPost}"
 										method="post">
 
 										<div class="mb-3 form-group">
@@ -52,113 +52,43 @@
 												required></textarea>
 										</div>
 
-										<div class="form-group align-items-bottom">
-											<label class="form-label">Date and Time of Job</label>
-											<div class="form-row align-items-top">
+										<!-- Date & Time -->
+										<div class="mb-3 form-group col-xl-6 px-0">
+											<label class="form-label">Date & Time of Job</label>
+											<div class="form-row">
 												<div class="col">
 													<div class="input-group">
 														<div class="input-group-prepend">
-															<span class="input-group-text">Start Date</span>
+															<div class="input-group-text"><i
+																	class="fa fa-calendar mr-2"></i>Start
+															</div>
 														</div>
-														<input th:field="*{startDate}" id="startDate" type="date" class="form-control"
-															onchange="validateFields()" required />
+														<input id="startDateTime" th:value="*{startDateTime}"
+															type="text" class="form-control" name="datetimes1"
+															onchange="validateFields()" />
 													</div>
 													<div id="startDate-feedback" class="invalid-feedback d-block">
 													</div>
+													<input id="datetimes1" th:field="*{startDateTime}"
+														value="${jobPost.startDateTime}" type="text"
+														class="form-control" />
 												</div>
-
-												<div class="col-auto">
-													<div class="input-group">
-														<div class="input-group-prepend">
-															<span class="input-group-text">Start Time</span>
-														</div>
-														<select th:field="*{startTimeHour}" type="text"
-															class="form-control" onchange="validateFields()" required>
-															<option value="01">01</option>
-															<option value="02">02</option>
-															<option value="03">03</option>
-															<option value="04">04</option>
-															<option value="05">05</option>
-															<option value="06">06</option>
-															<option value="07">07</option>
-															<option value="08">08</option>
-															<option value="09">09</option>
-															<option value="10">10</option>
-															<option value="11">11</option>
-															<option value="12">12</option>
-														</select>
-														<div class="input-group-prepend">
-															<span class="input-group-text">:</span>
-														</div>
-														<select th:field="*{startTimeMin}" type="text"
-															class="form-control" onchange="validateFields()" required>
-															<option value="00">00</option>
-															<option value="30">30</option>
-														</select>
-														<select th:field="*{startTimeAmPm}" type="text"
-															class="form-control" onchange="validateFields()" required>
-															<option value="AM">AM</option>
-															<option value="PM">PM</option>
-														</select>
-													</div>
-													<div id="startTime-feedback" class="invalid-feedback d-block">
-													</div>
-												</div>
-
-												<div class="col-auto">
-													<div class="input-group">
-														<span class="mt-2">to</span>
-													</div>
-												</div>
-
 												<div class="col">
 													<div class="input-group">
 														<div class="input-group-prepend">
-															<span class="input-group-text">End Date</span>
+															<div class="input-group-text"><i
+																	class="fa fa-calendar mr-2"></i>End
+															</div>
 														</div>
-														<input th:field="*{endDate}" type="date" class="form-control"
-															onchange="validateFields()" required />
+														<input id="endDateTime" th:value="*{endDateTime}" type="text"
+															class="form-control" name="datetimes2"
+															onchange="validateFields()" />
 													</div>
 													<div id="endDate-feedback" class="invalid-feedback d-block">
 													</div>
-												</div>
-
-												<div class="col-auto">
-													<div class="input-group">
-														<div class="input-group-prepend">
-															<span class="input-group-text">End Time</span>
-														</div>
-														<select th:field="*{endTimeHour}" type="text"
-															class="form-control" onchange="validateFields(); " required>
-															<option value="01">01</option>
-															<option value="02">02</option>
-															<option value="03">03</option>
-															<option value="04">04</option>
-															<option value="05">05</option>
-															<option value="06">06</option>
-															<option value="07">07</option>
-															<option value="08">08</option>
-															<option value="09">09</option>
-															<option value="10">10</option>
-															<option value="11">11</option>
-															<option value="12">12</option>
-														</select>
-														<div class="input-group-prepend">
-															<span class="input-group-text">:</span>
-														</div>
-														<select th:field="*{endTimeMin}" type="text"
-															class="form-control" onchange="validateFields()" required>
-															<option value="00">00</option>
-															<option value="30">30</option>
-														</select>
-														<select th:field="*{endTimeAmPm}" type="text"
-															class="form-control" onchange="validateFields()" required>
-															<option value="AM">AM</option>
-															<option value="PM">PM</option>
-														</select>
-													</div>
-													<div id="endTime-feedback" class="invalid-feedback d-block">
-													</div>
+													<input id="datetimes2" th:field="*{endDateTime}"
+														value="${jobPost.endDateTime}" type="text"
+														class="form-control" />
 												</div>
 											</div>
 										</div>
@@ -166,7 +96,7 @@
 										<div class="row">
 											<div class="mb-3 form-group col-xl-6">
 												<label class="form-label">Clinic</label>
-												<select th:field="*{clinicId}" class="form-control" required>
+												<select th:field="*{clinic.id}" class="form-control" required>
 													<option value="" selected hidden>Please select a clinic</option>
 													<option th:each="c : ${clinics}" th:value="${c.id}"
 														th:text="${c.name}">
@@ -183,7 +113,8 @@
 														<span class="input-group-text">$</span>
 													</div>
 													<input th:field="*{ratePerHour}" type="number" min="0" step="0.01"
-														class="form-control" onkeyup="validateFields()" oninput="checkTrend()" required />
+														class="form-control" onkeyup="validateFields()"
+														oninput="checkTrend()" required />
 													<div class="input-group-append">
 														<span class="input-group-text mt-10">x</span>
 														<span id="totalHours" class="input-group-text">? hours</span>
@@ -195,10 +126,8 @@
 												</div>
 												<div id="ratePerHour-trend-feedback"></div>
 												<div id="ratePerHour-feedback" class="invalid-feedback d-block"></div>
-												</div>
 											</div>
-										</div>
-										<button type="submit" class="btn btn-info">Create</button>
+										</div><button id="submitbtn" type="submit" class="btn btn-info">Create</button>
 									</form>
 								</div>
 							</div>
@@ -242,93 +171,66 @@
 		}
 	});
 	/*]]>*/
-</script>
-<script>
+
+	currentDate = new Date();
+	var startInput = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 8, 0, 0, 0);
+	var endInput = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 9, 0, 0, 0);
+	$('#datetimes1').val(dateToString(startInput));
+	$('#datetimes2').val(dateToString(endInput));
+
+	$('input[name="datetimes1"]').daterangepicker({
+		"singleDatePicker": true,
+		"timePicker": true,
+		"timePicker24Hour": true,
+		"timePickerIncrement": 30,
+		"autoApply": true,
+		"startDate": startInput,
+		locale: {
+			format: 'DD/MM/YYYY HH:mm'
+		}
+	}, function (start, end, label) {
+		console.log('New date range selected: ' + start.format('YYYY-MM-DD hh:mm A') + ' to ' + end.format('YYYY-MM-DD hh:mm A') + ')');
+		startInput = new Date(start.toLocaleString());
+		$('#datetimes1').val(dateToString(startInput));
+	});
+	$('input[name="datetimes2"]').daterangepicker({
+		"singleDatePicker": true,
+		"timePicker": true,
+		"timePicker24Hour": true,
+		"timePickerIncrement": 30,
+		"autoApply": true,
+		"startDate": endInput,
+		locale: {
+			format: 'DD/MM/YYYY HH:mm A'
+		}
+	}, function (start, end, label) {
+		console.log('New date range selected: ' + start.format('YYYY-MM-DD hh:mm A') + ' to ' + end.format('YYYY-MM-DD hh:mm A') + ')');
+		endInput = new Date(start.toLocaleString());
+		$('#datetimes2').val(dateToString(endInput));
+	});
+	function dateToString(date) {
+		return String(date.getDate()).padStart(2, '0') + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + date.getFullYear() + ' ' + String(date.getHours()).padStart(2, '0') + ':' + String(date.getMinutes()).padStart(2, '0');
+	}
 	function validateFields() {
-		var startElem = document.getElementById("startDate");
-		var endElem = document.getElementById("endDate");
+		var startElem = document.getElementById("startDateTime");
+		var endElem = document.getElementById("endDateTime");
 		var rateElem = document.getElementById("ratePerHour");
 
-		var startTimeHourElem = document.getElementById("startTimeHour");
-		var startTimeMinElem = document.getElementById("startTimeMin");
-		var startTimeAmPmElem = document.getElementById("startTimeAmPm");
-
-		var endTimeHourElem = document.getElementById("endTimeHour");
-		var endTimeMinElem = document.getElementById("endTimeMin");
-		var endTimeAmPmElem = document.getElementById("endTimeAmPm");
-
-		var startDate = new Date(startElem.value);
-		var startTimeHour = parseInt(startTimeHourElem.value);
-		var startTimeMin = parseInt(startTimeMinElem.value);
-		var startTimeAmPm = startTimeAmPmElem.value;
-		if (startTimeAmPm == "PM") {
-			startDate.setHours(startTimeHour + 12, startTimeMin, 0);
-		} else {
-			startDate.setHours(startTimeHour, startTimeMin, 0);
-		}
-
-		var endDate = new Date(endElem.value);
-		var endTimeHour = parseInt(endTimeHourElem.value);
-		var endTimeMin = parseInt(endTimeMinElem.value);
-		var endTimeAmPm = endTimeAmPmElem.value;
-		if (endTimeAmPm == "PM" && endTimeHour != 12) {
-			endDate.setHours(endTimeHour + 12, endTimeMin, 0);
-		} else {
-			endDate.setHours(endTimeHour, endTimeMin, 0);
-		}
+		var diff = endInput - startInput;
 
 		var startFeedbackElem = document.getElementById("startDate-feedback");
-		if (startElem.value == "") {
-			startFeedbackElem.innerHTML = "Please enter start date and time.";
+		var endFeedbackElem = document.getElementById("endDate-feedback");
+		if (diff <= 0) {
+			endElem.classList.add("is-invalid");
 			startElem.classList.add("is-invalid");
+			endFeedbackElem.innerHTML = "End date cannot be same or earlier than start date.";
+			startFeedbackElem.innerHTML = "Start date cannot be same or later than end date.";
 			resetTotalRate();
 		} else {
 			startElem.classList.remove("is-invalid");
 			startFeedbackElem.innerHTML = "";
-		}
-
-		var endFeedbackElem = document.getElementById("endDate-feedback");
-		if (endElem.value == "") {
-			endFeedbackElem.innerHTML = "Please enter end date and time.";
-			endElem.classList.add("is-invalid");
-			resetTotalRate();
-		} else {
 			endElem.classList.remove("is-invalid");
 			endFeedbackElem.innerHTML = "";
-		}
-
-		var diff = endDate.getTime() - startDate.getTime();
-
-		if (diff < 0 && endDate.toLocaleDateString() != startDate.toLocaleDateString()) {
-			endElem.classList.add("is-invalid");
-			startElem.classList.add("is-invalid");
-			endFeedbackElem.innerHTML = "End date cannot be earlier than start date.";
-			startFeedbackElem.innerHTML = "Start date cannot be same or later than end date.";
-			resetTotalRate();
-		} else if (endDate.toLocaleDateString() == startDate.toLocaleDateString()) {
-			if (startTimeHour - endTimeHour > 0 ||
-				startTimeHour == endTimeHour && startTimeMin - endTimeMin >= 0
-			) {
-				if (startTimeAmPm == "PM" && endTimeAmPm == "AM" || startTimeAmPm == endTimeAmPm) {
-					startTimeHourElem.classList.add("is-invalid");
-					startTimeMinElem.classList.add("is-invalid");
-					startTimeAmPmElem.classList.add("is-invalid");
-					endTimeHourElem.classList.add("is-invalid");
-					endTimeMinElem.classList.add("is-invalid");
-					endTimeAmPmElem.classList.add("is-invalid");
-					document.getElementById("endTime-feedback").innerHTML = "End time cannot be same or earlier than start time.";
-					document.getElementById("startTime-feedback").innerHTML = "Start time cannot be same or later than end time.";
-					resetTotalRate();
-				}
-				else {
-					resetTimeError();
-				}
-			}
-			else {
-				resetTimeError();
-			}
-		} else {
-			resetTimeError();
 		}
 
 		var rateFeedbackElem = document.getElementById("ratePerHour-feedback");
@@ -336,69 +238,19 @@
 			rateElem.classList.add("is-invalid");
 			rateFeedbackElem.innerHTML = "Please enter a valid number";
 			resetTotalRate();
+			return;
 		} else {
 			rateElem.classList.remove("is-invalid");
 			rateFeedbackElem.innerHTML = "";
 		}
-		calculateTotalRate(
-			getDuration(
-				startDate,
-				endDate,
-			),
-			rateElem.valueAsNumber);
-	}
-	
-	function checkTrend(){
-		var userDateInput = document.getElementById("startDate");
-		console.log(userDateInput.value)
-		var rateElem = document.getElementById("ratePerHour");
-		if (userDateInput.value){
-			var converted = new Date(startDate.value);
-			var dayNumber = converted.getDay();
-			var rate_per_hour_feedback = document.getElementById("ratePerHour-trend-feedback");
-			rate_per_hour_feedback.innerHTML = '';
-			var weekdayrate = /*[[${weekdayTrend}]]*/ null;
-			var weekdayrate = parseFloat(weekdayrate);
-			var weekendrate = /*[[${weekendTrend}]]*/ null;
-			var weekendrate = parseFloat(weekendrate);
-			if (dayNumber == 0 || dayNumber == 6){
-				console.log((rateElem.valueAsNumber / weekendrate));
-				if ((rateElem.valueAsNumber / weekendrate) < 0.8 ){
-					rate_per_hour_feedback.innerHTML = 'Your proposed rate is substantially lower than the recent average trending rate for weekend ($' + weekendrate.toFixed(2) + "). You may wish to reconsider again to ensure a higher chance of the job post being filled.";
-					rate_per_hour_feedback.className= "text-danger";
-				}
-			}
-			else{
-				if ((rateElem.valueAsNumber / weekdayrate) < 0.8 ){
-					rate_per_hour_feedback.innerHTML = 'Your proposed rate is substantially lower than the recent average trending rate for weekday ($' + weekdayrate.toFixed(2) + "). You may wish to reconsider again to ensure a higher chance of the job post being filled.";
-					rate_per_hour_feedback.className= "text-danger";
-				}		
-			}
-		}
-	}
-
-	function getDuration(
-		startDate,
-		endDate,
-	) {
-		var msec = endDate.getTime() - startDate.getTime();
-		return msec;
-	}
-
-	function resetTimeError() {
-		document.getElementById("startTimeHour").classList.remove("is-invalid");
-		document.getElementById("startTimeMin").classList.remove("is-invalid");
-		document.getElementById("startTimeAmPm").classList.remove("is-invalid");
-		document.getElementById("endTimeHour").classList.remove("is-invalid");
-		document.getElementById("endTimeMin").classList.remove("is-invalid");
-		document.getElementById("endTimeAmPm").classList.remove("is-invalid");
-		document.getElementById("endTime-feedback").innerHTML = "";
-		document.getElementById("startTime-feedback").innerHTML = "";
+		calculateTotalRate(diff, rateElem.valueAsNumber);
+		checkTrend();
 	}
 
 	function resetTotalRate() {
 		document.getElementById("totalHours").innerHTML = "? hours";
 		document.getElementById("totalRate").value = "?";
+		document.getElementById("submitbtn").disabled = true;
 	}
 
 	function calculateTotalRate(duration, rate) {
@@ -409,6 +261,36 @@
 		var totalHours = duration / 1000 / 60 / 60;
 		document.getElementById("totalHours").innerHTML = totalHours + " hours";
 		document.getElementById("totalRate").value = (Math.round(totalHours * rate * 100) / 100).toFixed(2);
+		document.getElementById("submitbtn").disabled = false;
+	}
+
+	function checkTrend() {
+		var userDateInput = document.getElementById("startDateTime");
+		console.log(userDateInput.value)
+		var rateElem = document.getElementById("ratePerHour");
+		if (userDateInput.value) {
+			var converted = new Date(userDateInput.value);
+			var dayNumber = converted.getDay();
+			var rate_per_hour_feedback = document.getElementById("ratePerHour-trend-feedback");
+			rate_per_hour_feedback.innerHTML = '';
+			var weekdayrate = /*[[${weekdayTrend}]]*/ null;
+			var weekdayrate = parseFloat(weekdayrate);
+			var weekendrate = /*[[${weekendTrend}]]*/ null;
+			var weekendrate = parseFloat(weekendrate);
+			if (dayNumber == 0 || dayNumber == 6) {
+				console.log((rateElem.valueAsNumber / weekendrate));
+				if ((rateElem.valueAsNumber / weekendrate) < 0.8) {
+					rate_per_hour_feedback.innerHTML = 'Your proposed rate is substantially lower than the recent average trending rate for weekend ($' + weekendrate.toFixed(2) + "). You may wish to reconsider again to ensure a higher chance of the job post being filled.";
+					rate_per_hour_feedback.className = "text-danger";
+				}
+			}
+			else {
+				if ((rateElem.valueAsNumber / weekdayrate) < 0.8) {
+					rate_per_hour_feedback.innerHTML = 'Your proposed rate is substantially lower than the recent average trending rate for weekday ($' + weekdayrate.toFixed(2) + "). You may wish to reconsider again to ensure a higher chance of the job post being filled.";
+					rate_per_hour_feedback.className = "text-danger";
+				}
+			}
+		}
 	}
 </script>
 
