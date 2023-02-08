@@ -1,7 +1,10 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,23 +14,21 @@ import jakarta.transaction.Transactional;
 import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseDeviceToken;
 import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseService;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.AdditionalFeeDetails;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.RemarksCategory;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.ClinicRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobPostRepository;
+import sg.edu.nus.iss.AD_Locum_Doctors.repository.RecommendedJobRepository;
 
 @Transactional
 @Service
 public class JobPostServiceImpl implements JobPostService {
 	@Autowired
 	private JobPostRepository jobPostRepo;
+
+	@Autowired
+	private RecommendedJobRepository recJobRepo;
 
 	@Autowired
 	private JobAdditionalRemarksRepository jobAdditionalRemarksRepo;
@@ -62,7 +63,7 @@ public class JobPostServiceImpl implements JobPostService {
 
 	@Override
 	public List<JobPost> findJobApplied(String userId) {
-		return jobPostRepo.findByStatus(JobStatus.PENDING_CONFIRMATION_BY_CLINIC);
+		return jobPostRepo.findByIdAndStatus(userId, JobStatus.PENDING_CONFIRMATION_BY_CLINIC);
 	}
 
 	@Override
@@ -100,7 +101,18 @@ public class JobPostServiceImpl implements JobPostService {
         return jobPostRepo.findByFreelancerNotNull();
     }
 
-    @Override
+	@Override
+	public Map<JobPost, Double> findAllRecommended(Long userId) {
+		List<RecommendedJob> recJobsList = recJobRepo.findByUserId(userId);
+		Map<JobPost, Double> jobPostMap = new HashMap<JobPost, Double>();
+		for (RecommendedJob recJobs : recJobsList) {
+			JobPost jobPost = jobPostRepo.getReferenceById(recJobs.getJobId());
+			jobPostMap.put(jobPost,recJobs.getSimilarityScore());
+		}
+		return jobPostMap;
+	}
+
+	@Override
 	public void setStatus(JobPost jobPost, JobStatus status, String userId, JobAdditionalRemarks addRemarks) {
 		User freelancer = userService.findById(Long.valueOf(userId));
 
