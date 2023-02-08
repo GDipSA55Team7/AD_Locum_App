@@ -29,6 +29,7 @@ import sg.edu.nus.iss.AD_Locum_Doctors.repository.RoleRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.UserRepository;
 
 @SpringBootApplication
+
 public class AdLocumDoctorsApplication {
 
 	public static void main(String[] args) {
@@ -394,15 +395,15 @@ public class AdLocumDoctorsApplication {
 
 			// Recommender mock data
 
-			User ru1 = new User();
-			testUser1.setName("Luffy");
-			testUser1.setEmail("Luffy@gmail.com");
-			testUser1.setUsername("luffy");
-			testUser1.setPassword("luffy");
-			testUser1.setContact("81381332");
-			testUser1.setMedicalLicenseNo("M31223H");
-			testUser1.setRole(r1);
-			userRepo.saveAndFlush(ru1);
+			User recoUser = new User();
+			recoUser.setName("Luffy");
+			recoUser.setEmail("Luffy@gmail.com");
+			recoUser.setUsername("luffy");
+			recoUser.setPassword("luffy");
+			recoUser.setContact("81381332");
+			recoUser.setMedicalLicenseNo("M31223H");
+			recoUser.setRole(r1);
+			userRepo.saveAndFlush(recoUser);
 
 			Clinic cNorth = new Clinic();
 			cNorth.setName("Raffles Medical - Causeway Point");
@@ -454,7 +455,7 @@ public class AdLocumDoctorsApplication {
 			jr1.setEndDateTime(LocalDateTime.of(2023, 1, 2, 20, 30, 0));
 			jr1.setRatePerHour(100);
 			jr1.setClinicUser(testUser3);
-			jr1.setFreelancer(ru1);
+			jr1.setFreelancer(recoUser);
 			jr1.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jr1.setActualStartDateTime(LocalDateTime.of(2023, 1, 2, 10, 30, 0));
 			jr1.setActualEndDateTime(LocalDateTime.of(2023, 1, 2, 21, 30, 0));
@@ -468,7 +469,7 @@ public class AdLocumDoctorsApplication {
 			jr2.setEndDateTime(LocalDateTime.of(2023, 1, 9, 20, 30, 0));
 			jr2.setRatePerHour(100);
 			jr2.setClinicUser(testUser3);
-			jr2.setFreelancer(ru1);
+			jr2.setFreelancer(recoUser);
 			jr2.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jr2.setActualStartDateTime(LocalDateTime.of(2023, 1, 9, 10, 30, 0));
 			jr2.setActualEndDateTime(LocalDateTime.of(2023, 1, 9, 21, 30, 0));
@@ -482,7 +483,7 @@ public class AdLocumDoctorsApplication {
 			jr3.setEndDateTime(LocalDateTime.of(2023, 1, 16, 20, 30, 0));
 			jr3.setRatePerHour(100);
 			jr3.setClinicUser(testUser3);
-			jr3.setFreelancer(ru1);
+			jr3.setFreelancer(recoUser);
 			jr3.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jr3.setActualStartDateTime(LocalDateTime.of(2023, 1, 16, 10, 30, 0));
 			jr3.setActualEndDateTime(LocalDateTime.of(2023, 1, 16, 21, 30, 0));
@@ -496,7 +497,7 @@ public class AdLocumDoctorsApplication {
 			jr4.setEndDateTime(LocalDateTime.of(2023, 1, 23, 20, 30, 0));
 			jr4.setRatePerHour(100);
 			jr4.setClinicUser(testUser3);
-			jr4.setFreelancer(ru1);
+			jr4.setFreelancer(recoUser);
 			jr4.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jr4.setActualStartDateTime(LocalDateTime.of(2023, 1, 23, 10, 30, 0));
 			jr4.setActualEndDateTime(LocalDateTime.of(2023, 1, 23, 21, 30, 0));
@@ -510,7 +511,7 @@ public class AdLocumDoctorsApplication {
 			jr5.setEndDateTime(LocalDateTime.of(2023, 1, 1, 18, 30, 0));
 			jr5.setRatePerHour(100);
 			jr5.setClinicUser(testUser3);
-			jr5.setFreelancer(ru1);
+			jr5.setFreelancer(recoUser);
 			jr5.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jr5.setActualStartDateTime(LocalDateTime.of(2023, 1, 1, 14, 30, 0));
 			jr5.setActualEndDateTime(LocalDateTime.of(2023, 1, 1, 18, 30, 0));
@@ -524,7 +525,7 @@ public class AdLocumDoctorsApplication {
 			jr6.setEndDateTime(LocalDateTime.of(2023, 1, 8, 18, 30, 0));
 			jr6.setRatePerHour(100);
 			jr6.setClinicUser(testUser3);
-			jr6.setFreelancer(ru1);
+			jr6.setFreelancer(recoUser);
 			jr6.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jr6.setActualStartDateTime(LocalDateTime.of(2023, 1, 8, 14, 30, 0));
 			jr6.setActualEndDateTime(LocalDateTime.of(2023, 1, 8, 18, 30, 0));
@@ -538,7 +539,7 @@ public class AdLocumDoctorsApplication {
 			jr7.setEndDateTime(LocalDateTime.of(2023, 1, 15, 19, 30, 0));
 			jr7.setRatePerHour(100);
 			jr7.setClinicUser(testUser3);
-			jr7.setFreelancer(ru1);
+			jr7.setFreelancer(recoUser);
 			jr7.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jr7.setActualStartDateTime(LocalDateTime.of(2023, 1, 15, 15, 30, 0));
 			jr7.setActualEndDateTime(LocalDateTime.of(2023, 1, 15, 19, 30, 0));
@@ -552,7 +553,7 @@ public class AdLocumDoctorsApplication {
 			jr8.setEndDateTime(LocalDateTime.of(2023, 1, 12, 1, 30, 0));
 			jr8.setRatePerHour(100);
 			jr8.setClinicUser(testUser3);
-			jr8.setFreelancer(ru1);
+			jr8.setFreelancer(recoUser);
 			jr8.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jr8.setActualStartDateTime(LocalDateTime.of(2023, 1, 11, 19, 30, 0));
 			jr8.setActualEndDateTime(LocalDateTime.of(2023, 1, 12, 1, 30, 0));
@@ -566,7 +567,7 @@ public class AdLocumDoctorsApplication {
 			jr9.setEndDateTime(LocalDateTime.of(2023, 1, 19, 6, 30, 0));
 			jr9.setRatePerHour(100);
 			jr9.setClinicUser(testUser3);
-			jr9.setFreelancer(ru1);
+			jr9.setFreelancer(recoUser);
 			jr9.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jr9.setActualStartDateTime(LocalDateTime.of(2023, 1, 18, 23, 30, 0));
 			jr9.setActualEndDateTime(LocalDateTime.of(2023, 1, 19, 6, 30, 0));
@@ -580,7 +581,7 @@ public class AdLocumDoctorsApplication {
 			jr10.setEndDateTime(LocalDateTime.of(2023, 1, 30, 14, 30, 0));
 			jr10.setRatePerHour(100);
 			jr10.setClinicUser(testUser3);
-			jr10.setFreelancer(ru1);
+			jr10.setFreelancer(recoUser);
 			jr10.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
 			jr10.setActualStartDateTime(LocalDateTime.of(2023, 1, 30, 10, 30, 0));
 			jr10.setActualEndDateTime(LocalDateTime.of(2023, 1, 30, 14, 30, 0));

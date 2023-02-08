@@ -3,9 +3,11 @@ package sg.edu.nus.iss.AD_Locum_Doctors.rest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,12 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostApiDTO;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.RemarksCategory;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
@@ -132,6 +129,24 @@ public class JobPostRestController {
         }
     }
 
+    @GetMapping("/recommended")
+    public ResponseEntity<List<JobPostApiDTO>> findJobRecommended(@RequestParam String id) {
+        Map<JobPost, Double> recJobsMap = jobPostService.findAllRecommended(Long.valueOf(id));
+        List<JobPostApiDTO> jobPostDTOList = new ArrayList<>();
+        try {
+            for (Map.Entry<JobPost, Double> entry : recJobsMap.entrySet()) {
+                JobPostApiDTO jobPostDTO = setJobPostDTO(entry.getKey(), entry.getValue());
+                jobPostDTOList.add(jobPostDTO);
+            }
+                if (jobPostDTOList.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(jobPostDTOList, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     private JobPostApiDTO setJobPostDTO(JobPost jobPost) {
 
     	  JobPostApiDTO jobPostDTO = new JobPostApiDTO();
@@ -151,6 +166,30 @@ public class JobPostRestController {
 	      jobPostDTO.setPaymentDate(String.valueOf(jobPost.getPaymentDate()));
 	      jobPostDTO.setPaymentRefNo(jobPost.getPaymentReferenceNumber());
 	      
+
+        return jobPostDTO;
+    }
+
+    private JobPostApiDTO setJobPostDTO(JobPost jobPost, Double similarityScore) {
+
+        JobPostApiDTO jobPostDTO = new JobPostApiDTO();
+        jobPostDTO.setId(jobPost.getId());
+        jobPostDTO.setDescription(jobPost.getDescription());
+        jobPostDTO.setStartDateTime(jobPost.getStartDateTime().toString());
+        jobPostDTO.setEndDateTime(jobPost.getEndDateTime().toString());
+        jobPostDTO.setClinic(jobPost.getClinic());
+        jobPostDTO.setStatus(jobPost.getStatus());
+        jobPostDTO.setTitle(jobPost.getTitle());
+        jobPostDTO.setTotalRate(jobPost.computeEstimatedTotalRate());
+        jobPostDTO.setAdditionalFeeListString(jobPostService.convertAdditionalFeesToString(jobPost));
+        jobPostDTO.setRatePerHour(jobPost.getRatePerHour());
+        jobPostDTO.setClinicUser(jobPost.getClinicUser());
+        jobPostDTO.setClinic(jobPost.getClinic());
+        jobPostDTO.setFreelancer(jobPost.getFreelancer());
+        jobPostDTO.setPaymentDate(String.valueOf(jobPost.getPaymentDate()));
+        jobPostDTO.setPaymentRefNo(jobPost.getPaymentReferenceNumber());
+        jobPostDTO.setSimilarityScore(similarityScore);
+
 
         return jobPostDTO;
     }

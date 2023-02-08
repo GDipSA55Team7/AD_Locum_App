@@ -1,12 +1,9 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostForm;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
 
 import java.util.List;
+import java.util.Map;
 
 public interface JobPostService {
 	List<JobPost> findAll();
@@ -40,6 +37,8 @@ public interface JobPostService {
 	List<JobPost> findPaidandUnpaidJobPosts(Long userOrgId);
 
 	List<JobPost> findAllApplied();
+
+	Map<JobPost, Double> findAllRecommended(Long userId);
 
 	void delete(JobPost jobPost, JobAdditionalRemarks additionalRemarks, User user);
 

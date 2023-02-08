@@ -32,7 +32,8 @@ public class JobPostApiDTO {
     private User freelancer;
 
     private Clinic clinic;
-    
+
+    private double similarityScore;
 
     private String paymentDate;
     
