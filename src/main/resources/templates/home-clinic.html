@@ -43,7 +43,7 @@
 								<span class="info-box-icon bg-info"><i class="fas fa-briefcase"></i></span>
 								<div class="info-box-content">
 									<span class="info-box-text">Unfilled Jobs</span>
-									<span class="info-box-number">4</span>
+									<span class="info-box-number" th:text="${unfilledJobs}"></span>
 								</div>
 							</div>
 						</div><!-- /.col -->
@@ -52,7 +52,7 @@
 								<span class="info-box-icon bg-info"><i class="fas fa-calendar-check"></i></span>
 								<div class="info-box-content">
 									<span class="info-box-text">Upcoming Job Bookings</span>
-									<span class="info-box-number">12</span>
+									<span class="info-box-number" th:text="${upcomingJobs}"></span>
 								</div>
 							</div>
 						</div><!-- /.col -->
@@ -61,7 +61,7 @@
 								<span class="info-box-icon bg-info"><i class="fas fa-calendar-xmark"></i></span>
 								<div class="info-box-content">
 									<span class="info-box-text">Cancellation Rate</span>
-									<span class="info-box-number">6%</span>
+									<span class="info-box-number"><span th:text="${cancellationRate}"></span>%</span>
 								</div>
 							</div>
 						</div><!-- /.col -->
@@ -70,7 +70,7 @@
 								<span class="info-box-icon bg-info"><i class="fas fa-gauge"></i></span>
 								<div class="info-box-content">
 									<span class="info-box-text">Average Job Take Up Speed</span>
-									<span class="info-box-number">12 Hours</span>
+									<span class="info-box-number"><span th:text="${averageTakeUpSpeed}"></span> 12 Hours</span>
 								</div>
 							</div>
 						</div><!-- /.col -->
