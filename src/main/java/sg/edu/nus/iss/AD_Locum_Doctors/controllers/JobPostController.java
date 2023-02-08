@@ -53,7 +53,6 @@ public class JobPostController {
 				jobPosts = jobPosts.stream()
 						.filter(x -> x.getClinic().getOrganization().getId() == user.getOrganization().getId())
 						.filter(x -> !x.getStatus().equals(JobStatus.REMOVED))
-						.sorted(Comparator.comparing(JobPost::getDateTimeModified).reversed())
 						.collect(Collectors.toList());
 				model.addAttribute("jobPosts", jobPosts);
 				return "jobpost-list";

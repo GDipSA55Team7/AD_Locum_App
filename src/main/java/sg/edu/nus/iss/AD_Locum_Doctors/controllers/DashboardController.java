@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpSession;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.AverageDailyRate;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Organization;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.AverageDailyRateService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostAdditionalRemarksService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 
@@ -31,6 +33,8 @@ public class DashboardController {
 	JobPostService jobPostService;
 	@Autowired
 	JobPostAdditionalRemarksService remarksService;
+	@Autowired
+	AverageDailyRateService averageDailyRateService;
 
 	static int count = 0;
 
@@ -57,6 +61,32 @@ public class DashboardController {
 		});
 		model.addAttribute("jobStatusList", jobStatusList);
 		model.addAttribute("jobStatusData", jobPostCountByStatus);
+		// Time Series Chart
+		List<AverageDailyRate> adrList = averageDailyRateService.getAverageDailyRates().stream()
+				.sorted(Comparator.comparing(AverageDailyRate::getDate)).collect(Collectors.toList());
+		List<LocalDate> dates = new ArrayList<>();
+		List<Double> weekday_14MA = new ArrayList<>(), weekday_28MA = new ArrayList<>(),
+				weekend_14MA = new ArrayList<>(), weekend_28MA = new ArrayList<>();
+		for (AverageDailyRate adr : adrList) {
+			dates.add(adr.getDate());
+			var weekday_14MA_2dp = adr.getWeekday_14_MA() == null ? null
+					: (double) Math.round(adr.getWeekday_14_MA() * 100) / 100;
+			var weekday_28MA_2dp = adr.getWeekday_28_MA() == null ? null
+					: (double) Math.round(adr.getWeekday_28_MA() * 100) / 100;
+			var weekend_14MA_2dp = adr.getWeekend_14_MA() == null ? null
+					: (double) Math.round(adr.getWeekend_14_MA() * 100) / 100;
+			var weekend_28MA_2dp = adr.getWeekend_28_MA() == null ? null
+					: (double) Math.round(adr.getWeekend_28_MA() * 100) / 100;
+			weekday_14MA.add(weekday_14MA_2dp);
+			weekday_28MA.add(weekday_28MA_2dp);
+			weekend_14MA.add(weekend_14MA_2dp);
+			weekend_28MA.add(weekend_28MA_2dp);
+		}
+		model.addAttribute("dates", dates);
+		model.addAttribute("weekday_14MA", weekday_14MA);
+		model.addAttribute("weekday_28MA", weekday_28MA);
+		model.addAttribute("weekend_14MA", weekend_14MA);
+		model.addAttribute("weekend_28MA", weekend_28MA);
 		// Latest Job Posts
 		model.addAttribute("latestJobPosts", jobPosts.stream().limit(8).toList());
 		// User Recent Activities

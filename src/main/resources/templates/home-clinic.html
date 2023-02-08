@@ -83,7 +83,8 @@
 								</div>
 								<!-- /.card-header -->
 								<div class="card-body">
-									<span th:if="${jobStatusData.size() == 0}">No data available. <a th:href="@{/jobpost/create}">Create a new job post.</a></span>
+									<span th:if="${jobStatusData.size() == 0}">No data available. <a
+											th:href="@{/jobpost/create}">Create a new job post.</a></span>
 									<canvas th:unless="${jobStatusData.size() == 0}" id="job-status-pie"></canvas>
 								</div>
 								<!-- /.card-body -->
@@ -152,6 +153,17 @@
 						<!-- /.col -->
 
 						<div class="col-lg-6">
+							<div class="card">
+								<div class="card-header">
+									<h3 class="card-title">Moving Averages of Locum Rates/hour</h3>
+								</div>
+								<!-- /.card-header -->
+								<div class="card-body">
+									<canvas id="job-time-series"></canvas>
+								</div>
+								<!-- /.card-body -->
+							</div>
+							<!-- /.card -->
 							<div class="card">
 								<div class="card-header">
 									<h3 class="card-title">Latest Job Posts</h3>
@@ -246,6 +258,73 @@
 				}]
 			},
 			options: pieOptions
+		});
+		/* TIME SERIES SMA CHART */
+		var dates = /*[[${dates}]]*/ null;
+		var weekday_14MA = /*[[${weekday_14MA}]]*/ null;
+		var weekday_28MA = /*[[${weekday_28MA}]]*/ null;
+		var weekend_14MA = /*[[${weekend_14MA}]]*/ null;
+		var weekend_28MA = /*[[${weekend_28MA}]]*/ null;
+		const timeSeriesCtx = document.getElementById('job-time-series');
+		const labels = dates;
+		const data = {
+			labels: labels,
+			datasets: [{
+				label: 'Weekday (14 days Moving Average)',
+				data: weekday_14MA,
+				fill: false,
+				borderColor: 'rgb(75, 192, 192)',
+				tension: 0.1
+			}, {
+				label: 'Weekday (28 days Moving Average)',
+				data: weekday_28MA,
+				fill: false,
+				borderColor: 'rgb(150, 115, 130)',
+				tension: 0.1
+			}, {
+				label: 'Weekend (14 days Moving Average)',
+				data: weekend_14MA,
+				fill: false,
+				borderColor: 'rgb(7, 60, 75)',
+				tension: 0.1
+			}, {
+				label: 'Weekend (28 days Moving Average)',
+				data: weekend_28MA,
+				fill: false,
+				borderColor: 'rgb(110, 140, 160)',
+				tension: 0.1
+			}]
+		};
+		const jobTimeSeriesChart = new Chart(timeSeriesCtx, {
+			type: 'line',
+			data: data,
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							// Include a dollar sign in the ticks
+							callback: function (value, index, values) {
+								return '$' + value;
+							}
+						}
+					}]
+				},
+				legend: {
+					align: 'end',
+					position: 'top',
+					labels: {
+						boxWidth: 10
+					}
+				},
+				tooltips: {
+					callbacks: {
+						label: function (tooltipItem, data) {
+							var label = data.datasets[tooltipItem.datasetIndex].label || '';
+							return label + ' $' + tooltipItem.yLabel;
+						}
+					}
+				}
+			}
 		});
 		/*]]>*/
 	</script>
