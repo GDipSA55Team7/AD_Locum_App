@@ -75,7 +75,7 @@ public class MedicalInstitutionRegistrationFormController {
             case "Clinic_Admin":
                 return "redirect:/clinic-admin";
             case "Clinic_Main_Admin":
-                return "redirect:/clinic-admin";
+            return "redirect:/dashboard/clinic-admin";
             case "Clinic_User":
                 return "redirect:/clinic-user";
             default:
