@@ -107,7 +107,9 @@ public class JobPostServiceImpl implements JobPostService {
 		Map<JobPost, Double> jobPostMap = new HashMap<JobPost, Double>();
 		for (RecommendedJob recJobs : recJobsList) {
 			JobPost jobPost = jobPostRepo.getReferenceById(recJobs.getJobId());
-			jobPostMap.put(jobPost,recJobs.getSimilarityScore());
+			if (jobPost.getStatus() == JobStatus.OPEN) {
+				jobPostMap.put(jobPost, recJobs.getSimilarityScore());
+			}
 		}
 		return jobPostMap;
 	}
