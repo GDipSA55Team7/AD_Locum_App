@@ -58,6 +58,7 @@
 													<th>Name</th>
 													<th>Email</th>
 													<th>User Type</th>
+													<th>User Status</th>
 													<th>Contact</th>
 													<th>Organization</th>
 													<th>Medical License No.</th>
@@ -66,10 +67,14 @@
 											</thead>
 											<tbody>
 												<tr th:each="user : ${userList}" class="listRecord">
-													<td th:text="${user.username}">Name</td>
-													<td th:text="${user.name}">HCI Code</td>
-													<td th:text="${user.email}">Postal Code</td>
-													<td th:text="${user.role.name}">Postal Code</td>
+													<td th:text="${user.username}">UserName</td>
+													<td th:text="${user.name}">Name</td>
+													<td th:text="${user.email}">Email</td>
+													<td th:text="${user.role.name}">User Type</td>
+													<td>
+														<span th:if="${user.active == true}" th:text="Active"></span>
+														<span th:unless="${user.active == true}" th:text="Deactivated"></span>
+													</td>
 													<td th:text="${user.contact}">Contact</td>
 													<td>
 														<span th:if="${user.organization !=null}"
@@ -87,7 +92,10 @@
 														<span th:unless="${user.role.id == 1}">-</span>
 													</td>
 													<td align="center">
-														<div><a th:href="@{/deleteuser/}+${user.id}">Delete</a></div>
+														<div>
+															<a th:if="${user.active == true}" th:href="@{/deactivateUser/}+${user.id}">Deactivate</a>
+															<a th:unless="${user.active == true}" th:href="@{/reactivateUser/}+${user.id}">Activate</a>														
+														</div>
 														<div><a th:href="@{/viewUser/}+${user.id}">Edit</a></div>
 													</td>
 												</tr>

@@ -40,10 +40,10 @@
 								class="d-flex flex-row mb-3 justify-content-between  align-items-center pt-3 pb-2 border-bottom">
 								<div class="p-2">
 									<form th:action="@{/paymentSummary/}" method="get">
-										<select name="paymentStatus" id="selection">
+										<select name="paymentStatus" id="selection" onchange={test}>
 											<option value="Unpaid">Pending Payment</option>
 											<option value="Paid">Paid</option>
-											<option value="All">All</option>
+											<option value="All">All Completed Jobs</option>
 										</select>
 									</form>
 								</div>
@@ -58,7 +58,7 @@
 									<div class="card-body">
 										<div class="table-responsive">
 											<table id="example1" class="table table-bordered table-hover">
-												<thead>
+												<thead id="table_body">
 													<tr>
 														<th>S/N</th>
 														<th>Job ID</th>
@@ -71,20 +71,22 @@
 														<th>Actions</th>
 													</tr>
 												</thead>
-												<tbody>
+												<tbody id="test">
 													<!-- Fill in table items here -->
 													<tr th:each="jp, iStat : ${jobPosts}" class="listRecord">
 														<td th:text="${iStat.index + 1}">S/N</td>
 														<td th:text="${jp.id}">Job Post Id</td>
 														<td th:text="${jp.description}">Job Description</td>
 														<td th:text="${jp.clinic.name}">Clinic Location</td>
-														<td>
-															<p
-																th:if="${jp.status.name() == 'COMPLETED_PENDING_PAYMENT'}">
-																Completed (Pending Payment)</p>
-															<p
-																th:unless="${jp.status.name() == 'COMPLETED_PENDING_PAYMENT'}">
-																Completed (Paid)</p>
+														<td th:id="status_column">
+															<p style="pointer-events:none" type="button"
+																th:if="${jp.status.name == 'COMPLETED_PENDING_PAYMENT'}"
+																class="bg-danger btn btn-sm my-auto"
+																th:text="${jp.status.value}"></p>
+															<p style="pointer-events:none"
+																th:if="${jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+																class="bg-navy btn btn-sm my-auto"
+																th:text="${jp.status.value}"></p>
 														</td>
 														<td>
 															<span th:text="${jp.getStartDateTimeString()}"></span>
@@ -155,7 +157,7 @@
 			$('#selection').change(test);
 
 			function test() {
-
+				console.log("triggered!");
 				var url = "/paymentSummary";
 				if ($('#selection').val() === "Unpaid") {
 					url = url + "/outstandingPayments"
@@ -169,6 +171,8 @@
 
 				//load fragment and replace content
 				$('#replace_div').load(url);
+				
+				$( "td:eq( 4 )" ).css( "color", "red" );
 			}
 		</script>
 	</div>

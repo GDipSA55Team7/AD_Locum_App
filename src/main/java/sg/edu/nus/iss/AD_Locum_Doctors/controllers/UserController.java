@@ -122,9 +122,15 @@ public class UserController {
     @GetMapping("/deactivateUser/{id}")
     public String deactivateUser(Model model, @PathVariable(value = "id") Long id) {
         User user = userService.findById(id);
-        userService.deleteUser(user);
+        userService.deactivateUser(user);
         return "redirect:/UserList";
     }
 
+    @GetMapping("/reactivateUser/{id}")
+    public String reactivateUser(Model model, @PathVariable(value = "id") Long id) {
+        User user = userService.findById(id);
+        userService.reactivateUser(user);
+        return "redirect:/UserList";
+    }
 
 }
