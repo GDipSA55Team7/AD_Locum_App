@@ -38,7 +38,7 @@ public interface JobPostService {
 
 	List<JobPost> findPaidandUnpaidJobPosts(Long userOrgId);
 
-	void delete(JobPost jobPost, JobAdditionalRemarks additionalRemarks, User user);
+	void remove(JobPost jobPost, JobAdditionalRemarks additionalRemarks, User user);
 
 	void setStatus(JobPost jobPost, JobStatus status, String userId, JobAdditionalRemarks additionalRemarks);
 }

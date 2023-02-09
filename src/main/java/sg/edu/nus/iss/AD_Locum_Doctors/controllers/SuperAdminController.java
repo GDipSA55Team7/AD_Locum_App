@@ -67,7 +67,7 @@ public class SuperAdminController {
 		System.out.println("Delete id:" + id);
 		JobPost jobPost = jobPostService.findJobPostById(id);
 		User user = userService.findById(Long.parseLong("4"));
-		jobPostService.delete(jobPost, additionalRemarks, user);
+		jobPostService.remove(jobPost, additionalRemarks, user);
 		return "redirect:/superadmin/listJobPosts";
 	}
 
