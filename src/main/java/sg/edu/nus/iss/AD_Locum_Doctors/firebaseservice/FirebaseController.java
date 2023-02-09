@@ -16,8 +16,13 @@ public class FirebaseController {
 
 	    @GetMapping("/api/onloginupdatetoken")
 	    public ResponseEntity<String> sendToken(@RequestParam String token,@RequestParam String username) {
-	    	firebaseService.onLoginSaveToken(token,username);
-	        return new ResponseEntity<>("Token saved successfully", HttpStatus.OK);
+	    	try {
+		    	firebaseService.onLoginSaveToken(token,username);
+		        return new ResponseEntity<>("Token saved successfully", HttpStatus.OK);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new ResponseEntity<>("Token failed to be updated due to server-side error", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
 	    }
 
 	    @GetMapping("/api/onlogout")
