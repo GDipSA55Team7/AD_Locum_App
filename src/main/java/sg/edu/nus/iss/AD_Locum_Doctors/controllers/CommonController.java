@@ -54,7 +54,7 @@ public class CommonController {
 		User u = userService.authenticate(user.getUsername(), user.getPassword());
 		session.setAttribute("user", u);
 		if (u.getRole().getName().equals("System_Admin")) {
-			return "redirect:/system-admin";
+			return "redirect:/dashboard/system-admin";
 		} else {
 			return "redirect:/dashboard/clinic";
 		}
@@ -64,11 +64,6 @@ public class CommonController {
 	public String logout(HttpSession session) {
 		session.invalidate();
 		return "redirect:/login";
-	}
-
-	@GetMapping("/system-admin")
-	public String systemAdminPage() {
-		return "home-system-admin";
 	}
 
 	@GetMapping("/password_reset/{userID}/email_trigger")

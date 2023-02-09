@@ -132,9 +132,36 @@ public class DashboardController {
 		Map<LocalDate, List<JobAdditionalRemarks>> dateTimeToRemarks = new HashMap<>();
 		dateTimeToRemarks = remarksService.findAll().stream()
 				.filter(x -> x.getJobPost().getClinicUser().getId() == user.getId())
+				.filter(x -> x.getDateTime() != null)
 				.sorted(Comparator.comparing(JobAdditionalRemarks::getDateTime).reversed()).limit(10)
 				.collect(Collectors.groupingBy(JobAdditionalRemarks::getDateOnly));
 		model.addAttribute("recentActivities", dateTimeToRemarks);
 		return "home-clinic";
+	}
+
+	@GetMapping("/system-admin")
+	public String systemAdminDashboard(Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		List<JobPost> jobPosts = new ArrayList<>();
+		jobPosts = jobPostService.findAll();
+		// TODO: New Locums Registered for current month
+		
+		// TODO: New Clinic Users Registered for current month
+		
+		// TODO: New Organization Registered for current month
+		
+		// TODO: Total Jobs Processed
+		
+		// TODO: Pie Chart - User Category
+		
+		// TODO: Line Chart - Number of New Users Registered Monthly
+		
+		// TODO: Latest Organizations
+		
+		// Latest Job Posts
+		model.addAttribute("latestJobPosts", jobPosts.stream().filter(x -> x.getDateTimeModified() != null)
+				.sorted(Comparator.comparing(JobPost::getDateTimeModified).reversed()).limit(8)
+				.collect(Collectors.toList()));
+		return "home-system-admin";
 	}
 }

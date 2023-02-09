@@ -32,7 +32,7 @@ public class SessionInterceptor implements HandlerInterceptor {
 			} else {
 				User u = (User) session.getAttribute("user");
 				if (u.getRole().getName().equals("System_Admin")) {
-					response.sendRedirect("/system-admin");
+					response.sendRedirect("/dashboard/system-admin");
 				} else {
 					response.sendRedirect("/dashboard/clinic");
 				}

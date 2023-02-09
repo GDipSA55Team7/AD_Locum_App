@@ -70,7 +70,7 @@ public class MedicalInstitutionRegistrationFormController {
         User u = userService.authenticate(user.getUsername(), user.getPassword());
         session.setAttribute("user", u);
         if (u.getRole().getName().equals("System_Admin")) {
-            return "redirect:/system-admin";
+            return "redirect:/dashboard/system-admin";
         } else {
             return "redirect:/dashboard/clinic";
         }

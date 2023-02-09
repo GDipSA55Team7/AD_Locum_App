@@ -115,10 +115,10 @@ public class JobPost {
 	}
 
 	public LocalDateTime getDateTimeModified() {
-		List<JobAdditionalRemarks> remarks = this.getJobAdditionalRemarks().stream()
-				.sorted(Comparator.comparing(JobAdditionalRemarks::getDateTime).reversed()).toList();
-		if (remarks.size() > 0) {
-			return remarks.get(0).getDateTime();
+		JobAdditionalRemarks remark = this.getJobAdditionalRemarks().stream().filter(x -> x.getDateTime() != null)
+				.sorted(Comparator.comparing(JobAdditionalRemarks::getDateTime).reversed()).findFirst().orElse(null);
+		if (remark != null) {
+			return remark.getDateTime();
 		}
 		return null;
 	}
