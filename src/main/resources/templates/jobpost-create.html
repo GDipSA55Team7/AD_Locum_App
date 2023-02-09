@@ -151,10 +151,16 @@
 				</div>
 				<div class="modal-body">
 					Unable to create a job post as your clinic list is empty.<br>
-					<a th:href="@{/addClinicForm}">Click here to add a clinic.</a>
+					<span th:if="${session.user.role.name == 'Clinic_User'}">Please inform your clinic admin to add a
+						clinic.</span>
+					<a th:if="${session.user.role.name != 'Clinic_User'}" th:href="@{/addClinicForm}">Click here to add
+						a clinic.</a>
 				</div>
 				<div class="modal-footer">
-					<a class="btn btn-info" th:href="@{/addClinicForm}">Add Clinic</a>
+					<a th:if="${session.user.role.name == 'Clinic_User'}" class="btn btn-info"
+						th:href="@{/dashboard/clinic}">Back to Home</a>
+					<a th:if="${session.user.role.name != 'Clinic_User'}" class="btn btn-info"
+						th:href="@{/addClinicForm}">Add Clinic</a>
 				</div>
 			</div>
 		</div>
@@ -264,11 +270,9 @@
 	}
 
 	function checkTrend() {
-		var userDateInput = document.getElementById("startDateTime");
-		console.log(userDateInput.value)
 		var rateElem = document.getElementById("ratePerHour");
-		if (userDateInput.value) {
-			var converted = new Date(userDateInput.value);
+		if (startInput) {
+			var converted = new Date(startInput);
 			var dayNumber = converted.getDay();
 			var rate_per_hour_feedback = document.getElementById("ratePerHour-trend-feedback");
 			rate_per_hour_feedback.innerHTML = '';
