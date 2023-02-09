@@ -114,7 +114,8 @@ public class UserController {
     @GetMapping("/deleteuser/{id}")
     public String deleteClinic(Model model, @PathVariable(value = "id") Long id) {
         User user = userService.findById(id);
-        userService.deleteUser(user);
+       user.setActive(false);
+       userService.saveUser(user);
         return "redirect:/UserList";
     }
 

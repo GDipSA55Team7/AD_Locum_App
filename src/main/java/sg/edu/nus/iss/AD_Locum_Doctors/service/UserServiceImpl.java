@@ -40,13 +40,18 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User authenticate(String username, String pwd) {
-		return userRepo.findAll().stream().filter(u -> u.getPassword().equals(pwd) && u.getUsername().equals(username))
+		return userRepo.findAll().stream().filter(u -> u.getPassword().equals(pwd) && u.getUsername().equals(username)&& u.getActive()==true)
 				.findFirst().get();
 	}
 
 	@Override
 	public void deleteUser(User user) {
 		userRepo.delete(user);
+	}
+	
+	@Override
+	public void deactivateUser(User user) {
+		
 	}
 
 	@Override

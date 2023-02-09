@@ -71,7 +71,7 @@
 													</div>
 													<input id="datetimes1" th:field="*{startDateTime}"
 														value="${jobPost.startDateTime}" type="text"
-														class="form-control" />
+														class="form-control" hidden />
 												</div>
 												<div class="col">
 													<div class="input-group">
@@ -87,8 +87,8 @@
 													<div id="endDate-feedback" class="invalid-feedback d-block">
 													</div>
 													<input id="datetimes2" th:field="*{endDateTime}"
-														value="${jobPost.endDateTime}" type="text"
-														class="form-control" />
+														value="${jobPost.endDateTime}" type="text" class="form-control"
+														hidden />
 												</div>
 											</div>
 										</div>
@@ -113,8 +113,7 @@
 														<span class="input-group-text">$</span>
 													</div>
 													<input th:field="*{ratePerHour}" type="number" min="0" step="0.01"
-														class="form-control" onkeyup="validateFields()"
-														oninput="checkTrend()" required />
+														class="form-control" onkeyup="validateFields()" required />
 													<div class="input-group-append">
 														<span class="input-group-text mt-10">x</span>
 														<span id="totalHours" class="input-group-text">? hours</span>
@@ -273,9 +272,11 @@
 			var dayNumber = converted.getDay();
 			var rate_per_hour_feedback = document.getElementById("ratePerHour-trend-feedback");
 			rate_per_hour_feedback.innerHTML = '';
-			var weekdayrate = /*[[${weekdayTrend}]]*/ null;
+			var weekdayrate = /*[[${weekdayTrend}]]*/ 80;
+			console.log(weekdayrate)
 			var weekdayrate = parseFloat(weekdayrate);
-			var weekendrate = /*[[${weekendTrend}]]*/ null;
+			var weekendrate = /*[[${weekendTrend}]]*/ 100;
+			console.log(weekendrate)
 			var weekendrate = parseFloat(weekendrate);
 			if (dayNumber == 0 || dayNumber == 6) {
 				console.log((rateElem.valueAsNumber / weekendrate));
