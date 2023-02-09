@@ -75,7 +75,7 @@ public class DashboardController {
 		model.addAttribute("cancellationRate", cancellationRate);
 
 		// TODO: Average Job Take Up Speed
-		
+
 		model.addAttribute("averageTakeUpSpeed", "");
 
 		// Job Postings Status
@@ -124,7 +124,9 @@ public class DashboardController {
 		model.addAttribute("weekend_28MA", weekend_28MA);
 
 		// Latest Job Posts
-		model.addAttribute("latestJobPosts", jobPosts.stream().limit(8).toList());
+		model.addAttribute("latestJobPosts", jobPosts.stream().filter(x -> x.getDateTimeModified() != null)
+				.sorted(Comparator.comparing(JobPost::getDateTimeModified).reversed()).limit(8)
+				.collect(Collectors.toList()));
 
 		// User Recent Activities
 		Map<LocalDate, List<JobAdditionalRemarks>> dateTimeToRemarks = new HashMap<>();
