@@ -73,7 +73,7 @@
 													<!-- <td th:text="${user.medicalLicenseNo}">Medical License No.</td> -->
 													<td align="center">
 														<div><a th:if="${user.id != currentUserId && user.active == true}" th:href="@{/deleteuser/}+${user.id}">Delete</a></div>
-														<div><a th:href="@{/viewUser/}+${user.id}">View</a></div>
+														 <div><a  th:if="${user.active == true}"th:href="@{/viewUser/}+${user.id}">View</a></div>
 													</td>
 												</tr>
 											</tbody>
