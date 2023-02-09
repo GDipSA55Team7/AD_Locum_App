@@ -123,6 +123,7 @@ public class AdLocumDoctorsApplication {
 
 			User testUser1 = new User();
 			testUser1.setName("Robert Lin");
+			testUser1.setDateRegistered(LocalDateTime.of(2021, 1, 2, 10, 0, 0));
 			testUser1.setEmail("RobertLin@gmail.com");
 			testUser1.setUsername("dr_robert");
 			testUser1.setPassword("password123");
@@ -133,6 +134,7 @@ public class AdLocumDoctorsApplication {
 
 			User testUser2 = new User();
 			testUser2.setName("Mary Tan");
+			testUser2.setDateRegistered(LocalDateTime.of(2021, 1, 2, 10, 0, 0));
 			testUser2.setEmail("MaryTan@gmail.com");
 			testUser2.setUsername("dr_mary");
 			testUser2.setPassword("password123");
@@ -143,6 +145,7 @@ public class AdLocumDoctorsApplication {
 
 			User testUser3 = new User();
 			testUser3.setName("Jon Ng");
+			testUser3.setDateRegistered(LocalDateTime.of(2021, 1, 2, 10, 0, 0));
 			testUser3.setEmail("JonNg@rmg.com.sg");
 			testUser3.setUsername("jon");
 			testUser3.setPassword("password123");
@@ -153,6 +156,7 @@ public class AdLocumDoctorsApplication {
 
 			User testUser5 = new User();
 			testUser5.setName("Ben");
+			testUser5.setDateRegistered(LocalDateTime.of(2021, 1, 2, 10, 0, 0));
 			testUser5.setEmail("shanfu87@yahoo.com");
 			testUser5.setUsername("ben");
 			testUser5.setPassword("password123");
@@ -163,6 +167,7 @@ public class AdLocumDoctorsApplication {
 
 			User testUser6 = new User();
 			testUser6.setName("Ann");
+			testUser6.setDateRegistered(LocalDateTime.of(2021, 1, 2, 10, 0, 0));
 			testUser6.setEmail("ann@locumapp.com.sg");
 			testUser6.setUsername("ann");
 			testUser6.setPassword("password123");
@@ -172,6 +177,7 @@ public class AdLocumDoctorsApplication {
 
 			User testUser7 = new User();
 			testUser7.setName("Ron");
+			testUser7.setDateRegistered(LocalDateTime.of(2021, 1, 2, 10, 0, 0));
 			testUser7.setEmail("ron@rmg.com.sg");
 			testUser7.setUsername("ron");
 			testUser7.setPassword("password123");

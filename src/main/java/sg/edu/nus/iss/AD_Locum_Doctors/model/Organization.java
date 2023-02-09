@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,10 +39,15 @@ public class Organization {
 	@OneToMany(mappedBy = "organization")
 	private List<User> users;
 
-	@OneToMany(mappedBy = "organization", cascade=CascadeType.PERSIST)
+	@OneToMany(mappedBy = "organization", cascade = CascadeType.PERSIST)
 	private List<Clinic> clinics = new ArrayList<>();
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
-    private LocalDateTime dateRegistered = LocalDateTime.now();
+	private LocalDateTime dateRegistered = LocalDateTime.now();
+
+	public String getDateRegisteredString() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
+		return dateRegistered.format(formatter);
+	}
 }

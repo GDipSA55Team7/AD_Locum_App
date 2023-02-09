@@ -147,10 +147,12 @@ public class DashboardController {
 
 	@GetMapping("/system-admin")
 	public String systemAdminDashboard(Model model, HttpSession session) {
-		List<User> users = userService.findAll();
+		List<User> users = userService.findAll().stream()
+				.sorted(Comparator.comparing(User::getDateRegistered).reversed()).collect(Collectors.toList());
 		Month currentMonth = LocalDate.now().getMonth();
+		List<Organization> organizations = orgService.getAllOrganizations();
 		// New Locums Registered for current month
-		var currentMonthUsers = users.stream().filter(x -> x.getDateRegistered().getMonth() == currentMonth)
+		List<User> currentMonthUsers = users.stream().filter(x -> x.getDateRegistered().getMonth() == currentMonth)
 				.collect(Collectors.toList());
 		var registeredLocumsThisMonth = currentMonthUsers.stream()
 				.filter(x -> x.getRole().getName().equals("Locum_Doctor"))
@@ -164,7 +166,6 @@ public class DashboardController {
 		model.addAttribute("registeredClinicUsersThisMonth", registeredClinicUsersThisMonth);
 
 		// New Organizations Registered for current month
-		List<Organization> organizations = orgService.getAllOrganizations();
 		var registeredOrgThisMonth = organizations.stream()
 				.filter(x -> x.getDateRegistered().getMonth().equals(currentMonth)).collect(Collectors.toList()).size();
 		model.addAttribute("registeredOrgThisMonth", registeredOrgThisMonth);
@@ -192,9 +193,44 @@ public class DashboardController {
 		model.addAttribute("userCategories", userCategories);
 		model.addAttribute("totalsByUserCategories", totalsByUserCategories);
 
-		// TODO: Line Chart - Number of New Users Registered Monthly
+		// Line Chart - Number of New Users Registered Monthly
+		int currentYear = LocalDate.now().getYear();
+		int currentMonthValue = LocalDate.now().getMonthValue();
+		List<String> past12MonthsList = new ArrayList<>();
+		List<LocalDate> past12MonthsDateList = new ArrayList<>();
+		for (int i = 0; i < 12; i++) {
+			if (currentMonthValue == 0) {
+				currentYear--;
+				currentMonthValue += 12;
+			}
+			past12MonthsList.add(0, String.valueOf(currentYear) + '-' + String.format("%02d", currentMonthValue));
+			past12MonthsDateList.add(LocalDate.of(currentYear, currentMonthValue, 1));
+			currentMonthValue--;
+		}
+		List<Integer> locumCounts = new ArrayList<>();
+		List<Integer> clinicUserCounts = new ArrayList<>();
+		// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		for (int i = 0; i < past12MonthsDateList.size(); i++) {
+			LocalDate date = past12MonthsDateList.get(i);
+			int locumCountPerMonth = users.stream().filter(x -> x.getDateRegistered().getYear() == date.getYear()
+					&& x.getDateRegistered().getMonth() == date.getMonth()
+					&& x.getRole().getName().equals("Locum_Doctor")).collect(Collectors.toList()).size();
+			locumCounts.add(locumCountPerMonth);
+			int clinicUserCountPerMonth = users.stream().filter(x -> x.getDateRegistered().getYear() == date.getYear()
+					&& x.getDateRegistered().getMonth() == date.getMonth()
+					&& !x.getRole().getName().equals("Locum_Doctor") && !x.getRole().getName().equals("System_Admin"))
+					.collect(Collectors.toList()).size();
+			clinicUserCounts.add(clinicUserCountPerMonth);
+		}
+		model.addAttribute("userChartDates", past12MonthsList);
+		model.addAttribute("clinicUserCounts", clinicUserCounts);
+		model.addAttribute("locumCounts", locumCounts);
 
-		// TODO: Latest Organizations
+		// Latest Organizations
+		var latestOrganizations = organizations.stream()
+				.sorted(Comparator.comparing(Organization::getDateRegistered).reversed()).limit(10)
+				.collect(Collectors.toList());
+		model.addAttribute("latestOrganizations", latestOrganizations);
 
 		// Latest Job Posts
 		model.addAttribute("latestJobPosts", jobPosts.stream().filter(x -> x.getDateTimeModified() != null)

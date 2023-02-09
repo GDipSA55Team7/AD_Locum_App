@@ -95,7 +95,18 @@
 								</div>
 								<!-- /.card-header -->
 								<div class="card-body p-0">
-
+									<div class="table-responsive">
+										<table class="table m-0 table-sm table-striped table-valign-middle">
+											<tbody>
+												<tr th:each="org : ${latestOrganizations}">
+													<td><strong><span th:text="${org.name}"></span></strong></td>
+													<td width="40%">Registered on <span
+															th:text="${org.getDateRegisteredString}"></span>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
 								</div>
 								<!-- /.card-body -->
 								<div class="card-footer text-center">
@@ -108,11 +119,11 @@
 						<div class="col-lg-6">
 							<div class="card">
 								<div class="card-header">
-									<h3 class="card-title">Number of New Users Registered Monthly</h3>
+									<h3 class="card-title">Number of New Users Registered in the Past 12 Months</h3>
 								</div>
 								<!-- /.card-header -->
 								<div class="card-body">
-									<!-- <canvas id="new-users-line"></canvas> -->
+									<canvas id="new-users-line"></canvas>
 								</div>
 								<!-- /.card-body -->
 							</div>
@@ -210,7 +221,36 @@
 			},
 			options: pieOptions
 		});
-
+		/* LINE CHART - MONTHLY USER REGISTRATION */
+		var userChartDates = /*[[${userChartDates}]]*/ {};
+		var clinicUserCounts = /*[[${clinicUserCounts}]]*/ {};
+		var locumCounts = /*[[${locumCounts}]]*/ {};
+		const usersChartCtx = document.getElementById('new-users-line');
+		var lineOptions = {
+			legend: {
+				align: 'end',
+				position: 'top',
+				labels: {
+					boxWidth: 10
+				}
+			}
+		};
+		const usersChart = new Chart(usersChartCtx, {
+			type: 'bar',
+			data: {
+				datasets: [{
+					label: 'Locum Doctors',
+					data: locumCounts,
+					backgroundColor: 'rgba(7, 60, 75, 0.7)'
+				}, {
+					label: 'Clinic Users',
+					data: clinicUserCounts,
+					backgroundColor: 'rgba(75, 192, 192, 0.7)'
+				}],
+				labels: userChartDates
+			},
+			options: lineOptions
+		});
 		/*]]>*/
 	</script>
 </body>
