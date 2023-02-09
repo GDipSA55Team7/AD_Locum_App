@@ -257,7 +257,9 @@
 
 									</form>
 								</div>
-
+								<div th:if="${jobPost.getAdditionalFeeDetails().size() == 0}" class="card-body">
+									This job has 0 additional fees.
+								</div>
 								<div th:if="${jobPost.getAdditionalFeeDetails().size() > 0}"
 									class="card-body table-responsive p-0">
 									<table class="table table-bordered table-hover text-nowrap"

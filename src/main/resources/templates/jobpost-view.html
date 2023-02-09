@@ -106,7 +106,8 @@
 											</div>
 										</div>
 										<div class="mt-3 form-group d-flex flex-row">
-											<a th:href="@{'/jobpost/'+${jobPost.id}+'/edit'}"
+											<a th:if="${jobPost.status.name == 'OPEN' AND session.user.organization?.id == jobPost.clinicUser.organization.id}"
+												th:href="@{'/jobpost/'+${jobPost.id}+'/edit'}"
 												class="btn btn-info mr-auto">Edit</a>
 											<a th:if="${jobPost.status.name == 'OPEN' AND session.user.id == jobPost.clinicUser.id}"
 												th:href="@{'/jobpost/'+${jobPost.id}+'/delete'}"
