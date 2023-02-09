@@ -25,11 +25,13 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.AverageDailyRateService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostAdditionalRemarksService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
 @Controller
 @RequestMapping(value = { "/dashboard" })
 public class DashboardController {
-
+	@Autowired
+	UserService userService;
 	@Autowired
 	JobPostService jobPostService;
 	@Autowired
@@ -142,22 +144,37 @@ public class DashboardController {
 	@GetMapping("/system-admin")
 	public String systemAdminDashboard(Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
+		List<User> users = userService.findAll();
 		List<JobPost> jobPosts = new ArrayList<>();
 		jobPosts = jobPostService.findAll();
 		// TODO: New Locums Registered for current month
-		
+
 		// TODO: New Clinic Users Registered for current month
-		
+
 		// TODO: New Organization Registered for current month
-		
+
 		// TODO: Total Jobs Processed
-		
-		// TODO: Pie Chart - User Category
-		
+
+		// Pie Chart - User Category
+		List<String> userCategories = new ArrayList<>();
+		userCategories.add("Locum Doctors");
+		userCategories.add("Clinic Users");
+		Integer locumTotals = 0, clinicUserTotals = 0;
+		locumTotals = users.stream().filter(x -> x.getRole().getName().equals("Locum_Doctor"))
+				.collect(Collectors.toList()).size();
+		clinicUserTotals = users.stream().filter(x -> !x.getRole().getName().equals("Locum_Doctor"))
+				.filter(x -> !x.getRole().getName().equals("System_Admin"))
+				.collect(Collectors.toList()).size();
+		List<Integer> totalsByUserCategories = new ArrayList<>();
+		totalsByUserCategories.add(locumTotals);
+		totalsByUserCategories.add(clinicUserTotals);
+		model.addAttribute("userCategories", userCategories);
+		model.addAttribute("totalsByUserCategories", totalsByUserCategories);
+
 		// TODO: Line Chart - Number of New Users Registered Monthly
-		
+
 		// TODO: Latest Organizations
-		
+
 		// Latest Job Posts
 		model.addAttribute("latestJobPosts", jobPosts.stream().filter(x -> x.getDateTimeModified() != null)
 				.sorted(Comparator.comparing(JobPost::getDateTimeModified).reversed()).limit(8)

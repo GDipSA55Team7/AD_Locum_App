@@ -2,7 +2,10 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
 	layout:decorate="~{fragments/layout}">
 
-<head th:replace="fragments/layout.html :: html_head" />
+<head>
+	<div th:replace="fragments/layout.html :: html_head" />
+	<script type="text/javascript" src="../plugins/chart.js/chart.utils.js"></script>
+</head>
 
 <body class="hold-transition sidebar-mini">
 	<div class="wrapper">
@@ -72,7 +75,7 @@
 							</div>
 						</div><!-- /.col -->
 					</div><!-- /.row -->
-					<div class="row d-flex flex-wrap">
+					<div class="row">
 						<div class="col-lg-6">
 							<div class="card">
 								<div class="card-header">
@@ -80,26 +83,11 @@
 								</div>
 								<!-- /.card-header -->
 								<div class="card-body">
-									<!-- <canvas id="user-cat-pie"></canvas> -->
+									<canvas id="user-category-pie"></canvas>
 								</div>
 								<!-- /.card-body -->
 							</div>
 							<!-- /.card -->
-						</div>
-						<div class="col-lg-6">
-							<div class="card">
-								<div class="card-header">
-									<h3 class="card-title">Number of New Users Registered Monthly</h3>
-								</div>
-								<!-- /.card-header -->
-								<div class="card-body">
-									<!-- <canvas id="new-users-line"></canvas> -->
-								</div>
-								<!-- /.card-body -->
-							</div>
-							<!-- /.card -->
-						</div>
-						<div class="col-lg-6">
 							<div class="card">
 								<div class="card-header">
 									<h3 class="card-title">Latest Organizations</h3>
@@ -117,6 +105,17 @@
 							<!-- /.card -->
 						</div>
 						<div class="col-lg-6">
+							<div class="card">
+								<div class="card-header">
+									<h3 class="card-title">Number of New Users Registered Monthly</h3>
+								</div>
+								<!-- /.card-header -->
+								<div class="card-body">
+									<!-- <canvas id="new-users-line"></canvas> -->
+								</div>
+								<!-- /.card-body -->
+							</div>
+							<!-- /.card -->
 							<div class="card">
 								<div class="card-header">
 									<h3 class="card-title">Latest Job Posts</h3>
@@ -181,6 +180,38 @@
 		<div th:replace="fragments/layout.html :: footer" />
 		<div th:replace="fragments/layout.html :: script" />
 	</div>
+	<script src="../plugins/chart.js/Chart.min.js"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		/* PIE CHART */
+		const ctx = document.getElementById('user-category-pie');
+		var userCategories = /*[[${userCategories}]]*/ {};
+		var totalsByUserCategories = /*[[${totalsByUserCategories}]]*/ {};
+		var pieOptions = {
+			legend: {
+				position: 'right',
+				labels: {
+					usePointStyle: true,
+					pointStyle: 'circle',
+					padding: 15
+				}
+			}
+		};
+		const userCategoriesChart = new Chart(ctx, {
+			type: 'pie',
+			data: {
+				labels: userCategories,
+				datasets: [{
+					data: totalsByUserCategories,
+					backgroundColor: COLORS,
+					hoverOffset: 4
+				}]
+			},
+			options: pieOptions
+		});
+
+		/*]]>*/
+	</script>
 </body>
 
 </html>
