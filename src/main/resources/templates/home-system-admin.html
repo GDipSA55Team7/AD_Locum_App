@@ -34,16 +34,14 @@
 			<!-- Main content -->
 			<div class="content">
 				<div class="container-fluid">
-					<h5 class="mb-3">Key Metrics for <span
-							th:text="${#calendars.format(#calendars.createNow(), 'MMM yyyy')}"></span></h5>
 					<div class="row">
 						<div class="col-md-3 col-sm-6 col-12">
 							<div class="info-box">
 								<span class="info-box-icon bg-info"><i class="fas fa-user-doctor"></i></span>
 								<div class="info-box-content">
-									<span class="h3 info-box-number">777</span>
-									<span class="info-box-text">New Locums Registered</span>
-									<!-- <span class="info-box-number" th:text="${unfilledJobs}"></span> -->
+									<span class="h3 info-box-number" th:text="${registeredLocumsThisMonth}"></span>
+									<span class="info-box-text"
+										th:text="'Locums registered in '+${#calendars.format(#calendars.createNow(), 'MMMM')}"></span>
 								</div>
 							</div>
 						</div><!-- /.col -->
@@ -51,8 +49,10 @@
 							<div class="info-box">
 								<span class="info-box-icon bg-info"><i class="fas fa-clinic-medical"></i></span>
 								<div class="info-box-content d-flex">
-									<span class="h3 info-box-number d-inline">100</span>
-									<span class="info-box-text d-inline">New Clinic Users Registered</span>
+									<span class="h3 info-box-number d-inline"
+										th:text="${registeredClinicUsersThisMonth}"></span>
+									<span class="info-box-text"
+										th:text="'Clinic Users registered in '+${#calendars.format(#calendars.createNow(), 'MMMM')}"></span>
 								</div>
 							</div>
 						</div><!-- /.col -->
@@ -60,8 +60,9 @@
 							<div class="info-box">
 								<span class="info-box-icon bg-info"><i class="fas fa-building"></i></span>
 								<div class="info-box-content">
-									<span class="h3 info-box-number">77</span>
-									<span class="info-box-text">New Organizations Registered</span>
+									<span class="h3 info-box-number" th:text="${registeredOrgThisMonth}"></span>
+									<span class="info-box-text"
+										th:text="'Organizations registered in '+${#calendars.format(#calendars.createNow(), 'MMMM')}"></span>
 								</div>
 							</div>
 						</div><!-- /.col -->
@@ -69,8 +70,8 @@
 							<div class="info-box">
 								<span class="info-box-icon bg-info"><i class="fas fa-briefcase"></i></span>
 								<div class="info-box-content">
-									<span class="h3 info-box-number">888</span>
-									<span class="info-box-text">Total Jobs Processed</span>
+									<span class="h3 info-box-number" th:text="${jobsProcessed}"></span>
+									<span class="info-box-text">Jobs Processed</span>
 								</div>
 							</div>
 						</div><!-- /.col -->

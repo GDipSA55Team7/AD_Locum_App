@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.controllers;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.AverageDailyRateService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostAdditionalRemarksService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.OrganizationService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
 @Controller
@@ -32,6 +34,8 @@ import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 public class DashboardController {
 	@Autowired
 	UserService userService;
+	@Autowired
+	OrganizationService orgService;
 	@Autowired
 	JobPostService jobPostService;
 	@Autowired
@@ -143,17 +147,34 @@ public class DashboardController {
 
 	@GetMapping("/system-admin")
 	public String systemAdminDashboard(Model model, HttpSession session) {
-		User user = (User) session.getAttribute("user");
 		List<User> users = userService.findAll();
-		List<JobPost> jobPosts = new ArrayList<>();
-		jobPosts = jobPostService.findAll();
-		// TODO: New Locums Registered for current month
+		Month currentMonth = LocalDate.now().getMonth();
+		// New Locums Registered for current month
+		var currentMonthUsers = users.stream().filter(x -> x.getDateRegistered().getMonth() == currentMonth)
+				.collect(Collectors.toList());
+		var registeredLocumsThisMonth = currentMonthUsers.stream()
+				.filter(x -> x.getRole().getName().equals("Locum_Doctor"))
+				.collect(Collectors.toList()).size();
+		model.addAttribute("registeredLocumsThisMonth", registeredLocumsThisMonth);
 
-		// TODO: New Clinic Users Registered for current month
+		// New Clinic Users Registered for current month
+		var registeredClinicUsersThisMonth = currentMonthUsers.stream()
+				.filter(x -> !x.getRole().getName().equals("System_Admin"))
+				.filter(x -> !x.getRole().getName().equals("Locum_Doctor")).collect(Collectors.toList()).size();
+		model.addAttribute("registeredClinicUsersThisMonth", registeredClinicUsersThisMonth);
 
-		// TODO: New Organization Registered for current month
+		// New Organizations Registered for current month
+		List<Organization> organizations = orgService.getAllOrganizations();
+		var registeredOrgThisMonth = organizations.stream()
+				.filter(x -> x.getDateRegistered().getMonth().equals(currentMonth)).collect(Collectors.toList()).size();
+		model.addAttribute("registeredOrgThisMonth", registeredOrgThisMonth);
 
-		// TODO: Total Jobs Processed
+		// Total Jobs Processed
+		List<JobPost> jobPosts = jobPostService.findAll();
+		var jobsProcessed = jobPosts.stream().filter(x -> x.getStatus().equals(JobStatus.COMPLETED_PAYMENT_PROCESSED))
+				.collect(Collectors.toList()).size();
+		model.addAttribute("jobTotals", jobPosts.size());
+		model.addAttribute("jobsProcessed", jobsProcessed);
 
 		// Pie Chart - User Category
 		List<String> userCategories = new ArrayList<>();

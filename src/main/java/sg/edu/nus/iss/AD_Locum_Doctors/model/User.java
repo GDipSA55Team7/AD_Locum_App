@@ -1,7 +1,10 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -15,6 +18,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.SecondaryTable;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -49,6 +54,11 @@ public class User {
     private Role role;
 
     private Boolean active = true;
+
+    @JsonIgnore
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+    private LocalDateTime dateRegistered = LocalDateTime.now();
 
     @JsonIgnore
     @OneToMany(mappedBy = "clinicUser", cascade = CascadeType.ALL)

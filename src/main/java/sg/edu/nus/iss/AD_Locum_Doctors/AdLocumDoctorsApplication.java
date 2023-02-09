@@ -55,37 +55,26 @@ public class AdLocumDoctorsApplication {
 
 		return args -> {
 
-			Role r1 = new Role();
-			r1.setName("Locum_Doctor");
-			roleRepo.saveAndFlush(r1);
-
-			Role r2 = new Role();
-			r2.setName("Clinic_Main_Admin");
-			roleRepo.saveAndFlush(r2);
-
-			Role r3 = new Role();
-			r3.setName("Clinic_User");
-			roleRepo.saveAndFlush(r3);
-
-			Role r4 = new Role();
-			r4.setName("Clinic_Admin");
-			roleRepo.saveAndFlush(r4);
-
-			Role r5 = new Role();
-			r5.setName("System_Admin");
-			roleRepo.saveAndFlush(r5);
+			Role locumDoctor = roleRepo.saveAndFlush(new Role("Locum_Doctor"));
+			Role clinicUser = roleRepo.saveAndFlush(new Role("Clinic_User"));
+			Role clinicMainAdmin = roleRepo.saveAndFlush(new Role("Clinic_Main_Admin"));
+			Role clinicAdmin = roleRepo.saveAndFlush(new Role("Clinic_Admin"));
+			Role systemAdmin = roleRepo.saveAndFlush(new Role("System_Admin"));
 
 			Organization org1 = new Organization();
 			org1.setName("Raffles Medical Group Ltd");
 			org1.setUEN("198901967K");
+			org1.setDateRegistered(LocalDateTime.of(2023, 01, 01, 18, 30, 0));
 			organizationRepo.saveAndFlush(org1);
 			Organization org_sc = new Organization();
 			org_sc.setName("SC Organization");
 			org_sc.setUEN("222901967A");
+			org_sc.setDateRegistered(LocalDateTime.of(2023, 02, 02, 18, 30, 0));
 			organizationRepo.saveAndFlush(org_sc);
 			Organization org_pg = new Organization();
 			org_pg.setName("PG Organization");
 			org_pg.setUEN("333901967B");
+			org_pg.setDateRegistered(LocalDateTime.of(2023, 02, 03, 18, 30, 0));
 			organizationRepo.saveAndFlush(org_pg);
 
 			Clinic c1 = new Clinic();
@@ -139,7 +128,7 @@ public class AdLocumDoctorsApplication {
 			testUser1.setPassword("password123");
 			testUser1.setContact("97117782");
 			testUser1.setMedicalLicenseNo("M31234H");
-			testUser1.setRole(r1);
+			testUser1.setRole(locumDoctor);
 			userRepo.saveAndFlush(testUser1);
 
 			User testUser2 = new User();
@@ -149,7 +138,7 @@ public class AdLocumDoctorsApplication {
 			testUser2.setPassword("password123");
 			testUser2.setContact("92231880");
 			testUser2.setMedicalLicenseNo("M11266G");
-			testUser2.setRole(r1);
+			testUser2.setRole(locumDoctor);
 			userRepo.saveAndFlush(testUser2);
 
 			User testUser3 = new User();
@@ -159,7 +148,7 @@ public class AdLocumDoctorsApplication {
 			testUser3.setPassword("password123");
 			testUser3.setContact("91119111");
 			testUser3.setOrganization(org1);
-			testUser3.setRole(r2);
+			testUser3.setRole(clinicMainAdmin);
 			userRepo.saveAndFlush(testUser3);
 
 			User testUser5 = new User();
@@ -169,7 +158,7 @@ public class AdLocumDoctorsApplication {
 			testUser5.setPassword("password123");
 			testUser5.setContact("93339333");
 			testUser5.setOrganization(org1);
-			testUser5.setRole(r3);
+			testUser5.setRole(clinicUser);
 			userRepo.saveAndFlush(testUser5);
 
 			User testUser6 = new User();
@@ -178,7 +167,7 @@ public class AdLocumDoctorsApplication {
 			testUser6.setUsername("ann");
 			testUser6.setPassword("password123");
 			testUser6.setContact("92229222");
-			testUser6.setRole(r5);
+			testUser6.setRole(systemAdmin);
 			userRepo.saveAndFlush(testUser6);
 
 			User testUser7 = new User();
@@ -188,7 +177,7 @@ public class AdLocumDoctorsApplication {
 			testUser7.setPassword("password123");
 			testUser7.setContact("98889888");
 			testUser7.setOrganization(org1);
-			testUser7.setRole(r4);
+			testUser7.setRole(clinicAdmin);
 			userRepo.saveAndFlush(testUser7);
 
 			JobPost jp1 = new JobPost();
