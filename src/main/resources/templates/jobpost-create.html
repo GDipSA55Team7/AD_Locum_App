@@ -327,9 +327,11 @@
 			var dayNumber = converted.getDay();
 			var rate_per_hour_feedback = document.getElementById("ratePerHour-trend-feedback");
 			rate_per_hour_feedback.innerHTML = '';
-			var weekdayrate = /*[[${weekdayTrend}]]*/ null;
+			var weekdayrate = /*[[${weekdayTrend}]]*/ 80;
+			console.log(weekdayrate)
 			var weekdayrate = parseFloat(weekdayrate);
-			var weekendrate = /*[[${weekendTrend}]]*/ null;
+			var weekendrate = /*[[${weekendTrend}]]*/ 100;
+			console.log(weekendrate)
 			var weekendrate = parseFloat(weekendrate);
 			if (dayNumber == 0 || dayNumber == 6){
 				console.log((rateElem.valueAsNumber / weekendrate));

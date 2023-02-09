@@ -48,6 +48,11 @@ public class UserServiceImpl implements UserService {
 	public void deleteUser(User user) {
 		userRepo.delete(user);
 	}
+	
+	@Override
+	public void deactivateUser(User user) {
+		
+	}
 
 	@Override
 	public FreeLancerDTO createFreeLancer(FreeLancerDTO freeLancerDTO) {
