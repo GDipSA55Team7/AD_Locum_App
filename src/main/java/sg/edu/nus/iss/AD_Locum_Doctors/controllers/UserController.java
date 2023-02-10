@@ -73,9 +73,17 @@ public class UserController {
     @GetMapping("/register/addUserForm")
     public String addUserForm(Model model) {
         loadReference();
+        Long userRoleID = user.getRole().getId();
+        System.out.print(userRoleID);
+        model.addAttribute("currentUserId", user.getId());
+        if (userRoleID == 5) {
+            model.addAttribute("organizationList", organizationService.getAllOrganizations());
+        }
+        else {
+            model.addAttribute("organizationList", organizations);	
+        }
         User user = new User();
         model.addAttribute("user", user);
-        model.addAttribute("organizationList", organizations);
         model.addAttribute("roleList", roleService.findAllRoles());
         return "addUserForm";
     }

@@ -14,4 +14,7 @@ public interface OrganizationService {
     List<Organization> getAllOrganizations();
     
     Organization findById(Long id);
+    
+    Organization updateOrganizationDetails(Organization organization);
+   
 }
