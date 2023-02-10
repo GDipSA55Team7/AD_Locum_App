@@ -106,15 +106,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public FreeLancerDTO loginFreeLancer(FreeLancerDTO freeLancerDTO) {
-		User existingUser = userRepo.findUserByUsernameAndPassword(freeLancerDTO.getUsername(),
-				freeLancerDTO.getPassword());
+
+		User existingUser = authenticate(freeLancerDTO.getUsername(), freeLancerDTO.getPassword());
 
 		// Found Registered User
 		if (existingUser != null && existingUser.getRole().getName().equals("Locum_Doctor")) {
 			freeLancerDTO.setId(existingUser.getId().toString()); // tag id
 			freeLancerDTO.setName(existingUser.getName());
 			freeLancerDTO.setUsername(existingUser.getUsername());
-			freeLancerDTO.setPassword(existingUser.getPassword());
 			freeLancerDTO.setContact(existingUser.getContact());
 			freeLancerDTO.setEmail(existingUser.getEmail());
 			freeLancerDTO.setMedicalLicenseNo(existingUser.getMedicalLicenseNo());
