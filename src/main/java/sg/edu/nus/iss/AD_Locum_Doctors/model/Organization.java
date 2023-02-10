@@ -33,8 +33,12 @@ public class Organization {
 	private String HCI;
 
 	private String address;
+	
+	private String contact_person_name;
 
 	private String contact;
+	
+	private Boolean active = true;
 
 	@OneToMany(mappedBy = "organization")
 	private List<User> users;

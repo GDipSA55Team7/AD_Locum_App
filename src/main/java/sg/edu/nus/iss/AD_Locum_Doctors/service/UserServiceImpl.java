@@ -50,8 +50,15 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public void deactivateUser(User user) {
-		
+	public User deactivateUser(User user) {
+		user.setActive(false);
+		return userRepo.saveAndFlush(user);
+	}
+	
+	@Override
+	public User reactivateUser(User user) {
+		user.setActive(true);
+		return userRepo.saveAndFlush(user);
 	}
 
 	@Override

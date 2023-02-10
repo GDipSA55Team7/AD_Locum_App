@@ -77,7 +77,31 @@
 													<td th:text="${jp.clinic.name}">Clinic Location</td>
 
 													<td>
-														<span th:text="${jp.status.value}"></span>
+														<p style="pointer-events:none"
+															th:if="${jp.status.name == 'OPEN'}"
+															class="bg-lightblue btn btn-sm my-auto"
+															th:text="${jp.status.value}"></p>
+														<p style="pointer-events:none"
+															th:if="${jp.status.name == 'CANCELLED' OR jp.status.name == 'REMOVED'}"
+															class="bg-gray btn btn-sm my-auto"
+															th:text="${jp.status.value}"></p>
+														<p style="pointer-events:none"
+															th:if="${jp.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
+															class="bg-warning btn btn-sm my-auto"
+															th:text="${jp.status.value}"></p>
+														<p style="pointer-events:none"
+															th:if="${jp.status.name == 'ACCEPTED'}"
+															class="bg-success btn btn-sm my-auto"
+															th:text="${jp.status.value}">
+														</p>
+														<p style="pointer-events:none" type="button"
+															th:if="${jp.status.name == 'COMPLETED_PENDING_PAYMENT'}"
+															class="bg-danger btn btn-sm my-auto"
+															th:text="${jp.status.value}"></p>
+														<p style="pointer-events:none"
+															th:if="${jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+															class="bg-navy btn btn-sm my-auto"
+															th:text="${jp.status.value}"></p>
 													</td>
 													<td>
 														<span th:text="${jp.getStartDateTimeString()}"></span> to<br>
@@ -101,7 +125,7 @@
 													</td>
 												</tr>
 											</tbody>
-										</table>
+						t</table>
 									</div>
 								</div>
 								<!-- /.card-body -->
