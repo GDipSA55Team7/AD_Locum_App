@@ -16,20 +16,18 @@
 					<div class="row mb-2">
 						<div class="col-auto">
 							<h1 class="m-0"
-								th:text="${jobPost.status.name == 'ACCEPTED' ? 'Update Job Posting' : 'View Job Posting'}">
+								th:text="${jobPost.status.name != 'COMPLETED_PAYMENT_PROCESSED' ? 'Update Job Posting' : 'View Job Posting'}">
 								Update Job Posting</h1>
 						</div><!-- /.col -->
 						<div class="col-auto d-flex justify-content-center mr-auto">
-							<p style="pointer-events:none"
-								th:if="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
+							<p th:if="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
 								class="bg-warning badge my-auto" th:text="${jobPost.status.value}"></p>
-							<p style="pointer-events:none" th:if="${jobPost.status.name == 'ACCEPTED'}"
-								class="bg-success badge my-auto" th:text="${jobPost.status.value}">
+							<p th:if="${jobPost.status.name == 'ACCEPTED'}" class="bg-success badge my-auto"
+								th:text="${jobPost.status.value}">
 							</p>
-							<p style="pointer-events:none" th:if="${jobPost.status.name == 'COMPLETED_PENDING_PAYMENT'}"
+							<p th:if="${jobPost.status.name == 'COMPLETED_PENDING_PAYMENT'}"
 								class="bg-danger badge my-auto" th:text="${jobPost.status.value}"></p>
-							<p style="pointer-events:none"
-								th:if="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+							<p th:if="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
 								class="bg-navy badge my-auto" th:text="${jobPost.status.value}"></p>
 						</div><!-- /.col -->
 						<div class="col-auto">
@@ -40,6 +38,72 @@
 									class="breadcrumb-item active"></li>
 							</ol>
 						</div>
+					</div>
+					<div class="col">
+						<div class="bs-stepper">
+							<div class="bs-stepper-header" role="tablist">
+								<!-- steps here -->
+								<div class="step">
+									<button disabled style="pointer-events: none;" type="button" class="step-trigger"
+										role="tab" aria-controls="logins-part" id="logins-part-trigger">
+										<span class="bs-stepper-circle"> <i class="fa fa-check"></i> </span><br>
+										<span class="bs-stepper-label text-left" style="pointer-events: none;">Locum
+											Found</span>
+									</button>
+								</div>
+								<div class="line"></div>
+								<div class="step">
+									<button th:disabled="${jobPost.status.name != 'PENDING_CONFIRMATION_BY_CLINIC'}"
+										style="pointer-events: none;" type="button" class="step-trigger" role="tab"
+										aria-controls="logins-part" id="logins-part-trigger">
+										<span class="bs-stepper-circle"
+											th:classappend="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'} ? 'bg-primary'">
+											<i th:if="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
+												class="fa fa-spinner"></i>
+											<i th:if="${jobPost.status.name != 'PENDING_CONFIRMATION_BY_CLINIC'}"
+												class="fa fa-check"></i>
+										</span><br>
+										<span class="bs-stepper-label text-left" style="pointer-events: none;">Accept
+											Locum</span>
+									</button>
+								</div>
+								<div class="line"></div>
+								<div class="step">
+									<button th:disabled="${jobPost.status.name != 'ACCEPTED'}"
+										style="pointer-events: none;" type="button" class="step-trigger" role="tab"
+										aria-controls="information-part" id="information-part-trigger">
+										<span class="bs-stepper-circle"
+											th:classappend="${jobPost.status.name == 'ACCEPTED'} ? 'bg-primary'">
+											<span
+												th:if="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}">2</span>
+											<i th:if="${jobPost.status.name == 'ACCEPTED'}" class="fa fa-spinner"></i>
+											<i th:if="${jobPost.status.name != 'ACCEPTED' AND jobPost.status.name != 'PENDING_CONFIRMATION_BY_CLINIC'}"
+												class="fa fa-check"></i>
+										</span><br>
+										<span class="bs-stepper-label text-left">Set Job as Completed<br>
+											by Locum (Pending Payment)</span>
+									</button>
+								</div>
+								<div class="line"></div>
+								<div class="step">
+									<button th:disabled="${jobPost.status.name != 'COMPLETED_PENDING_PAYMENT'}"
+										style="pointer-events: none;" type="button" class="step-trigger" role="tab"
+										aria-controls="information-part" id="information-part-trigger">
+										<span class="bs-stepper-circle"
+											th:classappend="${jobPost.status.name == 'COMPLETED_PENDING_PAYMENT'} ? 'bg-primary'">
+											<span
+												th:if="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC' OR jobPost.status.name == 'ACCEPTED'}">3</span>
+											<i th:if="${jobPost.status.name == 'COMPLETED_PENDING_PAYMENT'}"
+												class="fa fa-spinner"></i>
+											<i th:if="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+												class="fa fa-check"></i>
+										</span><br>
+										<span class="bs-stepper-label text-left">Set Job as Payment Processed</span>
+									</button>
+								</div>
+							</div>
+						</div>
+						<!-- /.col -->
 					</div><!-- /.row -->
 				</div><!-- /.container-fluid -->
 			</div>
@@ -47,7 +111,6 @@
 
 			<!-- Main content -->
 			<div class="content">
-
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col">
@@ -143,7 +206,8 @@
 									</div>
 
 									<h3 class="profile-username text-center"
-										th:text="${jobPost.getFreelancer().getName()}"></h3>
+										th:text="${jobPost.getFreelancer().getName()}">
+									</h3>
 
 									<p class="text-muted text-center">Locum</p>
 
