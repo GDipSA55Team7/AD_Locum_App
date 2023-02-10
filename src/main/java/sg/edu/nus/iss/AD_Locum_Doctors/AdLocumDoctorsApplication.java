@@ -398,19 +398,22 @@ public class AdLocumDoctorsApplication {
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.ACCEPTION, "",
 					LocalDateTime.of(2021, 2, 21, 13, 0, 0), jp11, testUser3));
 
-			// Seed data for User Table (for system admin dashboard chart)
+			// Seed data (for system admin dashboard chart)
 			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
 			String mysqlUrl = "jdbc:mysql://localhost:3306/AD_Locum";
 			Connection con = DriverManager.getConnection(mysqlUrl, env.getProperty("spring.datasource.username"),
 					env.getProperty("spring.datasource.password"));
 			System.out.println("Connection established......");
 			ScriptRunner sr = new ScriptRunner(con);
-			Reader reader_User = new BufferedReader(new FileReader(
-					"src/main/resources/sql/user.sql"));
 			// Reader reader_averageDailyRate = new BufferedReader(new FileReader(
 			// "src/main/resources/sql/average_daily_rate.sql"));
 			// sr.runScript(reader_averageDailyRate);
+			Reader reader_User = new BufferedReader(new FileReader(
+					"src/main/resources/sql/user.sql"));
 			sr.runScript(reader_User);
+			Reader reader_UserPassword = new BufferedReader(new FileReader(
+					"src/main/resources/sql/user_password.sql"));
+			sr.runScript(reader_UserPassword);
 		};
 	}
 }
