@@ -35,7 +35,7 @@ public class FirebaseService {
         		+ "\",\"title\":\"" + title 
         		+ "\",\"body\":\"" + body 
         		+ "\",\"newstatus\":\"" +  status
-        		+ "\",\"username\":\"" +  deviceToken.getLoginUserName()
+        		+ "\",\"username\":\"" +  deviceToken.getUser().getUsername()
         		+ "\",\"jobid\":\"" +  jobId
         		+ "\"},\"priority\":\"high\"}";
 
@@ -47,7 +47,7 @@ public class FirebaseService {
 
     public void onLoginSaveToken(String token,String username) {
     	
-    	FirebaseDeviceToken existingFirebaseDeviceToken = firebaseRepository.findByLoginUserName(username);
+    	FirebaseDeviceToken existingFirebaseDeviceToken = firebaseRepository.findDeviceTokenByUserName(username);
     	
     	//Not first login for client(have DB record)
     	if(existingFirebaseDeviceToken != null) {
@@ -89,7 +89,7 @@ public class FirebaseService {
     	}
     	//first time client login(no DB record)
     	else {
-    		FirebaseDeviceToken firebaseToken = new FirebaseDeviceToken(token,username,true);
+    		FirebaseDeviceToken firebaseToken = new FirebaseDeviceToken(token,true);
     		firebaseRepository.saveAndFlush(firebaseToken);
      		System.out.println("Username : " + username + " has signed into mobile client for the first time"  );
     		System.out.println("This token will be persisted into DB : " + token);
@@ -98,7 +98,7 @@ public class FirebaseService {
     
     public void onLogOut(String username) {
     	
-    	FirebaseDeviceToken existingFirebaseDeviceToken = firebaseRepository.findByLoginUserName(username);
+    	FirebaseDeviceToken existingFirebaseDeviceToken = firebaseRepository.findDeviceTokenByUserName(username);
     	
     	if(existingFirebaseDeviceToken != null && existingFirebaseDeviceToken.getIsLoggedIntoMobileApp()) {
     		existingFirebaseDeviceToken.setIsLoggedIntoMobileApp(false);
@@ -129,7 +129,7 @@ public class FirebaseService {
 		}
 		
 		
-		FirebaseDeviceToken deviceToken = firebaseRepository.findByLoginUserName(jobPost.getFreelancer().getUsername());
+		FirebaseDeviceToken deviceToken = firebaseRepository.findDeviceTokenByUserName(jobPost.getFreelancer().getUsername());
 		
 		if(deviceToken != null ) {
 			//client logged in,server call FCM API with updated token
@@ -152,16 +152,14 @@ public class FirebaseService {
 				
 			}
 			System.out.println("notification successfully push to username : " 
-			+ deviceToken.getLoginUserName() 
+			+ deviceToken.getUser().getUsername()
 			+ " token no. : " + deviceToken.getToken()
 					);
 		}
 		else {
 			System.out.println("UserName : " + jobPost.getFreelancer().getUsername() + " has not logged in from mobile before so there is no token linked to that account, so unable to push notificaitons");
 		}
-
 		
 	}
-    
     
 }

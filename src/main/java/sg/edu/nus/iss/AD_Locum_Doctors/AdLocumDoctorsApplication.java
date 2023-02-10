@@ -17,6 +17,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
+import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseDeviceToken;
+import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.AdditionalFeeDetails;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
@@ -51,7 +53,7 @@ public class AdLocumDoctorsApplication {
 			RoleRepository roleRepo,
 			UserRepository userRepo,
 			AdditionalFeeDetailsRepository additionalFeeDetailsRepository,
-			JobAdditionalRemarksRepository jobRemarksRepo,
+			JobAdditionalRemarksRepository jobRemarksRepo,FirebaseRepository firebaseRepository,
 			Environment env) {
 
 		return args -> {
@@ -139,6 +141,11 @@ public class AdLocumDoctorsApplication {
 			rafflesClinics.add(c5);
 			org1.setClinics(rafflesClinics);
 			organizationRepo.saveAndFlush(org1);
+			
+			FirebaseDeviceToken RobertFireBase = new FirebaseDeviceToken("", false); 
+			firebaseRepository.saveAndFlush(RobertFireBase);
+			FirebaseDeviceToken MaryFireBase = new FirebaseDeviceToken("", false); 
+			firebaseRepository.saveAndFlush(MaryFireBase);
 
 			User testUser1 = new User();
 			testUser1.setName("Robert Lin");
@@ -148,6 +155,7 @@ public class AdLocumDoctorsApplication {
 			testUser1.setContact("97117782");
 			testUser1.setMedicalLicenseNo("M31234H");
 			testUser1.setRole(r1);
+			testUser1.setFirebaseDeviceToken(RobertFireBase);
 			userRepo.saveAndFlush(testUser1);
 
 			User testUser2 = new User();
@@ -158,6 +166,7 @@ public class AdLocumDoctorsApplication {
 			testUser2.setContact("92231880");
 			testUser2.setMedicalLicenseNo("M11266G");
 			testUser2.setRole(r1);
+			testUser2.setFirebaseDeviceToken(MaryFireBase);
 			userRepo.saveAndFlush(testUser2);
 
 			User testUser3 = new User();

@@ -26,7 +26,7 @@ public interface UserService {
 
 	FreeLancerDTO createFreeLancer(FreeLancerDTO freeLancerDTO);
 	
-	FreeLancerDTO loginFreeLancer(FreeLancerDTO freeLancerDTO);
+	FreeLancerDTO loginFreeLancerAndUpdateToken(FreeLancerDTO freeLancerDTO);
 	
 	FreeLancerDTO updateFreeLancer(FreeLancerDTO freeLancerDTO);
 	

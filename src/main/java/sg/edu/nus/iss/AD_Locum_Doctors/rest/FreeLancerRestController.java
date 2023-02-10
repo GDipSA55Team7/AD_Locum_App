@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.FreeLancerDTO;
@@ -22,7 +23,8 @@ public class FreeLancerRestController {
 	public ResponseEntity<FreeLancerDTO> loginNewFreeLancer(@RequestBody FreeLancerDTO freeLancerDTO) {
 		try {
 			// updates all dto fields with registered user data
-			FreeLancerDTO existingFreeLancer = userService.loginFreeLancer(freeLancerDTO);
+			System.out.println(freeLancerDTO);
+			FreeLancerDTO existingFreeLancer = userService.loginFreeLancerAndUpdateToken(freeLancerDTO);
 			if (existingFreeLancer == null) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
 			}

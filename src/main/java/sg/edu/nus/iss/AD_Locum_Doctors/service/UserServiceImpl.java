@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseDeviceToken;
+import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.FreeLancerDTO;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Role;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
@@ -21,6 +23,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	RoleRepository roleRepo;
+	
+	@Autowired
+	FirebaseRepository firebaseRepo;
 
 	@Override
 	public void saveUser(User user) {
@@ -56,8 +61,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public FreeLancerDTO createFreeLancer(FreeLancerDTO freeLancerDTO) {
-		// Check against all Registered users. Username,Email,medicalLicenseNo must be
-		// unique
+		// Check against all Registered users. Username,Email,medicalLicenseNo must be unique
 		String errorsFieldString = "";
 		List<User> allRegisteredUsersList = userRepo.findAll();
 		if (!allRegisteredUsersList.isEmpty()) {
@@ -96,6 +100,9 @@ public class UserServiceImpl implements UserService {
 		// set role
 		Role locumDoctorRole = roleRepo.findRole("Locum_Doctor");
 		newFreeLancerUser.setRole(locumDoctorRole);
+		//set firebasetoken
+		FirebaseDeviceToken newFirebaseForUser = new FirebaseDeviceToken(freeLancerDTO.getDeviceToken(),true);
+		newFreeLancerUser.setFirebaseDeviceToken(newFirebaseForUser);
 
 		userRepo.saveAndFlush(newFreeLancerUser);
 
@@ -105,18 +112,39 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public FreeLancerDTO loginFreeLancer(FreeLancerDTO freeLancerDTO) {
+	public FreeLancerDTO loginFreeLancerAndUpdateToken(FreeLancerDTO freeLancerDTO) {
 
 		User existingUser = authenticate(freeLancerDTO.getUsername(), freeLancerDTO.getPassword());
 
 		// Found Registered User
 		if (existingUser != null && existingUser.getRole().getName().equals("Locum_Doctor")) {
+			
 			freeLancerDTO.setId(existingUser.getId().toString()); // tag id
 			freeLancerDTO.setName(existingUser.getName());
 			freeLancerDTO.setUsername(existingUser.getUsername());
 			freeLancerDTO.setContact(existingUser.getContact());
 			freeLancerDTO.setEmail(existingUser.getEmail());
 			freeLancerDTO.setMedicalLicenseNo(existingUser.getMedicalLicenseNo());
+			
+			String token = freeLancerDTO.getDeviceToken();
+			
+			System.out.println("username" + freeLancerDTO.getUsername());
+			System.out.println("device Token" + freeLancerDTO.getDeviceToken());
+			
+			//Update Device Token
+			FirebaseDeviceToken existingUserFireBase = existingUser.getFirebaseDeviceToken();
+
+			if (existingUserFireBase != null) {
+			    existingUserFireBase.setToken(freeLancerDTO.getDeviceToken());
+			    existingUserFireBase.setIsLoggedIntoMobileApp(true);
+			} else {
+			    existingUserFireBase = new FirebaseDeviceToken(token, true);
+			}
+
+			existingUser.setFirebaseDeviceToken(existingUserFireBase);
+			userRepo.saveAndFlush(existingUser);
+
+
 			return freeLancerDTO;
 		}
 		return null;
