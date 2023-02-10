@@ -15,7 +15,7 @@ import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseDeviceToken;
 import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseService;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
+
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.ClinicRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobPostRepository;
@@ -41,7 +41,7 @@ public class JobPostServiceImpl implements JobPostService {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private FirebaseRepository firebaseRepo;
 
@@ -153,19 +153,12 @@ public class JobPostServiceImpl implements JobPostService {
 	}
 
 	@Override
-	public JobPost createJobPost(JobPostForm jobPostForm, User user) {
-		JobPost newJobPost = new JobPost();
-		newJobPost.setClinicUser(user);
-		newJobPost.setTitle(jobPostForm.getTitle());
-		newJobPost.setDescription(jobPostForm.getDescription());
-		newJobPost.setStartDateTime(jobPostForm.getStartDateTime());
-		newJobPost.setEndDateTime(jobPostForm.getEndDateTime());
-		newJobPost.setRatePerHour(jobPostForm.getRatePerHour());
-		newJobPost.setClinic(clinicRepo.findById(jobPostForm.getClinicId()).get());
-		newJobPost = jobPostRepo.saveAndFlush(newJobPost);
-		remarksService.createJobPostAdditionalRemarks(RemarksCategory.CREATED, user, newJobPost,
-				newJobPost.getAdditionalRemarks());
-		return newJobPost;
+	public JobPost createJobPost(JobPost jobPost, User user) {
+		jobPost.setClinicUser(user);
+		jobPostRepo.saveAndFlush(jobPost);
+		remarksService.createJobPostAdditionalRemarks(RemarksCategory.CREATED, user, jobPost,
+				jobPost.getAdditionalRemarks());
+		return jobPost;
 	}
 
 	@Override

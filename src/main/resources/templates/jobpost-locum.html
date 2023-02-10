@@ -22,16 +22,15 @@
 						<div class="col-auto d-flex justify-content-center mr-auto">
 							<p style="pointer-events:none"
 								th:if="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
-								class="bg-warning btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></p>
+								class="bg-warning badge my-auto" th:text="${jobPost.status.value}"></p>
 							<p style="pointer-events:none" th:if="${jobPost.status.name == 'ACCEPTED'}"
-								class="bg-success btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}">
+								class="bg-success badge my-auto" th:text="${jobPost.status.value}">
 							</p>
-							<p style="pointer-events:none" type="button"
-								th:if="${jobPost.status.name == 'COMPLETED_PENDING_PAYMENT'}"
-								class="bg-danger btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></p>
+							<p style="pointer-events:none" th:if="${jobPost.status.name == 'COMPLETED_PENDING_PAYMENT'}"
+								class="bg-danger badge my-auto" th:text="${jobPost.status.value}"></p>
 							<p style="pointer-events:none"
 								th:if="${jobPost.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
-								class="bg-navy btn btn-block btn-xs my-auto" th:text="${jobPost.status.value}"></p>
+								class="bg-navy badge my-auto" th:text="${jobPost.status.value}"></p>
 						</div><!-- /.col -->
 						<div class="col-auto">
 							<ol class="breadcrumb float-sm-right">
@@ -236,8 +235,7 @@
 						</div>
 						</form>
 
-						<div class="col-xl-9"
-							th:unless="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}">
+						<div class="col-xl-9" th:unless="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}">
 							<div class="card card-danger card-outline">
 								<div class="card-header d-flex justify-content-between">
 									<h3 class="card-title my-auto">Additional Fees</h3>
@@ -259,7 +257,9 @@
 
 									</form>
 								</div>
-
+								<div th:if="${jobPost.getAdditionalFeeDetails().size() == 0}" class="card-body">
+									This job has 0 additional fees.
+								</div>
 								<div th:if="${jobPost.getAdditionalFeeDetails().size() > 0}"
 									class="card-body table-responsive p-0">
 									<table class="table table-bordered table-hover text-nowrap"
@@ -341,8 +341,10 @@
 			"timePicker": true,
 			"timePickerIncrement": 30,
 			"autoApply": true,
+			"startDate": Date.now,
+			"endDate": Date.now,
 			locale: {
-				format: 'MM/DD/YYYY hh:mm A'
+				format: 'DD/MM/YYYY hh:mm A'
 			}
 		}, function (start, end, label) {
 			$('#datetimes1').val(start.format('DD-MM-YYYY HH:mm'));

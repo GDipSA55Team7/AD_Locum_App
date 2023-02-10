@@ -19,13 +19,17 @@ public interface UserService {
     User authenticate(String username, String pwd);
 
     void deleteUser(User user);
+    
+    void deactivateUser(User user);
 
     List<User> findByOrganizationId(Long id);
 
-
 	FreeLancerDTO createFreeLancer(FreeLancerDTO freeLancerDTO);
+	
 	FreeLancerDTO loginFreeLancer(FreeLancerDTO freeLancerDTO);
+	
 	FreeLancerDTO updateFreeLancer(FreeLancerDTO freeLancerDTO);
+	
 	String checkIfFieldIsUnique(List<User> checkAgainstUsers,String fieldName,String fieldValue);
 
 }

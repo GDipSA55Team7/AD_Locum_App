@@ -179,17 +179,8 @@
                     <ul th:unless="${session.user.role.name == 'System_Admin'}"
                         class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-
-                        <li th:unless="${session.user.role.name == 'Clinic_User'}" class="nav-item">
-                            <a href="/dashboard/clinic-admin" class="nav-link">
-                                <i class="nav-icon fas fa-chart-pie"></i>
-                                <p>
-                                    Dashboard
-                                </p>
-                            </a>
-                        </li>
-                        <li th:if="${session.user.role.name == 'Clinic_User'}" class="nav-item">
-                            <a href="/clinic-user" class="nav-link">
+                        <li class="nav-item">
+                            <a href="/dashboard/clinic" class="nav-link">
                                 <i class="nav-icon fas fa-chart-pie"></i>
                                 <p>
                                     Dashboard
@@ -286,7 +277,7 @@
         <!-- Main Footer -->
         <footer class="main-footer" th:fragment="footer">
             <!-- Default to the left -->
-            <strong>Copyright &copy; 2021-2022 <a href="#">GdipSA 55, Team 7</a>.</strong> All rights reserved.
+            <strong>Copyright &copy; 2023 <a href="#">GdipSA 55, Team 7</a>.</strong> All rights reserved.
         </footer>
     </div>
     <!-- ./wrapper -->

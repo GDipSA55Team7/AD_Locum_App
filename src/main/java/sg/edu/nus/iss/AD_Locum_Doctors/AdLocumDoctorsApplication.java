@@ -1,14 +1,21 @@
 package sg.edu.nus.iss.AD_Locum_Doctors;
 
 import java.time.LocalDate;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.Reader;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.jdbc.ScriptRunner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.AdditionalFeeDetails;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
@@ -29,7 +36,6 @@ import sg.edu.nus.iss.AD_Locum_Doctors.repository.RoleRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.UserRepository;
 
 @SpringBootApplication
-
 public class AdLocumDoctorsApplication {
 
 	public static void main(String[] args) {
@@ -45,7 +51,8 @@ public class AdLocumDoctorsApplication {
 			RoleRepository roleRepo,
 			UserRepository userRepo,
 			AdditionalFeeDetailsRepository additionalFeeDetailsRepository,
-			JobAdditionalRemarksRepository jobRemarksRepo) {
+			JobAdditionalRemarksRepository jobRemarksRepo,
+			Environment env) {
 
 		return args -> {
 
@@ -188,6 +195,7 @@ public class AdLocumDoctorsApplication {
 			testUser7.setUsername("ron");
 			testUser7.setPassword("password123");
 			testUser7.setContact("98889888");
+			testUser7.setOrganization(org1);
 			testUser7.setRole(r4);
 			userRepo.saveAndFlush(testUser7);
 
@@ -333,6 +341,18 @@ public class AdLocumDoctorsApplication {
 			jp11.setClinicUser(testUser3);
 			jp11.setStatus(JobStatus.ACCEPTED);
 			jobPostRepo.saveAndFlush(jp11);
+
+			JobPost jp12 = new JobPost();
+			jp12.setClinic(c3);
+			jp12.setTitle("Looking for locum @ RMG Lot 1");
+			jp12.setDescription("Looking for locum doctor");
+			jp12.setStartDateTime(LocalDateTime.of(2023, 02, 22, 18, 30, 0));
+			jp12.setEndDateTime(LocalDateTime.of(2023, 02, 22, 20, 30, 0));
+			jp12.setRatePerHour(100);
+			jp12.setClinicUser(testUser5);
+			jp12.setFreelancer(null);
+			jp12.setStatus(JobStatus.OPEN);
+			jobPostRepo.saveAndFlush(jp12);
 
 			AdditionalFeeDetails afdJob3 = new AdditionalFeeDetails();
 			afdJob3.setJobPost(jp3);
@@ -699,6 +719,17 @@ public class AdLocumDoctorsApplication {
 			jr20.setRatePerHour(88.8);
 			jobPostRepo.saveAndFlush(jr20);
 
+
+			// Seed data for Average Daily Rate
+			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+			String mysqlUrl = "jdbc:mysql://localhost:3306/AD_Locum";
+			Connection con = DriverManager.getConnection(mysqlUrl, env.getProperty("spring.datasource.username"),
+					env.getProperty("spring.datasource.password"));
+			System.out.println("Connection established......");
+			ScriptRunner sr = new ScriptRunner(con);
+			Reader reader = new BufferedReader(new FileReader(
+					"src/main/resources/sql/average_daily_rate.sql"));
+			sr.runScript(reader);
 		};
 	}
 }

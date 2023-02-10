@@ -69,18 +69,10 @@ public class MedicalInstitutionRegistrationFormController {
         userService.saveUser(user);
         User u = userService.authenticate(user.getUsername(), user.getPassword());
         session.setAttribute("user", u);
-        switch (u.getRole().getName()) {
-            case "System_Admin":
-                return "redirect:/system-admin";
-            case "Clinic_Admin":
-                return "redirect:/clinic-admin";
-            case "Clinic_Main_Admin":
-                return "redirect:/clinic-admin";
-            case "Clinic_User":
-                return "redirect:/clinic-user";
-            default:
-                return "login";
+        if (u.getRole().getName().equals("System_Admin")) {
+            return "redirect:/system-admin";
+        } else {
+            return "redirect:/dashboard/clinic";
         }
-
     }
 }
