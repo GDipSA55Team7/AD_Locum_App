@@ -5,6 +5,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -87,9 +88,10 @@ public class DashboardController {
 		// Job Postings Status
 		jobPostList = new ArrayList<JobPost>(jobPosts);
 		List<Integer> jobPostCountByStatus = new ArrayList<>();
-		List<JobStatus> jobStatusList = Stream.of(JobStatus.values()).filter(s -> !s.equals(JobStatus.DELETED))
+		List<JobStatus> jobStatusEnums = Stream.of(JobStatus.values()).filter(s -> !s.equals(JobStatus.DELETED))
 				.toList();
-		jobStatusList.forEach(s -> {
+		List<String> jobStatusList = new ArrayList<>();
+		jobStatusEnums.forEach(s -> {
 			count = 0;
 			jobPostList.forEach(j -> {
 				if (j.getStatus() == s) {
@@ -97,6 +99,7 @@ public class DashboardController {
 				}
 			});
 			jobPostCountByStatus.add(count);
+			jobStatusList.add(count + " " + s.getValue().toUpperCase());
 		});
 		model.addAttribute("jobStatusList", jobStatusList);
 		model.addAttribute("jobStatusData", jobPostCountByStatus);
@@ -178,15 +181,15 @@ public class DashboardController {
 		model.addAttribute("jobsProcessed", jobsProcessed);
 
 		// Pie Chart - User Category
-		List<String> userCategories = new ArrayList<>();
-		userCategories.add("Locum Doctors");
-		userCategories.add("Clinic Users");
 		Integer locumTotals = 0, clinicUserTotals = 0;
 		locumTotals = users.stream().filter(x -> x.getRole().getName().equals("Locum_Doctor"))
 				.collect(Collectors.toList()).size();
 		clinicUserTotals = users.stream().filter(x -> !x.getRole().getName().equals("Locum_Doctor"))
 				.filter(x -> !x.getRole().getName().equals("System_Admin"))
 				.collect(Collectors.toList()).size();
+		List<String> userCategories = new ArrayList<>();
+		userCategories.add(locumTotals + " LOCUM DOCTORS");
+		userCategories.add(clinicUserTotals + " CLINIC USERS");
 		List<Integer> totalsByUserCategories = new ArrayList<>();
 		totalsByUserCategories.add(locumTotals);
 		totalsByUserCategories.add(clinicUserTotals);
@@ -260,6 +263,26 @@ public class DashboardController {
 				.sorted(Comparator.comparing(Organization::getDateRegistered).reversed()).limit(10)
 				.collect(Collectors.toList());
 		model.addAttribute("latestOrganizations", latestOrganizations);
+
+		// Clinic Users with Top Activity
+		Map<User, Long> activityByClinicUser = remarksService.findAll().stream()
+				.filter(r -> !r.getUser().getRole().getName().equals("Locum_Doctor"))
+				.collect(Collectors.groupingBy(r -> r.getUser(),
+						Collectors.counting()));
+		Map<User, Long> finalMapByClinicUser = new LinkedHashMap<>();
+		activityByClinicUser.entrySet().stream().sorted(Map.Entry.<User, Long>comparingByValue().reversed()).limit(5)
+				.forEachOrdered(e -> finalMapByClinicUser.put(e.getKey(), e.getValue()));
+		model.addAttribute("activityByClinicUser", finalMapByClinicUser);
+
+		// Locums with Top Activity
+		Map<User, Long> activityByLocum = remarksService.findAll().stream().limit(5)
+				.filter(r -> r.getUser().getRole().getName().equals("Locum_Doctor"))
+				.collect(Collectors.groupingBy(r -> r.getUser(),
+						Collectors.counting()));
+		Map<User, Long> finalMapActivityByLocum = new LinkedHashMap<>();
+		activityByLocum.entrySet().stream().sorted(Map.Entry.<User, Long>comparingByValue().reversed()).limit(5)
+				.forEachOrdered(e -> finalMapActivityByLocum.put(e.getKey(), e.getValue()));
+		model.addAttribute("activityByLocum", finalMapActivityByLocum);
 
 		// Latest Job Posts
 		model.addAttribute("latestJobPosts",
