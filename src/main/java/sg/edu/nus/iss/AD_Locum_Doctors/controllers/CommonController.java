@@ -43,7 +43,17 @@ public class CommonController {
 	@Autowired
 	private PasswordResetCheckerService passwordResetCheckerService;
 
-	@GetMapping(value = { "/", "/login" })
+	@GetMapping("/")
+	public String index(HttpSession session) {
+		User u = (User) session.getAttribute("user");
+		if (u.getRole().getName().equals("System_Admin")) {
+			return "redirect:/dashboard/system-admin";
+		} else {
+			return "redirect:/dashboard/clinic";
+		}
+	}
+
+	@GetMapping("/login")
 	public String login(Model model) {
 		model.addAttribute("user", new User());
 		return "login";

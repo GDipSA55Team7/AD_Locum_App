@@ -47,17 +47,14 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="index3.html" class="nav-link">Home</a>
-                </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link">Contact</a>
+                    <a href="/" class="nav-link">Home</a>
                 </li>
             </ul>
 
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
                 <!-- Navbar Search -->
-                <li class="nav-item">
+                <li class="nav-item" hidden>
                     <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                         <i class="fas fa-search"></i>
                     </a>
@@ -82,7 +79,7 @@
                 <!-- Messages Dropdown Menu -->
 
                 <!-- Notifications Dropdown Menu -->
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" hidden>
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-bell"></i>
                         <span class="badge badge-warning navbar-badge">15</span>
@@ -120,17 +117,18 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4" th:fragment="sidebar">
             <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
-                <img src="/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-                    style="opacity: .8">
-                <span class="brand-text font-weight-light">Locum App</span>
+            <a href="/" class="brand-link">
+                <!-- <img src="/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+                    style="opacity: .8"> -->
+                <i class="fa-lg mt-2 ml-3 fas fa-user-doctor"></i>
+                <span class="h3 brand-text"><b>Locum</b>App</span>
             </a>
 
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- Sidebar user panel (optional) -->
-                <div th:if="${session.user != null}" class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
+                <div th:if="${session.user != null}" class="user-panel mt-3 pb-3 d-flex">
+                    <div class="image my-auto">
                         <img src="/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
@@ -147,14 +145,12 @@
                     <ul th:if="${session.user.role.name == 'System_Admin'}"
                         class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-                       with font-awesome or any other icon font library -->
                         <li class="nav-header">SYSTEM ADMIN</li>
                         <li class="nav-item">
                             <a href="/dashboard/system-admin" class="nav-link">
-                                <i class="nav-icon fas fa-home"></i>
+                                <i class="nav-icon fas fa-chart-pie"></i>
                                 <p>
-                                    Home
+                                    Dashboard
                                 </p>
                             </a>
                         </li>

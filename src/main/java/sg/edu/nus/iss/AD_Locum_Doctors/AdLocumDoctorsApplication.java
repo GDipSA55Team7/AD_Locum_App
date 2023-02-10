@@ -398,7 +398,7 @@ public class AdLocumDoctorsApplication {
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.ACCEPTION, "",
 					LocalDateTime.of(2021, 2, 21, 13, 0, 0), jp11, testUser3));
 
-			// Seed data for Average Daily Rate
+			// Seed data for User Table (for system admin dashboard chart)
 			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
 			String mysqlUrl = "jdbc:mysql://localhost:3306/AD_Locum";
 			Connection con = DriverManager.getConnection(mysqlUrl, env.getProperty("spring.datasource.username"),
