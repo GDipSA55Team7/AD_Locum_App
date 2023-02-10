@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpSession;
 import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseService;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.AverageDailyRateRepository;
+import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.AdditionalFeeDetailsService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.EmailService;
@@ -42,9 +43,6 @@ public class JobPostController {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private JobAdditionalRemarksRepository jobAdditionalRemarksRepo;
 
 	@Autowired
 	private JobPostAdditionalRemarksService addRemarksService;

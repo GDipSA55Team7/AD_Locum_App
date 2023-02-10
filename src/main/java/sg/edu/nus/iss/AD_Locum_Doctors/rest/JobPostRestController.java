@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.EmailService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
