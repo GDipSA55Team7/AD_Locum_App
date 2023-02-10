@@ -15,13 +15,13 @@
 				<div class="container-fluid">
 					<div class="row mb-2">
 						<div class="col-sm-6">
-							<h1 class="m-0">Create New Job Posting</h1>
+							<h1 class="m-0">Edit Job Posting Details</h1>
 						</div><!-- /.col -->
 						<div class="col-sm-6">
 							<ol class="breadcrumb float-sm-right">
 								<li class="breadcrumb-item"><a href="#">Home</a></li>
 								<li class="breadcrumb-item"><a th:href="@{/jobpost/list}">Job Posts</a></li>
-								<li class="breadcrumb-item active">Create</li>
+								<li class="breadcrumb-item active">Edit Job Posting Details</li>
 							</ol>
 						</div>
 					</div><!-- /.row -->
@@ -33,25 +33,25 @@
 			<div class="content">
 				<div class="container-fluid">
 					<div class="row">
-						<div class="col-12">
+						<div class="col-xl-9">
 							<div class="card">
 								<div class="card-body">
-									<h1 th:value="${testrate}">
-									</h1>
-									<form action="#" th:action="@{'/jobpost/create'}" th:object="${jobPost}"
-										method="post">
-
+									<form action="#" th:action="@{'/jobpost/'+${jobPost.id}+'/edit'}"
+										th:object="${jobPost}" method="post">
+										<input th:field="*{id}" th:value="*{id}" type="text" hidden />
+										<input th:field="*{clinicUser.id}" th:value="*{clinicUser.id}" type="text"
+											hidden />
 										<div class="mb-3 form-group">
 											<label class="form-label">Title</label>
-											<input th:field="*{title}" type="text" class="form-control" required>
+											<input th:field="*{title}" th:value="*{title}" type="text"
+												class="form-control" required>
 										</div>
 
 										<div class="mb-3 form-group">
 											<label class="form-label">Description</label>
-											<textarea th:field="*{description}" type="text" class="form-control"
-												required></textarea>
+											<textarea th:field="*{description}" th:value="*{description}" type="text"
+												class="form-control" required></textarea>
 										</div>
-
 										<!-- Date & Time -->
 										<div class="mb-3 form-group col-xl-6 px-0">
 											<label class="form-label">Date & Time of Job</label>
@@ -93,40 +93,38 @@
 											</div>
 										</div>
 
-										<div class="row">
-											<div class="mb-3 form-group col-xl-6">
-												<label class="form-label">Clinic</label>
-												<select th:field="*{clinic.id}" class="form-control" required>
-													<option value="" selected hidden>Please select a clinic</option>
-													<option th:each="c : ${clinics}" th:value="${c.id}"
-														th:text="${c.name}">
-														Clinics</option>
-												</select>
-											</div>
+										<div class="mb-3 form-group col-xl-6 px-0">
+											<label class="form-label">Clinic</label>
+											<select th:field="*{clinic.id}" class="form-control" required>
+												<option value="" selected hidden>Please select a clinic</option>
+												<option th:each="c : ${clinics}" th:value="${c.id}"
+													th:selected="${c.id == jobPost.clinic.id}" th:text="${c.name}">
+													Clinics</option>
+											</select>
 										</div>
 
-										<div class="form-row align-items-top">
-											<div class="form-group col-xl-6">
-												<label class="form-label">Rate/hour</label>
-												<div class="input-group">
-													<div class="input-group-prepend">
-														<span class="input-group-text">$</span>
-													</div>
-													<input th:field="*{ratePerHour}" type="number" min="0" step="0.01"
-														class="form-control" onkeyup="validateFields()" required />
-													<div class="input-group-append">
-														<span class="input-group-text mt-10">x</span>
-														<span id="totalHours" class="input-group-text">? hours</span>
-														<span class="input-group-text">=</span>
-														<span class="input-group-text">$</span>
-														<input id="totalRate" type="text"
-															class="form-control input-group-text" value="?" readonly />
-													</div>
+										<div class="form-group col-xl-6 px-0">
+											<label class="form-label">Rate/hour</label>
+											<div class="input-group">
+												<div class="input-group-prepend">
+													<span class="input-group-text">$</span>
 												</div>
-												<div id="ratePerHour-trend-feedback"></div>
-												<div id="ratePerHour-feedback" class="invalid-feedback d-block"></div>
+												<input th:field="*{ratePerHour}" type="number" min="0" step="0.01"
+													th:value="*{ratePerHour}" class="form-control"
+													onkeyup="validateFields()" required />
+												<div class="input-group-append">
+													<span class="input-group-text mt-10">x</span>
+													<span id="totalHours" class="input-group-text">? hours</span>
+													<span class="input-group-text">=</span>
+													<span class="input-group-text">$</span>
+													<input id="totalRate" type="text"
+														class="form-control input-group-text" value="?" readonly />
+												</div>
 											</div>
-										</div><button id="submitbtn" type="submit" class="btn btn-info">Create</button>
+											<div id="ratePerHour-feedback" class="invalid-feedback d-block">
+											</div>
+										</div>
+										<button id="savebtn" type="submit" class="btn btn-info mt-3" disabled>Save</button>
 									</form>
 								</div>
 							</div>
@@ -141,62 +139,30 @@
 		<div th:replace="fragments/layout.html :: script" />
 	</div>
 
-	<!-- Modal -->
-	<div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog"
-		aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="staticBackdropLabel">Error</h5>
-				</div>
-				<div class="modal-body">
-					Unable to create a job post as your clinic list is empty.<br>
-					<span th:if="${session.user.role.name == 'Clinic_User'}">Please inform your clinic admin to add a
-						clinic.</span>
-					<a th:if="${session.user.role.name != 'Clinic_User'}" th:href="@{/addClinicForm}">Click here to add
-						a clinic.</a>
-				</div>
-				<div class="modal-footer">
-					<a th:if="${session.user.role.name == 'Clinic_User'}" class="btn btn-info"
-						th:href="@{/dashboard/clinic}">Back to Home</a>
-					<a th:if="${session.user.role.name != 'Clinic_User'}" class="btn btn-info"
-						th:href="@{/addClinicForm}">Add Clinic</a>
-				</div>
-			</div>
-		</div>
-	</div>
-
 </body>
 <script th:inline="javascript">
 	/*<![CDATA[*/
-	$(document).ready(function () {
-		var clinicList = /*[[${clinics}]]*/ {};
-		if (clinicList.length == 0) {
-			$('#staticBackdrop').modal();
-		}
-	});
+	var startDateTime = /*[[${jobPost.getStartDateTimeString}]]*/ null;
+	var endDateTime = /*[[${jobPost.getEndDateTimeString}]]*/ null;
+	var start = /*[[${jobPost.startDateTime}]]*/ null;
+	var end = /*[[${jobPost.endDateTime}]]*/ null;
+	var startInput = new Date(start.toLocaleString());
+	var endInput = new Date(end.toLocaleString());
 	/*]]>*/
-
-	currentDate = new Date();
-	var startInput = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 8, 0, 0, 0);
-	var endInput = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 9, 0, 0, 0);
-	$('#datetimes1').val(dateToString(startInput));
-	$('#datetimes2').val(dateToString(endInput));
-
 	$('input[name="datetimes1"]').daterangepicker({
 		"singleDatePicker": true,
 		"timePicker": true,
 		"timePicker24Hour": true,
 		"timePickerIncrement": 30,
 		"autoApply": true,
-		"startDate": startInput,
+		"startDate": startDateTime,
 		locale: {
-			format: 'DD/MM/YYYY HH:mm'
+			format: 'DD/MM/YYYY HH:mm A'
 		}
 	}, function (start, end, label) {
 		console.log('New date range selected: ' + start.format('YYYY-MM-DD hh:mm A') + ' to ' + end.format('YYYY-MM-DD hh:mm A') + ')');
 		startInput = new Date(start.toLocaleString());
-		$('#datetimes1').val(dateToString(startInput));
+		$('#datetimes1').val(start.format('DD-MM-YYYY HH:mm'));
 	});
 	$('input[name="datetimes2"]').daterangepicker({
 		"singleDatePicker": true,
@@ -204,18 +170,16 @@
 		"timePicker24Hour": true,
 		"timePickerIncrement": 30,
 		"autoApply": true,
-		"startDate": endInput,
+		"startDate": endDateTime,
 		locale: {
 			format: 'DD/MM/YYYY HH:mm A'
 		}
 	}, function (start, end, label) {
 		console.log('New date range selected: ' + start.format('YYYY-MM-DD hh:mm A') + ' to ' + end.format('YYYY-MM-DD hh:mm A') + ')');
 		endInput = new Date(start.toLocaleString());
-		$('#datetimes2').val(dateToString(endInput));
+		$('#datetimes2').val(start.format('DD-MM-YYYY HH:mm'));
 	});
-	function dateToString(date) {
-		return String(date.getDate()).padStart(2, '0') + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + date.getFullYear() + ' ' + String(date.getHours()).padStart(2, '0') + ':' + String(date.getMinutes()).padStart(2, '0');
-	}
+
 	function validateFields() {
 		var startElem = document.getElementById("startDateTime");
 		var endElem = document.getElementById("endDateTime");
@@ -249,13 +213,12 @@
 			rateFeedbackElem.innerHTML = "";
 		}
 		calculateTotalRate(diff, rateElem.valueAsNumber);
-		checkTrend();
 	}
 
 	function resetTotalRate() {
 		document.getElementById("totalHours").innerHTML = "? hours";
 		document.getElementById("totalRate").value = "?";
-		document.getElementById("submitbtn").disabled = true;
+		document.getElementById("savebtn").disabled = true;
 	}
 
 	function calculateTotalRate(duration, rate) {
@@ -266,36 +229,7 @@
 		var totalHours = duration / 1000 / 60 / 60;
 		document.getElementById("totalHours").innerHTML = totalHours + " hours";
 		document.getElementById("totalRate").value = (Math.round(totalHours * rate * 100) / 100).toFixed(2);
-		document.getElementById("submitbtn").disabled = false;
-	}
-
-	function checkTrend() {
-		var rateElem = document.getElementById("ratePerHour");
-		if (startInput) {
-			var converted = new Date(startInput);
-			var dayNumber = converted.getDay();
-			var rate_per_hour_feedback = document.getElementById("ratePerHour-trend-feedback");
-			rate_per_hour_feedback.innerHTML = '';
-			var weekdayrate = /*[[${weekdayTrend}]]*/ 80;
-			console.log(weekdayrate)
-			var weekdayrate = parseFloat(weekdayrate);
-			var weekendrate = /*[[${weekendTrend}]]*/ 100;
-			console.log(weekendrate)
-			var weekendrate = parseFloat(weekendrate);
-			if (dayNumber == 0 || dayNumber == 6) {
-				console.log((rateElem.valueAsNumber / weekendrate));
-				if ((rateElem.valueAsNumber / weekendrate) < 0.8) {
-					rate_per_hour_feedback.innerHTML = 'Your proposed rate is substantially lower than the recent average trending rate for weekend ($' + weekendrate.toFixed(2) + "). You may wish to reconsider again to ensure a higher chance of the job post being filled.";
-					rate_per_hour_feedback.className = "text-danger";
-				}
-			}
-			else {
-				if ((rateElem.valueAsNumber / weekdayrate) < 0.8) {
-					rate_per_hour_feedback.innerHTML = 'Your proposed rate is substantially lower than the recent average trending rate for weekday ($' + weekdayrate.toFixed(2) + "). You may wish to reconsider again to ensure a higher chance of the job post being filled.";
-					rate_per_hour_feedback.className = "text-danger";
-				}
-			}
-		}
+		document.getElementById("savebtn").disabled = false;
 	}
 </script>
 

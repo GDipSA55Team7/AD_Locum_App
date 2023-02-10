@@ -40,93 +40,97 @@
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-12">
-							<div
-								class="d-flex flex-row mb-3 justify-content-between  align-items-center pt-3 pb-2 border-bottom">
-								<div class="p-2">
-
-								</div>
-								<div class="p-2">
-									<form th:if="${session.user.role.name != 'System_Admin'}" th:action="@{/jobpost/create}">
-										<button type="submit" class="btn btn-info">Add Job Post</button>
-									</form>
-								</div>
-							</div>
-							<div class="card">
-								<div class="card-body">
-									<div class="table-responsive overflow-hidden">
-										<table id="example1" class="table table-bordered table-hover">
-											<thead>
-												<tr>
-													<th>S/N</th>
-													<th>Job Title</th>
-													<th>Clinic Location</th>
-													<th>Date/Time</th>
-													<th>Created By</th>
-													<th>Status</th>
-													<th>Date Modified</th>
-													<th>Actions</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr th:each="jp : ${jobPosts}" class="listRecord">
-													<td th:text="${jp.id}">Job Post Id</td>
-													<td th:text="${jp.title}">Job Title</td>
-													<td th:text="${jp.clinic.name}">Clinic Location</td>
-													<td>
-														<span th:text="${jp.getStartDateTimeString()}"></span> to<br>
-														<span th:text="${jp.getEndDateTimeString()}"></span>
-													</td>
-													<td th:text="${jp.clinicUser.name}">Created By</td>
-													<td>
-														<p style="pointer-events:none"
-															th:if="${jp.status.name == 'OPEN'}"
-															class="bg-lightblue btn btn-sm my-auto"
-															th:text="${jp.status.value}"></p>
-														<p style="pointer-events:none"
-															th:if="${jp.status.name == 'CANCELLED' OR jp.status.name == 'REMOVED'}"
-															class="bg-gray btn btn-sm my-auto"
-															th:text="${jp.status.value}"></p>
-														<p style="pointer-events:none"
-															th:if="${jp.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
-															class="bg-warning btn btn-sm my-auto"
-															th:text="${jp.status.value}"></p>
-														<p style="pointer-events:none"
-															th:if="${jp.status.name == 'ACCEPTED'}"
-															class="bg-success btn btn-sm my-auto"
-															th:text="${jp.status.value}">
-														</p>
-														<p style="pointer-events:none" type="button"
-															th:if="${jp.status.name == 'COMPLETED_PENDING_PAYMENT'}"
-															class="bg-danger btn btn-sm my-auto"
-															th:text="${jp.status.value}"></p>
-														<p style="pointer-events:none"
-															th:if="${jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
-															class="bg-navy btn btn-sm my-auto"
-															th:text="${jp.status.value}"></p>
-													</td>
-													<td> <span
-															th:text="${jp.getDateTimeString(jp.getDateTimeModified)}"></span>
-													</td>
-													<td align="center">
-														<a th:href="@{/jobpost/}+${jp.id}">
-															<div
-																th:if="${jp.status.name == 'OPEN' OR jp.status.name == 'CANCELLED' OR jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}">
-																View
-															</div>
-															<div
-																th:unless="${jp.status.name == 'OPEN' OR jp.status.name == 'CANCELLED' OR jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}">
-																Edit
-															</div>
-														</a>
-													</td>
-												</tr>
-											</tbody>
-										</table>
+							<div class="col">
+								<div class="card card-primary card-outline card-outline-tabs">
+									<div class="card-header p-0 border-bottom-0">
+										<ul class="nav nav-tabs">
+											<li class="nav-item"><a class="nav-link"
+													th:classappend="${#ctx.springRequestContext.requestUri == '/jobpost/list'} ? active"
+													th:href="@{/jobpost/list}">Posted by Organization</a></li>
+											<li class="nav-item"><a th:href="@{/jobpost/me}" class="nav-link"
+													th:classappend="${#ctx.springRequestContext.requestUri == '/jobpost/me'} ? active">Posted
+													by Me</a></li>
+											<li class="nav-item ml-auto"
+												th:if="${session.user.role.name != 'System_Admin'}"><a class="nav-link"
+													th:href="@{/jobpost/create}"><i class="nav-icon fas fa-plus"></i>
+													Add Job Post</a>
+											</li>
+										</ul>
 									</div>
+									<div class="card-body">
+										<div class="table-responsive overflow-hidden">
+											<table id="example1" class="table table-bordered table-hover">
+												<thead>
+													<tr>
+														<th>S/N</th>
+														<th>Job Title</th>
+														<th>Clinic Location</th>
+														<th>Date/Time</th>
+														<th>Created By</th>
+														<th>Status</th>
+														<th>Date Modified</th>
+														<th>Actions</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr th:each="jp : ${jobPosts}" class="listRecord">
+														<td th:text="${jp.id}">Job Post Id</td>
+														<td th:text="${jp.title}">Job Title</td>
+														<td th:text="${jp.clinic.name}">Clinic Location</td>
+														<td>
+															<span th:text="${jp.getStartDateTimeString()}"></span>
+															to<br>
+															<span th:text="${jp.getEndDateTimeString()}"></span>
+														</td>
+														<td th:text="${jp.clinicUser.name}">Created By</td>
+														<td>
+															<span th:if="${jp.status.name == 'OPEN'}"
+																class="badge bg-lightblue" th:text="${jp.status.value}">
+															</span>
+															<span
+																th:if="${jp.status.name == 'CANCELLED' OR jp.status.name == 'REMOVED'}"
+																class="bg-gray badge"
+																th:text="${jp.status.value}"></span>
+															<span
+																th:if="${jp.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
+																class="bg-warning badge" th:text="${jp.status.value}">
+															</span>
+															<span th:if="${jp.status.name == 'ACCEPTED'}"
+																class="bg-success badge" th:text="${jp.status.value}">
+															</span>
+															<span
+																th:if="${jp.status.name == 'COMPLETED_PENDING_PAYMENT'}"
+																class="bg-danger badge" th:text="${jp.status.value}">
+															</span>
+															<span
+																th:if="${jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+																class="bg-navy badge"
+																th:text="${jp.status.value}"></span>
+														</td>
+														<td> <span
+																th:text="${jp.getDateTimeString(jp.getDateTimeModified)}"></span>
+														</td>
+														<td align="center">
+															<a th:href="@{/jobpost/}+${jp.id}">
+																<div
+																	th:if="${jp.status.name == 'OPEN' OR jp.status.name == 'CANCELLED' OR jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}">
+																	View
+																</div>
+																<div
+																	th:unless="${jp.status.name == 'OPEN' OR jp.status.name == 'CANCELLED' OR jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}">
+																	Update
+																</div>
+															</a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<!-- /.card-body -->
 								</div>
-								<!-- /.card-body -->
+								<!-- /.card -->
 							</div>
-							<!-- /.card -->
 						</div>
 						<!-- /.col -->
 					</div>

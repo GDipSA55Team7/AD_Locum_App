@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.EmailService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
@@ -34,6 +34,9 @@ public class JobPostRestController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    EmailService emailService;
 
     @GetMapping("/allopen")
     public ResponseEntity<List<JobPostApiDTO>> findAllOpen() {
@@ -76,6 +79,7 @@ public class JobPostRestController {
                     additionalRemarks.setJobPost(jobPost);
                     additionalRemarks.setUser(user);
                     jobPostService.setStatus(jobPost, JobStatus.OPEN, userId, additionalRemarks);
+                    sendCancelJobEmailByLocum(jobPost);
                 }
                 JobPostApiDTO jobPostDTO = setJobPostDTO(jobPost);
                 return new ResponseEntity<>(jobPostDTO, HttpStatus.OK);
@@ -165,7 +169,7 @@ public class JobPostRestController {
 	      jobPostDTO.setFreelancer(jobPost.getFreelancer());
 	      jobPostDTO.setPaymentDate(String.valueOf(jobPost.getPaymentDate()));
 	      jobPostDTO.setPaymentRefNo(jobPost.getPaymentReferenceNumber());
-	      
+
 
         return jobPostDTO;
     }
@@ -205,4 +209,18 @@ public class JobPostRestController {
         }
         return new ResponseEntity<>(jobPostDTOList, HttpStatus.OK);
     }
+
+    private String sendCancelJobEmailByLocum(JobPost jobpost){
+		jobpost = jobPostService.findJobPostById(jobpost.getId().toString());
+		EmailDetails testEmail = new EmailDetails();
+		User user = userService.findById(jobpost.getClinicUser().getId() );
+		testEmail.setRecipient(user.getEmail());
+		testEmail.setSubject("Cancel Job by locum:" + jobpost.getTitle());
+		String emailMessage = "Dear {0}, \n\nYour job post {1} has been cancelled by locum. \n\nIf this request did not come from you, please inform us immediately.\n\nYours Sincerely,\nSG Locum Administrator";
+		String formattedEmail = java.text.MessageFormat.format(emailMessage, user.getName(),jobpost.getTitle());
+		testEmail.setMsgBody(formattedEmail);
+		String status = emailService.sendSimpleMail(testEmail);
+		System.out.println(status);
+		return status;
+	}
 }

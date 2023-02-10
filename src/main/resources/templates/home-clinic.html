@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+	layout:decorate="~{fragments/layout}">
+
+<head>
+	<div th:replace="fragments/layout.html :: html_head" />
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+	<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script type="text/javascript" src="../plugins/chart.js/chart.utils.js"></script>
+</head>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+		<div th:replace="fragments/layout.html :: nav_menu" />
+		<div th:replace="fragments/layout.html :: sidebar" />
+
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<div class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1 class="m-0">Dashboard</h1>
+						</div><!-- /.col -->
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<li class="breadcrumb-item"><a href="#">Home</a></li>
+								<li class="breadcrumb-item active">Dashboard</li>
+							</ol>
+						</div>
+					</div><!-- /.row -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content-header -->
+
+			<!-- Main content -->
+			<div class="content">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="info-box">
+								<span class="info-box-icon bg-info"><i class="fas fa-briefcase"></i></span>
+								<div class="info-box-content">
+									<span class="info-box-text">Unfilled Jobs</span>
+									<span class="info-box-number" th:text="${unfilledJobs}"></span>
+								</div>
+							</div>
+						</div><!-- /.col -->
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="info-box">
+								<span class="info-box-icon bg-info"><i class="fas fa-calendar-check"></i></span>
+								<div class="info-box-content">
+									<span class="info-box-text">Upcoming Job Bookings</span>
+									<span class="info-box-number" th:text="${upcomingJobs}"></span>
+								</div>
+							</div>
+						</div><!-- /.col -->
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="info-box">
+								<span class="info-box-icon bg-info"><i class="fas fa-calendar-xmark"></i></span>
+								<div class="info-box-content">
+									<span class="info-box-text">Cancellation Rate</span>
+									<span class="info-box-number"><span th:text="${cancellationRate}"></span>%</span>
+								</div>
+							</div>
+						</div><!-- /.col -->
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="info-box">
+								<span class="info-box-icon bg-info"><i class="fas fa-gauge"></i></span>
+								<div class="info-box-content">
+									<span class="info-box-text">Average Job Take Up Speed</span>
+									<span class="info-box-number"><span th:text="${averageTakeUpSpeed}"></span> 12 Hours</span>
+								</div>
+							</div>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="card">
+								<div class="card-header">
+									<h3 class="card-title">Job Postings Status</h3>
+								</div>
+								<!-- /.card-header -->
+								<div class="card-body">
+									<span th:if="${jobStatusData.size() == 0}">No data available. <a
+											th:href="@{/jobpost/create}">Create a new job post.</a></span>
+									<canvas th:unless="${jobStatusData.size() == 0}" id="job-status-pie"></canvas>
+								</div>
+								<!-- /.card-body -->
+							</div>
+							<!-- /.card -->
+
+							<div th:if="${recentActivities.size() > 0}" class="card">
+								<div class="card-header">
+									<h3 class="card-title">My Recent Activities</h3>
+								</div>
+								<!-- /.card-header -->
+								<div class="card-body">
+									<!-- Main node for this component -->
+									<div class="timeline mb-0">
+										<!-- Timeline time label -->
+										<div th:each="row : ${recentActivities}" th:remove="tag">
+											<div class="time-label">
+												<span class="bg-info btn-xs" th:text="${row.key}"></span>
+											</div>
+											<div th:each="v : ${row.value}">
+												<i class="fas fa-envelope bg-lightgray"></i>
+												<i th:if="${v.category.name == 'CREATED'}"
+													class="fas fa-plus bg-lightgray"></i>
+												<i th:if="${v.category.name == 'DELETION'}"
+													class="fas fa-trash bg-lightgray"></i>
+												<i th:if="${v.category.name == 'PENDING'}"
+													class="fas fa-exclamation bg-lightgray"></i>
+												<i th:if="${v.category.name == 'ACCEPTION'}"
+													class="fas fa-user-doctor bg-lightgray"></i>
+												<i th:if="${v.category.name == 'CANCELLATION'}"
+													class="fas fa-xmark bg-lightgray"></i>
+												<i th:if="${v.category.name == 'REMOVED'}"
+													class="fas fa-ban bg-lightgray"></i>
+												<i th:if="${v.category.name == 'COMPLETED_JOB'}"
+													class="fas fa-check bg-lightgray"></i>
+												<i th:if="${v.category.name == 'PROCESSED_PAYMENT'}"
+													class="fas fa-dollar bg-lightgray"></i>
+												<!-- Timeline item -->
+												<div class="timeline-item">
+													<!-- Time -->
+													<span class="time"><i class="fas fa-clock"></i> <span
+															th:text="${v.getTimeOnlyString}"></span></span>
+													<!-- Header. -->
+													<h2 class="timeline-header" style="font-weight: bold;"><span
+															th:text="${v.category.value}"></span>
+														<a th:unless="${v.category.name == 'REMOVED' OR v.category.name == 'DELETED'}"
+															th:href="@{/jobpost/}+${v.jobPost.id}"
+															th:text="${' #' + v.jobPost.id + ': ' + v.jobPost.title}"></a>
+														<span
+															th:if="${v.category.name == 'REMOVED' OR v.category.name == 'DELETED'}"
+															th:text="${' (Job Post Id #' + v.jobPost.id} + ')'"></span>
+													</h2>
+												</div>
+											</div>
+										</div>
+										<div>
+											<i class="fas fa-clock bg-lightgray"></i>
+											<div style="margin-left:60px;">
+												<a th:href="@{/jobpost/list}">View more</a>
+											</div>
+										</div>
+									</div>
+								</div><!-- /.card-body -->
+							</div><!-- /.card -->
+						</div>
+						<!-- /.col -->
+
+						<div class="col-lg-6">
+							<div class="card">
+								<div class="card-header">
+									<h3 class="card-title">Moving Averages of Locum Rates/hour</h3>
+								</div>
+								<!-- /.card-header -->
+								<div class="card-body">
+									<canvas id="job-time-series"></canvas>
+								</div>
+								<!-- /.card-body -->
+							</div>
+							<!-- /.card -->
+							<div class="card">
+								<div class="card-header">
+									<h3 class="card-title">Latest Job Posts</h3>
+								</div>
+								<!-- /.card-header -->
+								<div class="card-body p-0">
+									<div class="table-responsive">
+										<table class="table m-0">
+											<thead>
+												<tr>
+													<th>ID</th>
+													<th>Job Post Title</th>
+													<th>Status</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="jp : ${latestJobPosts}">
+													<td><a th:href="@{/jobpost}+${'/'+jp.id}"
+															th:text="${'#'+jp.id}"></a>
+													</td>
+													<td th:text="${jp.title}"></td>
+													<td>
+														<span th:if="${jp.status.name == 'OPEN'}"
+															class="badge bg-lightblue" th:text="${jp.status.value}">
+														</span>
+														<span
+															th:if="${jp.status.name == 'CANCELLED' OR jp.status.name == 'REMOVED'}"
+															class="bg-gray badge" th:text="${jp.status.value}"></span>
+														<span
+															th:if="${jp.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
+															class="bg-warning badge" th:text="${jp.status.value}">
+														</span>
+														<span th:if="${jp.status.name == 'ACCEPTED'}"
+															class="bg-success badge" th:text="${jp.status.value}">
+														</span>
+														<span th:if="${jp.status.name == 'COMPLETED_PENDING_PAYMENT'}"
+															class="bg-danger badge" th:text="${jp.status.value}">
+														</span>
+														<span th:if="${jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+															class="bg-navy badge" th:text="${jp.status.value}"></span>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!-- /.card-body -->
+								<div class="card-footer">
+									<a th:href="@{'/jobpost/create'}" class="btn btn-sm btn-info float-left">Add New Job
+										Post</a>
+									<a th:href="@{'/jobpost/list'}" class="btn btn-sm btn-outline-info float-right">View
+										All Job Posts</a>
+								</div>
+								<!-- /.card-footer -->
+							</div>
+							<!-- /.card -->
+						</div>
+						<!-- /.col -->
+					</div>
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content -->
+		</div>
+		<div th:replace="fragments/layout.html :: footer" />
+		<div th:replace="fragments/layout.html :: script" />
+	</div>
+	<script src="../plugins/chart.js/Chart.min.js"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		/* JOBS STATUS - PIE CHART */
+		const ctx = document.getElementById('job-status-pie');
+		var jobStatusList = /*[[${jobStatusList}]]*/ {};
+		var jobStatusData = /*[[${jobStatusData}]]*/ {};
+		var pieOptions = {
+			legend: {
+				position: 'right',
+				labels: {
+					usePointStyle: true,
+					pointStyle: 'circle',
+					padding: 15
+				}
+			}
+		};
+		const jobStatusChart = new Chart(ctx, {
+			type: 'pie',
+			data: {
+				labels: jobStatusList,
+				datasets: [{
+					data: jobStatusData,
+					backgroundColor: COLORS,
+					hoverOffset: 4
+				}]
+			},
+			options: pieOptions
+		});
+		/* TIME SERIES SMA CHART */
+		var dates = /*[[${dates}]]*/ null;
+		var weekday_14MA = /*[[${weekday_14MA}]]*/ null;
+		var weekday_28MA = /*[[${weekday_28MA}]]*/ null;
+		var weekend_14MA = /*[[${weekend_14MA}]]*/ null;
+		var weekend_28MA = /*[[${weekend_28MA}]]*/ null;
+		const timeSeriesCtx = document.getElementById('job-time-series');
+		const labels = dates;
+		const data = {
+			labels: labels,
+			datasets: [{
+				label: 'Weekday (14 days Moving Average)',
+				data: weekday_14MA,
+				fill: false,
+				borderColor: 'rgb(75, 192, 192)',
+				tension: 0.1
+			}, {
+				label: 'Weekday (28 days Moving Average)',
+				data: weekday_28MA,
+				fill: false,
+				borderColor: 'rgb(150, 115, 130)',
+				tension: 0.1
+			}, {
+				label: 'Weekend (14 days Moving Average)',
+				data: weekend_14MA,
+				fill: false,
+				borderColor: 'rgb(7, 60, 75)',
+				tension: 0.1
+			}, {
+				label: 'Weekend (28 days Moving Average)',
+				data: weekend_28MA,
+				fill: false,
+				borderColor: 'rgb(110, 140, 160)',
+				tension: 0.1
+			}]
+		};
+		const jobTimeSeriesChart = new Chart(timeSeriesCtx, {
+			type: 'line',
+			data: data,
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							// Include a dollar sign in the ticks
+							callback: function (value, index, values) {
+								return '$' + value;
+							}
+						}
+					}]
+				},
+				legend: {
+					align: 'end',
+					position: 'top',
+					labels: {
+						boxWidth: 10
+					}
+				},
+				tooltips: {
+					callbacks: {
+						label: function (tooltipItem, data) {
+							var label = data.datasets[tooltipItem.datasetIndex].label || '';
+							return label + ' $' + tooltipItem.yLabel.toFixed(2);
+						}
+					}
+				}
+			}
+		});
+		/*]]>*/
+	</script>
+</body>
+
+</html>

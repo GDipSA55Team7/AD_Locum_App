@@ -16,7 +16,7 @@ public interface JobPostService {
 
 	List<JobPost> findJobConfirmed(String userId);
 
-	JobPost createJobPost(JobPostForm jobPostForm, User user);
+	JobPost createJobPost(JobPost jobPost, User user);
 
 	JobPost findJobPostById(String id);
 
@@ -45,5 +45,5 @@ public interface JobPostService {
 	void setStatus(JobPost jobPost, JobStatus status, String userId, JobAdditionalRemarks additionalRemarks);
 
 	String convertAdditionalFeesToString(JobPost jobPost);
-	
+
 }
