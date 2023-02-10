@@ -3,8 +3,6 @@ package sg.edu.nus.iss.AD_Locum_Doctors.model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -69,10 +67,4 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "freelancer", cascade = CascadeType.ALL)
     private List<JobPost> jobApplications = new ArrayList<>();
-
-    public int getJobPostsCountByStatus(String status) {
-        List<JobStatus> jobStatusEnums = Stream.of(JobStatus.values()).collect(Collectors.toList());
-        var count = jobApplications.size();
-        return 0;
-    }
 }

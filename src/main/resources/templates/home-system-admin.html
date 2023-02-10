@@ -37,7 +37,8 @@
 					<div class="row">
 						<div class="col-md-3 col-sm-6 col-12">
 							<div class="info-box">
-								<span class="info-box-icon bg-info"><i class="fas fa-user-doctor"></i></span>
+								<span class="info-box-icon" style="background-color: #4C737E; color: white;"><i
+										class="fas fa-user-doctor"></i></span>
 								<div class="info-box-content">
 									<span class="h3 info-box-number" th:text="${registeredLocumsThisMonth}"></span>
 									<span class="info-box-text"
@@ -58,7 +59,8 @@
 						</div><!-- /.col -->
 						<div class="col-md-3 col-sm-6 col-12">
 							<div class="info-box">
-								<span class="info-box-icon bg-info"><i class="fas fa-building"></i></span>
+								<span class="info-box-icon" style="background-color: #68b2c7; color: white;"><i
+										class="fas fa-building"></i></span>
 								<div class="info-box-content">
 									<span class="h3 info-box-number" th:text="${registeredOrgThisMonth}"></span>
 									<span class="info-box-text"
@@ -68,7 +70,8 @@
 						</div><!-- /.col -->
 						<div class="col-md-3 col-sm-6 col-12">
 							<div class="info-box">
-								<span class="info-box-icon bg-info"><i class="fas fa-briefcase"></i></span>
+								<span class="info-box-icon" style="background-color: #68b2c7; color: white;"><i
+										class="fas fa-briefcase"></i></span>
 								<div class="info-box-content">
 									<span class="h3 info-box-number" th:text="${jobsProcessed}"></span>
 									<span class="info-box-text">Jobs Processed</span>
@@ -100,23 +103,72 @@
 											<thead>
 												<tr>
 													<th></th>
-													<th>Name</th>
-													<th style="white-space: nowrap;">Activity Count</th>
-													<th style="white-space: nowrap;">Total Jobs Posted</th>
-													<th style="white-space: nowrap;">Open Jobs</th>
+													<th></th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Activity<br> Count</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Total<br> Jobs<br> Created</th>
+													<th class="align-middle small" style="white-space: nowrap;">Open
+													</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Cancelled</th>
+													<th class="align-middle small" style="white-space: nowrap;">Accepted
+													</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Pending<br> Confirmation</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Completed<br> (Pending<br> Payment)</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Completed<br> (Payment<br> Processed)</th>
 												</tr>
 											</thead>
 											<tbody>
 												<tr th:each="row, iStat : ${activityByClinicUser}">
-													<td><span class="badge badge-pill bg-info">Clinic User #<span
+													<td width="5%"><span class="badge badge-pill bg-info">#<span
 																th:text="${iStat.index + 1}"></span></span>
 													</td>
-													<td width="100%"><strong><span
+													<td width="20%"><strong><span
 																th:text="${row.key.name}"></span></strong></td>
-													<td><strong><span th:text="${row.value}"></span></strong></td>
-													<td><strong><span th:text="${row.key.getJobPosts.size()}"></span></strong></td>
-													<td><strong><span th:text="${row.key.getJobPosts.size()}"></span></strong></td>
-													<!-- work in progress -->
+													<td width="5%"><strong><span th:text="${row.value}"></span></strong></td>
+													<td width="5%"><strong><span
+																th:text="${row.key.getJobPosts.size()}"></span></strong>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobPosts.?[status.name == 'OPEN']}">
+															<strong><span class="badge badge-pill bg-lightblue"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobPosts.?[status.name == 'CANCELLED']}">
+															<strong><span class="badge badge-pill bg-gray"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobPosts.?[status.name == 'PENDING_CONFIRMATION_BY_CLINIC']}">
+															<strong><span class="badge badge-pill bg-warning"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobPosts.?[status.name == 'ACCEPTED']}">
+															<strong><span class="badge badge-pill bg-success"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobPosts.?[status.name == 'COMPLETED_PENDING_PAYMENT']}">
+															<strong><span class="badge badge-pill bg-danger"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobPosts.?[status.name == 'COMPLETED_PAYMENT_PROCESSED']}">
+															<strong><span class="badge badge-pill bg-navy"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
 												</tr>
 											</tbody>
 										</table>
@@ -133,15 +185,68 @@
 								<div class="card-body p-0">
 									<div class="table-responsive">
 										<table class="table m-0 table-sm table-striped table-valign-middle">
+											<thead>
+												<tr>
+													<th></th>
+													<th></th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Activity<br> Count</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Total<br> Jobs<br>Applied</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Cancelled</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Pending<br> Confirmation</th>
+													<th class="align-middle small" style="white-space: nowrap;">Accepted
+													</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Completed<br> (Pending<br> Payment)</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Completed<br> (Payment<br> Processed)</th>
+												</tr>
+											</thead>
 											<tbody>
 												<tr th:each="row, iStat : ${activityByLocum}">
-													<td><span class="badge badge-pill"
-															style="background-color: #4C737E; color: white;">Locum
-															Doctor #<span th:text="${iStat.index + 1}"></span></span>
+													<td width="5%"><span class="badge badge-pill"
+															style="background-color: #4C737E; color: white;"> #<span
+																th:text="${iStat.index + 1}"></span></span>
 													</td>
-													<td width="100%"><strong><span
+													<td width="20%"><strong><span
 																th:text="${row.key.name}"></span></strong></td>
-													<td><strong><span th:text="${row.value}"></span></strong></td>
+													<td width="7.5%"><strong><span
+																th:text="${row.key.getJobApplications.size()}"></span></strong>
+													</td>
+													<td width="7.5%"><strong><span th:text="${row.value}"></span></strong></td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobApplications.?[status.name == 'CANCELLED']}">
+															<strong><span class="badge badge-pill bg-gray"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobApplications.?[status.name == 'PENDING_CONFIRMATION_BY_CLINIC']}">
+															<strong><span class="badge badge-pill bg-warning"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobApplications.?[status.name == 'ACCEPTED']}">
+															<strong><span class="badge badge-pill bg-success"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobApplications.?[status.name == 'COMPLETED_PENDING_PAYMENT']}">
+															<strong><span class="badge badge-pill bg-danger"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobApplications.?[status.name == 'COMPLETED_PAYMENT_PROCESSED']}">
+															<strong><span class="badge badge-pill bg-navy"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
 												</tr>
 											</tbody>
 										</table>
