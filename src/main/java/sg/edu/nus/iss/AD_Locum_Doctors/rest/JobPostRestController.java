@@ -117,10 +117,10 @@ public class JobPostRestController {
     }
 
     @GetMapping("/allapplied")
-    public ResponseEntity<List<JobPostApiDTO>> findAllJobApplied() {
-        // TODO: may want to restrict by how long ago
+    public ResponseEntity<List<JobPostApiDTO>> findAppliedForRecommender() {
+        // all applied past 60 days only
         try {
-            List<JobPost> jobPostList = jobPostService.findAllApplied();
+            List<JobPost> jobPostList = jobPostService.findAppliedForRecommender();
             return getListResponseEntity(jobPostList);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

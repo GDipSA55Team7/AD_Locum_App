@@ -2,6 +2,7 @@ package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public interface JobPostService {
 
 	List<JobPost> findPaidandUnpaidJobPosts(Long userOrgId);
 
-	List<JobPost> findAllApplied();
+	List<JobPost> findAppliedForRecommender();
 
 	Map<JobPost, Double> findAllRecommended(Long userId);
 
