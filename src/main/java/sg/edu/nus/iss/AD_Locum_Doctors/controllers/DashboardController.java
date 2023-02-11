@@ -2,9 +2,9 @@ package sg.edu.nus.iss.AD_Locum_Doctors.controllers;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +23,7 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Organization;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.RemarksCategory;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.AverageDailyRateService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostAdditionalRemarksService;
@@ -81,9 +82,30 @@ public class DashboardController {
 		}
 		model.addAttribute("cancellationRate", cancellationRate);
 
-		// TODO: Average Job Take Up Speed
-
-		model.addAttribute("averageTakeUpSpeed", "");
+		// Average Job Take Up Speed
+		List<JobPost> jobsApplied = jobPosts.stream()
+				.filter(x -> !x.getStatus().equals(JobStatus.CANCELLED) && !x.getStatus().equals(JobStatus.OPEN)
+						&& !x.getStatus().equals(JobStatus.DELETED) && !x.getStatus().equals(JobStatus.REMOVED))
+				.collect(Collectors.toList());
+		Double averageTakeUpHours = (double) 0;
+		if (jobsApplied.size() != 0) {
+			for (JobPost jp : jobsApplied) {
+				JobAdditionalRemarks createdRemark = remarksService.findAll().stream()
+						.filter(r -> r.getJobPost().getId().equals(jp.getId()))
+						.filter(x -> x.getCategory().equals(RemarksCategory.CREATED)).findFirst().orElse(null);
+				JobAdditionalRemarks appliedRemark = remarksService.findAll().stream()
+						.filter(r -> r.getJobPost().getId().equals(jp.getId()))
+						.sorted(Comparator.comparing(JobAdditionalRemarks::getDateTime))
+						.filter(x -> x.getCategory().equals(RemarksCategory.PENDING)).findFirst().orElse(null);
+				if (appliedRemark != null && createdRemark != null) {
+					long jobAppliedDuration = ChronoUnit.MINUTES.between(createdRemark.getDateTime(),
+							appliedRemark.getDateTime());
+					averageTakeUpHours += jobAppliedDuration / 60.0;
+				}
+			}
+			averageTakeUpHours = (double) Math.round((averageTakeUpHours / jobsApplied.size()) * 10) / 10;
+		}
+		model.addAttribute("averageTakeUpSpeed", averageTakeUpHours);
 
 		// Job Postings Status
 		jobPostList = new ArrayList<JobPost>(jobPosts);
@@ -138,7 +160,7 @@ public class DashboardController {
 				.collect(Collectors.toList()));
 
 		// User Recent Activities
-		Map<LocalDate, List<JobAdditionalRemarks>> dateTimeToRemarks = new HashMap<>();
+		Map<LocalDate, List<JobAdditionalRemarks>> dateTimeToRemarks = new LinkedHashMap<>();
 		dateTimeToRemarks = remarksService.findAll().stream()
 				.filter(x -> x.getJobPost().getClinicUser().getId() == user.getId())
 				.filter(x -> x.getDateTime() != null)

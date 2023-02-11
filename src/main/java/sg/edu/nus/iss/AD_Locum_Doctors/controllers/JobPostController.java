@@ -64,7 +64,7 @@ public class JobPostController {
 				break;
 			default:
 				jobPosts = jobPosts.stream()
-						.filter(x -> x.getClinic().getOrganization().getId() == user.getOrganization().getId())
+						.filter(x -> x.getClinic().getOrganization().getId().equals(user.getOrganization().getId()))
 						.filter(x -> !x.getStatus().equals(JobStatus.REMOVED))
 						.collect(Collectors.toList());
 				model.addAttribute("jobPosts", jobPosts);

@@ -248,7 +248,7 @@ public class AdLocumDoctorsApplication {
 			jp5.setRatePerHour(100);
 			jp5.setClinicUser(testUser5);
 			jp5.setFreelancer(testUser2);
-			jp5.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
+			jp5.setStatus(JobStatus.OPEN);
 			jobPostRepo.saveAndFlush(jp5);
 
 			JobPost jp6 = new JobPost();
@@ -262,7 +262,7 @@ public class AdLocumDoctorsApplication {
 			jp6.setRatePerHour(100);
 			jp6.setClinicUser(testUser5);
 			jp6.setFreelancer(testUser2);
-			jp6.setStatus(JobStatus.COMPLETED_PENDING_PAYMENT);
+			jp6.setStatus(JobStatus.OPEN);
 			jobPostRepo.saveAndFlush(jp6);
 
 			JobPost jp7 = new JobPost();
@@ -352,9 +352,13 @@ public class AdLocumDoctorsApplication {
 			additionalFeeDetailsRepository.saveAndFlush(afdJob3_1);
 
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CANCELLATION, "Cancelled due to ...",
-					LocalDateTime.of(2021, 2, 2, 1, 0, 0), jp1, testUser2));
+					LocalDateTime.of(2021, 2, 1, 3, 0, 0), jp1, testUser2));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PENDING, "",
+					LocalDateTime.of(2021, 2, 1, 2, 0, 0), jp1, testUser1));
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CANCELLATION, "Cancelled due to ...",
 					LocalDateTime.of(2021, 2, 1, 1, 0, 0), jp1, testUser1));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PENDING, "",
+					LocalDateTime.of(2021, 1, 12, 12, 0, 0), jp1, testUser3));
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
 					LocalDateTime.of(2021, 1, 12, 11, 0, 0), jp1, testUser3));
 
@@ -365,11 +369,19 @@ public class AdLocumDoctorsApplication {
 					LocalDateTime.of(2021, 2, 12, 12, 0, 0), jp3, testUser3));
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.ACCEPTION, "",
 					LocalDateTime.of(2021, 1, 21, 13, 0, 0), jp3, testUser3));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PENDING, "",
+					LocalDateTime.of(2021, 1, 20, 13, 0, 0), jp3, testUser3));
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
 					LocalDateTime.of(2021, 1, 20, 12, 0, 0), jp3, testUser3));
 
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.COMPLETED_JOB, "",
+					LocalDateTime.of(2021, 2, 12, 4, 0, 0), jp4, testUser3));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.ACCEPTION, "",
+					LocalDateTime.of(2021, 2, 12, 3, 0, 0), jp4, testUser3));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PENDING, "",
 					LocalDateTime.of(2021, 2, 12, 2, 0, 0), jp4, testUser3));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
+					LocalDateTime.of(2021, 2, 12, 1, 0, 0), jp4, testUser3));
 
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
 					LocalDateTime.of(2021, 2, 20, 12, 0, 0), jp5, testUser5));
@@ -387,16 +399,28 @@ public class AdLocumDoctorsApplication {
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
 					LocalDateTime.of(2021, 2, 21, 1, 0, 0), jp8, testUser3));
 
-			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.REMOVED, "",
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PENDING, "",
 					LocalDateTime.of(2021, 2, 21, 3, 0, 0), jp9, testUser3));
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
 					LocalDateTime.of(2021, 2, 21, 2, 0, 0), jp9, testUser3));
 
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PROCESSED_PAYMENT, "",
-					LocalDateTime.of(2021, 2, 21, 13, 0, 0), jp10, testUser3));
+					LocalDateTime.of(2021, 2, 23, 17, 0, 0), jp10, testUser3));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.COMPLETED_JOB, "",
+					LocalDateTime.of(2021, 2, 22, 16, 0, 0), jp10, testUser3));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.ACCEPTION, "",
+					LocalDateTime.of(2021, 2, 22, 15, 0, 0), jp10, testUser3));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PENDING, "",
+					LocalDateTime.of(2021, 2, 21, 14, 0, 0), jp10, testUser3));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
+					LocalDateTime.of(2021, 2, 20, 13, 0, 0), jp10, testUser3));
 
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.ACCEPTION, "",
-					LocalDateTime.of(2021, 2, 21, 13, 0, 0), jp11, testUser3));
+					LocalDateTime.of(2021, 2, 21, 15, 0, 0), jp11, testUser3));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PENDING, "",
+					LocalDateTime.of(2021, 2, 20, 14, 30, 0), jp11, testUser3));
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
+					LocalDateTime.of(2021, 2, 19, 13, 0, 0), jp11, testUser3));
 
 			// Seed data (for system admin dashboard chart)
 			DriverManager.registerDriver(new com.mysql.jdbc.Driver());

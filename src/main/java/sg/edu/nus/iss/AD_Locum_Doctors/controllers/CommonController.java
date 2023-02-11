@@ -43,7 +43,7 @@ public class CommonController {
 	@Autowired
 	private PasswordResetCheckerService passwordResetCheckerService;
 
-	@GetMapping("/")
+	@GetMapping(value = { "/", "/dashboard" })
 	public String index(HttpSession session) {
 		User u = (User) session.getAttribute("user");
 		if (u.getRole().getName().equals("System_Admin")) {
@@ -63,11 +63,7 @@ public class CommonController {
 	public String authenticate(User user, Model model, HttpSession session) {
 		User u = userService.authenticate(user.getUsername(), user.getPassword());
 		session.setAttribute("user", u);
-		if (u.getRole().getName().equals("System_Admin")) {
-			return "redirect:/dashboard/system-admin";
-		} else {
-			return "redirect:/dashboard/clinic";
-		}
+		return "redirect:/dashboard";
 	}
 
 	@GetMapping(value = "/logout")

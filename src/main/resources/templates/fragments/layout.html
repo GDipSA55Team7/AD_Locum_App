@@ -128,14 +128,14 @@
 
 			<!-- Sidebar -->
 			<div class="sidebar">
-				<!-- Sidebar user panel (optional) -->
+				<!-- Sidebar user panel -->
 				<div th:if="${session.user != null}" class="user-panel mt-3 pb-3 d-flex">
 					<div class="image my-auto">
 						<img src="/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
 					</div>
 					<div class="info">
 						<a href="#" class="d-block"
-							th:text="${session.user != null} ? ${session.user['name']} : 'Not logged in'"></a>
+							th:text="${session.user != null} ? 'Hello, '+${session.user['name']} : 'Not logged in'"></a>
 						<span class="nav-header small"
 							th:text="${session.user != null} ? ${session.user.role.name} : ''"></span>
 					</div>
@@ -149,7 +149,7 @@
 						data-accordion="false">
 						<li class="nav-header">SYSTEM ADMIN</li>
 						<li class="nav-item">
-							<a href="/dashboard/system-admin" class="nav-link">
+							<a href="/dashboard" class="nav-link">
 								<i class="nav-icon fas fa-chart-pie"></i>
 								<p>
 									Dashboard
@@ -197,7 +197,7 @@
 						data-accordion="false">
 
 						<li class="nav-item">
-							<a href="/dashboard/clinic" class="nav-link">
+							<a href="/dashboard" class="nav-link">
 								<i class="nav-icon fas fa-chart-pie"></i>
 								<p>
 									Dashboard
