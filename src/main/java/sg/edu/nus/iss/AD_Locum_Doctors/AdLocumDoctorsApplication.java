@@ -722,7 +722,7 @@ public class AdLocumDoctorsApplication {
 
 			// Seed data for Average Daily Rate
 			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-			String mysqlUrl = "jdbc:mysql://localhost:3306/ad_locum";
+			String mysqlUrl = env.getProperty("spring.datasource.url");
 			Connection con = DriverManager.getConnection(mysqlUrl, env.getProperty("spring.datasource.username"),
 					env.getProperty("spring.datasource.password"));
 			System.out.println("Connection established......");
