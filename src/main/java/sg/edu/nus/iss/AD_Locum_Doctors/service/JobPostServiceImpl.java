@@ -10,10 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-
-import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseDeviceToken;
-import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseRepository;
-import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseService;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.ClinicRepository;
@@ -41,9 +37,6 @@ public class JobPostServiceImpl implements JobPostService {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private FirebaseRepository firebaseRepo;
 
 	@Override
 	public List<JobPost> findAll() {

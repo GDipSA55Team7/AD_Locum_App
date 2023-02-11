@@ -3,6 +3,7 @@ package sg.edu.nus.iss.AD_Locum_Doctors.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.FreeLancerDTO;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.FirebaseServiceImpl;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
 @RestController
@@ -18,12 +20,14 @@ public class FreeLancerRestController {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+    FirebaseServiceImpl firebaseService;
 
 	@PostMapping("/login")
 	public ResponseEntity<FreeLancerDTO> loginNewFreeLancer(@RequestBody FreeLancerDTO freeLancerDTO) {
 		try {
 			// updates all dto fields with registered user data
-			System.out.println(freeLancerDTO);
 			FreeLancerDTO existingFreeLancer = userService.loginFreeLancerAndUpdateToken(freeLancerDTO);
 			if (existingFreeLancer == null) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
@@ -62,4 +66,15 @@ public class FreeLancerRestController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	 @GetMapping("/logout")
+	    public ResponseEntity<String> removeToken(@RequestParam String username) {
+	    	try {
+	    		userService.logoutFreeLancer(username);
+				return new ResponseEntity<>("Logout success",HttpStatus.OK);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new ResponseEntity<>("Logout failed due to server-side error", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+	    }
 }

@@ -1,4 +1,4 @@
-package sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice;
+package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -7,44 +7,28 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import sg.edu.nus.iss.AD_Locum_Doctors.model.FirebaseDeviceToken;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
+import sg.edu.nus.iss.AD_Locum_Doctors.repository.FirebaseRepository;
+import sg.edu.nus.iss.AD_Locum_Doctors.repository.UserRepository;
 
 
 @Service
-public class FirebaseService {
+public class FirebaseServiceImpl implements FirebaseService{
 	
     @Autowired
     private FirebaseRepository firebaseRepository;
     
+    @Autowired
+    private UserRepository userRepo;
+    
 	public static final String FCM_SERVER_KEY = "AAAAkEI8xZ0:APA91bGKpmYGvLlYNhaXH7VCBqoXHFCPMukHdbNyMh1SDddZs_As_6NxsTd1ETbUJ-6_U7zQr0W5EkKvDsvqn5SgxayAUEBCgrGFxtOVjGsZDDnPB4BKB413VaIPCAiSQYzfUjO74UQT";
 	public static final String FCM_API_URL = "https://fcm.googleapis.com/fcm/send";
-	
 
-    public static void sendNotification(FirebaseDeviceToken deviceToken, String title, String body,String status,String jobId) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "key=" + FCM_SERVER_KEY);
 
-        //notification messages
-        //String payload = "{\"to\":\"" + registrationToken + "\",\"notification\":{\"title\":\"" + title + "\",\"body\":\"" + body + "\"}}";
-        //String payload = "{\"to\":\"" + registrationToken + "\",\"notification\":{\"title\":\"" + title + "\",\"body\":\"" + body + "\",\"click_action\":\"MainActivity\"}}";
-
-        //data messages
-        String payload = "{\"to\":\"" + deviceToken.getToken() 
-        		+ "\",\"data\":{\"click_action\":\"" + "sg.nus.iss.team7.locum.JobDetailActivity" 
-        		+ "\",\"title\":\"" + title 
-        		+ "\",\"body\":\"" + body 
-        		+ "\",\"newstatus\":\"" +  status
-        		+ "\",\"username\":\"" +  deviceToken.getUser().getUsername()
-        		+ "\",\"jobid\":\"" +  jobId
-        		+ "\"},\"priority\":\"high\"}";
-
-        HttpEntity<String> entity = new HttpEntity<>(payload, headers);
-        RestTemplate restTemplate = new RestTemplate();
-
-        restTemplate.postForObject(FCM_API_URL, entity, String.class);
-    }
-
+    
+    @Override
     public void onLoginSaveToken(String token,String username) {
     	
     	FirebaseDeviceToken existingFirebaseDeviceToken = firebaseRepository.findDeviceTokenByUserName(username);
@@ -57,15 +41,17 @@ public class FirebaseService {
     		//client did not logOut
     		if(existingFirebaseDeviceToken.getIsLoggedIntoMobileApp()) {
     			
-    			//check token
-    			
+    			//check if deviceToken has changed
         		if(existingFirebaseDeviceToken.getToken().equals(token)) {
         			System.out.println( "Username : " + username + " did not logout ,reconnected with same Token");
         		}
-        		//token has been changed,either diff. device or app reinstalled on same device
+        		//deviceToken has changed(Could be due to diff. device or app reinstalled on same device)
         		else {
             		existingFirebaseDeviceToken.setToken(token);
             		firebaseRepository.saveAndFlush(existingFirebaseDeviceToken);
+            		User existingLoginUser = userRepo.findByUsername(username);
+            		existingLoginUser.setFirebaseDeviceToken(existingFirebaseDeviceToken);
+            		userRepo.saveAndFlush(existingLoginUser);
             		System.out.println( "Username : " + username + " did not logout ,reconnected with new Token :" + token);
         		}
     		}
@@ -76,16 +62,18 @@ public class FirebaseService {
         		if(existingFirebaseDeviceToken.getToken().equals(token)) {
         			System.out.println( "Username : " + username + "relogin, Token is the same as previous login");
         		}
-        		//token has been changed,either diff. device or app reinstalled on same device
+        		//deviceToken has changed(Could be due to diff. device or app reinstalled on same device)
         		else {
-            		existingFirebaseDeviceToken.setToken(token);
+        			existingFirebaseDeviceToken.setToken(token);
+            		firebaseRepository.saveAndFlush(existingFirebaseDeviceToken);
+            		User existingLoginUser = userRepo.findByUsername(username);
+            		existingLoginUser.setFirebaseDeviceToken(existingFirebaseDeviceToken);
+            		userRepo.saveAndFlush(existingLoginUser);
             		System.out.println( "Username : " + username + "relogin, NewToken :" + token);
         		}
            		existingFirebaseDeviceToken.setIsLoggedIntoMobileApp(true);
         		firebaseRepository.saveAndFlush(existingFirebaseDeviceToken);
     		}
-    		
-    
     	}
     	//first time client login(no DB record)
     	else {
@@ -96,17 +84,7 @@ public class FirebaseService {
     	}
     }
     
-    public void onLogOut(String username) {
-    	
-    	FirebaseDeviceToken existingFirebaseDeviceToken = firebaseRepository.findDeviceTokenByUserName(username);
-    	
-    	if(existingFirebaseDeviceToken != null && existingFirebaseDeviceToken.getIsLoggedIntoMobileApp()) {
-    		existingFirebaseDeviceToken.setIsLoggedIntoMobileApp(false);
-    		firebaseRepository.saveAndFlush(existingFirebaseDeviceToken);
-    		System.out.println("Username : " + username +", has logged out successfully");
-    	}
-    }
-    
+    @Override
 	public void pushNotificationToFreeLancer(JobPost jobPost) {
 		
 		String newJobStatusMsg = "";
@@ -161,5 +139,27 @@ public class FirebaseService {
 		}
 		
 	}
+    
+    private void sendNotification(FirebaseDeviceToken deviceToken, String title, String body,String status,String jobId) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "key=" + FCM_SERVER_KEY);
+
+        //Consume FCM_API with JSON data messages,FCM API will push notifications to device
+        String targetActivityToRedirectToString = "sg.nus.iss.team7.locum.JobDetailActivity";
+        String payload = "{\"to\":\"" + deviceToken.getToken() 
+        		+ "\",\"data\":{\"click_action\":\"" + targetActivityToRedirectToString
+        		+ "\",\"title\":\"" + title 
+        		+ "\",\"body\":\"" + body 
+        		+ "\",\"newstatus\":\"" +  status
+        		+ "\",\"username\":\"" +  deviceToken.getUser().getUsername()
+        		+ "\",\"jobid\":\"" +  jobId
+        		+ "\"},\"priority\":\"high\"}";
+
+        HttpEntity<String> entity = new HttpEntity<>(payload, headers);
+        RestTemplate restTemplate = new RestTemplate();
+
+        restTemplate.postForObject(FCM_API_URL, entity, String.class);
+    }
     
 }

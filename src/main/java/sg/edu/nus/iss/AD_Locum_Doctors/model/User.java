@@ -19,7 +19,6 @@ import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.SecondaryTable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseDeviceToken;
 
 @Entity
 @SecondaryTable(name = "user_password", pkJoinColumns = @PrimaryKeyJoinColumn(name = "id"))

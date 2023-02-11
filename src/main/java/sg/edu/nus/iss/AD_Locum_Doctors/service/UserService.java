@@ -28,6 +28,8 @@ public interface UserService {
 	
 	FreeLancerDTO loginFreeLancerAndUpdateToken(FreeLancerDTO freeLancerDTO);
 	
+	void logoutFreeLancer(String username);
+	
 	FreeLancerDTO updateFreeLancer(FreeLancerDTO freeLancerDTO);
 	
 	String checkIfFieldIsUnique(List<User> checkAgainstUsers,String fieldName,String fieldValue);

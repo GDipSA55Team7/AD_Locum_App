@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpSession;
-import sg.edu.nus.iss.AD_Locum_Doctors.firebaseservice.FirebaseService;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.AverageDailyRateRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.AdditionalFeeDetailsService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.EmailService;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.FirebaseServiceImpl;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostAdditionalRemarksService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
@@ -33,7 +33,7 @@ public class JobPostController {
 	private JobPostService jobPostService;
 
 	@Autowired
-	private FirebaseService firebaseService;
+	private FirebaseServiceImpl firebaseService;
 
 	@Autowired
 	private AdditionalFeeDetailsService additionalFeeDetailsService;
