@@ -90,8 +90,9 @@ public class JobPostServiceImpl implements JobPostService {
 	}
 
     @Override
-    public List<JobPost> findAllApplied() {
-        return jobPostRepo.findByFreelancerNotNull();
+    public List<JobPost> findAppliedForRecommender() {
+		LocalDateTime dateTime = LocalDateTime.now().minusDays(60);
+        return jobPostRepo.findByFreelancerNotNull(dateTime);
     }
 
 	@Override

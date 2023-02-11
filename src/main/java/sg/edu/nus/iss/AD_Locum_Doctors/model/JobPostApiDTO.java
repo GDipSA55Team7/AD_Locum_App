@@ -27,9 +27,9 @@ public class JobPostApiDTO {
 
     private JobStatus status;
 
-    private User clinicUser;
+    private UserDTO clinicUser;
 
-    private User freelancer;
+    private UserDTO freelancer;
 
     private Clinic clinic;
 
