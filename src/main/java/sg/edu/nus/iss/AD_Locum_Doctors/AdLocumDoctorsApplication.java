@@ -353,11 +353,11 @@ public class AdLocumDoctorsApplication {
 
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CANCELLATION, "Cancelled due to ...",
 					LocalDateTime.of(2021, 2, 1, 3, 0, 0), jp1, testUser2));
-			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PENDING, "",
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.APPLIED, "",
 					LocalDateTime.of(2021, 2, 1, 2, 0, 0), jp1, testUser1));
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CANCELLATION, "Cancelled due to ...",
 					LocalDateTime.of(2021, 2, 1, 1, 0, 0), jp1, testUser1));
-			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PENDING, "",
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.APPLIED, "",
 					LocalDateTime.of(2021, 1, 12, 12, 0, 0), jp1, testUser3));
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
 					LocalDateTime.of(2021, 1, 12, 11, 0, 0), jp1, testUser3));
@@ -369,7 +369,7 @@ public class AdLocumDoctorsApplication {
 					LocalDateTime.of(2021, 2, 12, 12, 0, 0), jp3, testUser3));
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.ACCEPTION, "",
 					LocalDateTime.of(2021, 1, 21, 13, 0, 0), jp3, testUser3));
-			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PENDING, "",
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.APPLIED, "",
 					LocalDateTime.of(2021, 1, 20, 13, 0, 0), jp3, testUser3));
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
 					LocalDateTime.of(2021, 1, 20, 12, 0, 0), jp3, testUser3));
@@ -378,7 +378,7 @@ public class AdLocumDoctorsApplication {
 					LocalDateTime.of(2021, 2, 12, 4, 0, 0), jp4, testUser3));
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.ACCEPTION, "",
 					LocalDateTime.of(2021, 2, 12, 3, 0, 0), jp4, testUser3));
-			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PENDING, "",
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.APPLIED, "",
 					LocalDateTime.of(2021, 2, 12, 2, 0, 0), jp4, testUser3));
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
 					LocalDateTime.of(2021, 2, 12, 1, 0, 0), jp4, testUser3));
@@ -389,7 +389,7 @@ public class AdLocumDoctorsApplication {
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
 					LocalDateTime.of(2021, 2, 20, 3, 0, 0), jp6, testUser5));
 
-			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PENDING, "",
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.APPLIED, "",
 					LocalDateTime.of(2021, 2, 20, 14, 0, 0), jp7, testUser3));
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
 					LocalDateTime.of(2021, 2, 20, 13, 0, 0), jp7, testUser3));
@@ -399,7 +399,7 @@ public class AdLocumDoctorsApplication {
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
 					LocalDateTime.of(2021, 2, 21, 1, 0, 0), jp8, testUser3));
 
-			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PENDING, "",
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.APPLIED, "",
 					LocalDateTime.of(2021, 2, 21, 3, 0, 0), jp9, testUser3));
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
 					LocalDateTime.of(2021, 2, 21, 2, 0, 0), jp9, testUser3));
@@ -410,14 +410,14 @@ public class AdLocumDoctorsApplication {
 					LocalDateTime.of(2021, 2, 22, 16, 0, 0), jp10, testUser3));
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.ACCEPTION, "",
 					LocalDateTime.of(2021, 2, 22, 15, 0, 0), jp10, testUser3));
-			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PENDING, "",
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.APPLIED, "",
 					LocalDateTime.of(2021, 2, 21, 14, 0, 0), jp10, testUser3));
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
 					LocalDateTime.of(2021, 2, 20, 13, 0, 0), jp10, testUser3));
 
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.ACCEPTION, "",
 					LocalDateTime.of(2021, 2, 21, 15, 0, 0), jp11, testUser3));
-			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.PENDING, "",
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.APPLIED, "",
 					LocalDateTime.of(2021, 2, 20, 14, 30, 0), jp11, testUser3));
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
 					LocalDateTime.of(2021, 2, 19, 13, 0, 0), jp11, testUser3));

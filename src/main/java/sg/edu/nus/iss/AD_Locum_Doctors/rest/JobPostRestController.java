@@ -72,11 +72,17 @@ public class JobPostRestController {
             @RequestParam String userId) {
         try {
             JobPost jobPost = jobPostService.findJobPostById(id);
+            User user = userService.findById(Long.valueOf(userId));
             if (jobPost != null) {
                 if (Objects.equals(status, "apply")) {
                     jobPostService.setStatus(jobPost, JobStatus.PENDING_CONFIRMATION_BY_CLINIC, userId, null);
+                    JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
+                    additionalRemarks.setCategory(RemarksCategory.APPLIED);
+                    additionalRemarks.setRemarks("Applied by Locum");
+                    additionalRemarks.setDateTime(LocalDateTime.now());
+                    additionalRemarks.setJobPost(jobPost);
+                    additionalRemarks.setUser(user);
                 } else if (Objects.equals(status, "cancel")) {
-                    User user = userService.findById(Long.valueOf(userId));
                     JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
                     additionalRemarks.setCategory(RemarksCategory.CANCELLATION);
                     additionalRemarks.setRemarks("Application Cancelled");
@@ -156,17 +162,17 @@ public class JobPostRestController {
         return new ResponseEntity<>(jobPostDTOList, HttpStatus.OK);
     }
 
-    private String sendCancelJobEmailByLocum(JobPost jobpost){
-		jobpost = jobPostService.findJobPostById(jobpost.getId().toString());
-		EmailDetails testEmail = new EmailDetails();
-		User user = userService.findById(jobpost.getClinicUser().getId() );
-		testEmail.setRecipient(user.getEmail());
-		testEmail.setSubject("Cancel Job by locum:" + jobpost.getTitle());
-		String emailMessage = "Dear {0}, \n\nYour job post {1} has been cancelled by locum. \n\nIf this request did not come from you, please inform us immediately.\n\nYours Sincerely,\nSG Locum Administrator"; 
-		String formattedEmail = java.text.MessageFormat.format(emailMessage, user.getName(),jobpost.getTitle());
-		testEmail.setMsgBody(formattedEmail);
-		String status = emailService.sendSimpleMail(testEmail);
-		System.out.println(status);
-		return status;
-	}
+    private String sendCancelJobEmailByLocum(JobPost jobpost) {
+        jobpost = jobPostService.findJobPostById(jobpost.getId().toString());
+        EmailDetails testEmail = new EmailDetails();
+        User user = userService.findById(jobpost.getClinicUser().getId());
+        testEmail.setRecipient(user.getEmail());
+        testEmail.setSubject("Cancel Job by locum:" + jobpost.getTitle());
+        String emailMessage = "Dear {0}, \n\nYour job post {1} has been cancelled by locum. \n\nIf this request did not come from you, please inform us immediately.\n\nYours Sincerely,\nSG Locum Administrator";
+        String formattedEmail = java.text.MessageFormat.format(emailMessage, user.getName(), jobpost.getTitle());
+        testEmail.setMsgBody(formattedEmail);
+        String status = emailService.sendSimpleMail(testEmail);
+        System.out.println(status);
+        return status;
+    }
 }

@@ -96,7 +96,7 @@ public class DashboardController {
 				JobAdditionalRemarks appliedRemark = remarksService.findAll().stream()
 						.filter(r -> r.getJobPost().getId().equals(jp.getId()))
 						.sorted(Comparator.comparing(JobAdditionalRemarks::getDateTime))
-						.filter(x -> x.getCategory().equals(RemarksCategory.PENDING)).findFirst().orElse(null);
+						.filter(x -> x.getCategory().equals(RemarksCategory.APPLIED)).findFirst().orElse(null);
 				if (appliedRemark != null && createdRemark != null) {
 					long jobAppliedDuration = ChronoUnit.MINUTES.between(createdRemark.getDateTime(),
 							appliedRemark.getDateTime());
