@@ -213,5 +213,10 @@ public class JobPostServiceImpl implements JobPostService {
        return additionaFeeDetailsJSONString;
 	}
 
+	@Override
+	public List<JobPost> findJobPostByUserId(String id) {
+		return jobPostRepo.findByFreelancer_Id(Long.valueOf(id));
+	}
+
 
 }

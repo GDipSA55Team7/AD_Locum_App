@@ -56,6 +56,16 @@ public class JobPostRestController {
         }
     }
 
+    @GetMapping("/job/user")
+    public ResponseEntity<List<JobPostApiDTO>> findByUserId(@RequestParam String id) {
+        try {
+            List<JobPost> jobPostList = jobPostService.findJobPostByUserId(id);
+            return getListResponseEntity(jobPostList);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/job")
     public ResponseEntity<JobPostApiDTO> setJobStatus(@RequestParam String id, @RequestParam String status,
                                                       @RequestParam String userId) {

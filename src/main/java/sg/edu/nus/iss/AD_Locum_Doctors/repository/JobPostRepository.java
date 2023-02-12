@@ -38,10 +38,7 @@ public interface JobPostRepository extends JpaRepository<JobPost, Long> {
 	@Query("select j from JobPost j where j.freelancer.id is not null and j.startDateTime > ?1")
 	List<JobPost> findByFreelancerNotNull(LocalDateTime startDateTime);
 
-
-
-
-
-
+	@Query("select j from JobPost j where j.freelancer.id = ?1")
+	List<JobPost> findByFreelancer_Id(Long id);
 
 }
