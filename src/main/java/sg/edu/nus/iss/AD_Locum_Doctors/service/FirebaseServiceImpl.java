@@ -81,7 +81,7 @@ public class FirebaseServiceImpl implements FirebaseService{
     	}
     	//first time client login(no DB record)
     	else {
-    		FirebaseDeviceToken firebaseToken = new FirebaseDeviceToken(token,true);
+    		FirebaseDeviceToken firebaseToken = new FirebaseDeviceToken(token,true,username);
     		firebaseRepository.saveAndFlush(firebaseToken);
      		System.out.println("Username : " + username + " has signed into mobile client for the first time"  );
     		System.out.println("This token will be persisted into DB : " + token);

@@ -21,6 +21,8 @@ public class FirebaseDeviceToken {
     
     private Boolean isLoggedIntoMobileApp;
     
+    private String userName;
+    
     @JsonIgnore
     @OneToOne(mappedBy = "firebaseDeviceToken")
     private User user;
@@ -28,8 +30,9 @@ public class FirebaseDeviceToken {
     public FirebaseDeviceToken() {
     }
 
-    public FirebaseDeviceToken(String token,Boolean isLoggedIntoMobileApp ) {
+    public FirebaseDeviceToken(String token,Boolean isLoggedIntoMobileApp,String userName ) {
     		this.token = token;
 			this.isLoggedIntoMobileApp = isLoggedIntoMobileApp;
+			this.userName =userName;
     }
 }

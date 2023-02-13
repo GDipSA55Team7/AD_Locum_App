@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
 			Role locumDoctorRole = roleRepo.findRole("Locum_Doctor");
 			newFreeLancerUser.setRole(locumDoctorRole);
 			//set firebasetoken
-			FirebaseDeviceToken newFirebaseForUser = new FirebaseDeviceToken(freeLancerDTO.getDeviceToken(),true);
+			FirebaseDeviceToken newFirebaseForUser = new FirebaseDeviceToken(freeLancerDTO.getDeviceToken(),true,freeLancerDTO.getUsername());
 			firebaseRepo.saveAndFlush(newFirebaseForUser);
 			newFreeLancerUser.setFirebaseDeviceToken(newFirebaseForUser);
 			userRepo.saveAndFlush(newFreeLancerUser);
@@ -128,8 +128,6 @@ public class UserServiceImpl implements UserService {
 			freeLancerDTO.setContact(existingUser.getContact());
 			freeLancerDTO.setEmail(existingUser.getEmail());
 			freeLancerDTO.setMedicalLicenseNo(existingUser.getMedicalLicenseNo());
-			
-			String token = freeLancerDTO.getDeviceToken();
 			
 			System.out.println("username" + freeLancerDTO.getUsername());
 			System.out.println("device Token" + freeLancerDTO.getDeviceToken());

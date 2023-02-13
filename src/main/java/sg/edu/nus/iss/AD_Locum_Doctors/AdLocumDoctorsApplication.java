@@ -142,10 +142,12 @@ public class AdLocumDoctorsApplication {
 			org1.setClinics(rafflesClinics);
 			organizationRepo.saveAndFlush(org1);
 			
-			FirebaseDeviceToken RobertFireBase = new FirebaseDeviceToken("", false); 
+			FirebaseDeviceToken RobertFireBase = new FirebaseDeviceToken("", false,"dr_robert"); 
 			firebaseRepository.saveAndFlush(RobertFireBase);
-			FirebaseDeviceToken MaryFireBase = new FirebaseDeviceToken("", false); 
+			FirebaseDeviceToken MaryFireBase = new FirebaseDeviceToken("", false,"dr_mary"); 
 			firebaseRepository.saveAndFlush(MaryFireBase);
+			FirebaseDeviceToken LuffyFireBase = new FirebaseDeviceToken("", false,"luffy"); 
+			firebaseRepository.saveAndFlush(LuffyFireBase);
 
 			User testUser1 = new User();
 			testUser1.setName("Robert Lin");
@@ -432,6 +434,7 @@ public class AdLocumDoctorsApplication {
 			recoUser.setContact("81381332");
 			recoUser.setMedicalLicenseNo("M31223H");
 			recoUser.setRole(r1);
+			recoUser.setFirebaseDeviceToken(LuffyFireBase);
 			userRepo.saveAndFlush(recoUser);
 
 			Clinic cNorth = new Clinic();
