@@ -117,16 +117,17 @@ public class FirebaseServiceImpl implements FirebaseService{
 		
 		if(deviceToken != null ) {
 
-//			Notification notification = Notification.builder()
-//					.read(false)
-//					.title(title)
-//					.body(body)
-//					.build();
-//
-//			notificationService.saveNotification(notification);
+			title = "Status Update for Job Id: " + jobPost.getId();
+			body = "The status is now " + newJobStatusMsg;
 
-			title = "Status Update for Job Post Id : " + jobPost.getId();
-			body = "The status has been updated to " + newJobStatusMsg;
+			Notification notification = Notification.builder()
+					.isRead(false)
+					.title(title)
+					.body(body)
+					.jobId(jobPost.getId())
+					.build();
+
+			notificationService.saveNotification(notification);
 
 			//client logged in,server call FCM API with updated token
 			if(!newJobStatusMsg.equals("") && deviceToken.getIsLoggedIntoMobileApp()) {
