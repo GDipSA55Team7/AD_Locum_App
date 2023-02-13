@@ -211,7 +211,7 @@ public class AdLocumDoctorsApplication {
 			jobPostRepo.saveAndFlush(jp2);
 
 			JobPost jp3 = new JobPost();
-			jp3.setClinic(c2);
+			jp3.setClinic(c3);
 			jp3.setTitle("Looking for locum occupational therapist");
 			jp3.setDescription("Looking for locum occupational therapist");
 			jp3.setStartDateTime(LocalDateTime.of(2023, 02, 28, 18, 30, 0));

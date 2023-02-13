@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+	layout:decorate="~{fragments/layout}">
+
+<head th:replace="fragments/layout.html :: html_head" />
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
+
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+		<div th:replace="fragments/layout.html :: nav_menu" />
+		<div th:replace="fragments/layout.html :: sidebar" />
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<div class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1 class="m-0">View Calendar</h1>
+						</div><!-- /.col -->
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<li class="breadcrumb-item"><a href="#">Home</a></li>
+								<li class="breadcrumb-item active">Calendar</li>
+							</ol>
+						</div>
+					</div><!-- /.row -->
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content-header -->
+
+			<!-- Main content -->
+			<div class="content">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-12">
+							<div class="card">
+								<div class="card-body">
+									<span th:if="${jobPostEvents.size() == 0}">Your organization has 0 job posts! <a th:href="@{/jobpost/create}">Click here to
+										create one.</a></span>
+									<div id='calendar'></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:replace="fragments/layout.html :: footer" />
+		<div th:replace="fragments/layout.html :: script" />
+	</div>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		var jobPostEvents = /*[[${jobPostEvents}]]*/ {};
+
+		console.log(jobPostEvents);
+		document.addEventListener('DOMContentLoaded', function () {
+			var calendarEl = document.getElementById('calendar');
+			var jobPostEvents = /*[[${jobPostEvents}]]*/ {};
+			console.log(jobPostEvents);
+
+			var calendar = new FullCalendar.Calendar(calendarEl, {
+				initialDate: new Date(),
+				height: 750,
+				initialView: 'dayGridMonth',
+				nowIndicator: true,
+				headerToolbar: {
+					left: 'prev,next today',
+					center: 'title',
+					right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+				},
+				editable: false,
+				selectable: true,
+				businessHours: false,
+				dayMaxEvents: true, // allow "more" link when too many events
+				events: jobPostEvents,
+				businessHours: {
+					daysOfWeek: [1, 2, 3, 4, 5],
+					startTime: false,
+					endTime: false
+				}
+			});
+			calendar.render();
+		});
+		/*]]>*/
+	</script>
+</body>
+
+</html>

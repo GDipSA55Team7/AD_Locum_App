@@ -20,6 +20,8 @@ public interface JobPostService {
 
 	JobPost createJobPost(JobPost jobPost, User user);
 
+	JobPost findJobPostById(Long id);
+
 	JobPost findJobPostById(String id);
 
 	void cancel(JobPost jobPost);

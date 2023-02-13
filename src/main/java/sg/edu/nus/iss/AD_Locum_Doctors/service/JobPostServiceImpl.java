@@ -57,6 +57,11 @@ public class JobPostServiceImpl implements JobPostService {
 	}
 
 	@Override
+	public JobPost findJobPostById(Long id) {
+		return jobPostRepo.findById(id).orElse(null);
+	}
+
+	@Override
 	public JobPost findJobPostById(String id) {
 		return jobPostRepo.findById(Long.parseLong(id)).orElse(null);
 	}
