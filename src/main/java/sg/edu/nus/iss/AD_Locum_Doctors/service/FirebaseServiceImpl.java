@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 import sg.edu.nus.iss.AD_Locum_Doctors.model.FirebaseDeviceToken;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.Notification;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.FirebaseRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.UserRepository;
@@ -22,6 +23,9 @@ public class FirebaseServiceImpl implements FirebaseService{
     
     @Autowired
     private UserRepository userRepo;
+
+	@Autowired
+	private NotificationService notificationService;
     
 	public static final String FCM_SERVER_KEY = "AAAAkEI8xZ0:APA91bGKpmYGvLlYNhaXH7VCBqoXHFCPMukHdbNyMh1SDddZs_As_6NxsTd1ETbUJ-6_U7zQr0W5EkKvDsvqn5SgxayAUEBCgrGFxtOVjGsZDDnPB4BKB413VaIPCAiSQYzfUjO74UQT";
 	public static final String FCM_API_URL = "https://fcm.googleapis.com/fcm/send";
@@ -87,17 +91,19 @@ public class FirebaseServiceImpl implements FirebaseService{
     @Override
 	public void pushNotificationToFreeLancer(JobPost jobPost) {
 		
-		String newJobStatusMsg = "";
+		String newJobStatusMsg = "test";
+		String title = "test";
+		String body = "test";
 		
 		switch (jobPost.getStatus()) {
 		   case ACCEPTED:
 			   newJobStatusMsg = "Approved";
 			   break;
 		   case COMPLETED_PENDING_PAYMENT:
-			   newJobStatusMsg = "Completed(Pending_payment)";
+			   newJobStatusMsg = "Completed (Pending_payment)";
 			   break;
 		   case COMPLETED_PAYMENT_PROCESSED:
-			   newJobStatusMsg = "Completed(Payment_processed)";
+			   newJobStatusMsg = "Completed (Payment_processed)";
 			   break;
 		   case CANCELLED:
 			   newJobStatusMsg = "Cancelled";
@@ -110,12 +116,25 @@ public class FirebaseServiceImpl implements FirebaseService{
 		FirebaseDeviceToken deviceToken = firebaseRepository.findDeviceTokenByUserName(jobPost.getFreelancer().getUsername());
 		
 		if(deviceToken != null ) {
+
+//			Notification notification = Notification.builder()
+//					.read(false)
+//					.title(title)
+//					.body(body)
+//					.build();
+//
+//			notificationService.saveNotification(notification);
+
+			title = "Status Update for Job Post Id : " + jobPost.getId();
+			body = "The status has been updated to " + newJobStatusMsg;
+
 			//client logged in,server call FCM API with updated token
 			if(!newJobStatusMsg.equals("") && deviceToken.getIsLoggedIntoMobileApp()) {
+
 				System.out.println("server call FCM API for username : " + jobPost.getFreelancer().getUsername() + " "+ deviceToken.getToken());
 				sendNotification(deviceToken,
-						"Status Update for Job Post Id : " + jobPost.getId() ,
-						"The status has been updated to " + newJobStatusMsg,
+						title,
+						body,
 						newJobStatusMsg,
 						jobPost.getId().toString());
 			}
@@ -123,8 +142,8 @@ public class FirebaseServiceImpl implements FirebaseService{
 			else if(!newJobStatusMsg.equals("") && !deviceToken.getIsLoggedIntoMobileApp()) {
 				System.out.println("server call FCM API for username : " + jobPost.getFreelancer().getUsername() + " "+ deviceToken.getToken());
 				sendNotification(deviceToken,
-						"Status Update for Job Post Id : " + jobPost.getId() ,
-						"The status has been updated to " + newJobStatusMsg,
+						title,
+						body,
 						newJobStatusMsg,
 						jobPost.getId().toString());
 				
@@ -137,7 +156,6 @@ public class FirebaseServiceImpl implements FirebaseService{
 		else {
 			System.out.println("UserName : " + jobPost.getFreelancer().getUsername() + " has not logged in from mobile before so there is no token linked to that account, so unable to push notificaitons");
 		}
-		
 	}
     
     private void sendNotification(FirebaseDeviceToken deviceToken, String title, String body,String status,String jobId) {
