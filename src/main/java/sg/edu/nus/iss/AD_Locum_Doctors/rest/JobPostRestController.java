@@ -21,8 +21,6 @@ import java.util.Objects;
 @RequestMapping("api/jobs")
 public class JobPostRestController {
 
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
     @Autowired
     JobPostService jobPostService;
 
@@ -128,7 +126,7 @@ public class JobPostRestController {
 
     @GetMapping("/allapplied")
     public ResponseEntity<List<JobPostApiDTO>> findAppliedForRecommender() {
-        // all applied past 60 days only
+        // retrieves all applied past 60 days only
         try {
             List<JobPost> jobPostList = jobPostService.findAppliedForRecommender();
             return getListResponseEntity(jobPostList);

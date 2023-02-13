@@ -7,6 +7,7 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.Notification;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {

@@ -19,10 +19,12 @@ public class Notification {
 
     private Long userId;
 
+    private Long jobId;
+
     private String title;
 
     private String body;
 
-    private boolean read;
+    private boolean isRead;
 
 }

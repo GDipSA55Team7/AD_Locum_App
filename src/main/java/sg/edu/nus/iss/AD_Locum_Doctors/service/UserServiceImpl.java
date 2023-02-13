@@ -129,8 +129,8 @@ public class UserServiceImpl implements UserService {
 			freeLancerDTO.setEmail(existingUser.getEmail());
 			freeLancerDTO.setMedicalLicenseNo(existingUser.getMedicalLicenseNo());
 			
-			System.out.println("username" + freeLancerDTO.getUsername());
-			System.out.println("device Token" + freeLancerDTO.getDeviceToken());
+			System.out.println("username: " + freeLancerDTO.getUsername());
+			System.out.println("device Token: " + freeLancerDTO.getDeviceToken());
 			
 			//Update Device Token
 			FirebaseDeviceToken existingUserFireBase = existingUser.getFirebaseDeviceToken();
