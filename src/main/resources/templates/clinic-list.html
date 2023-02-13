@@ -17,10 +17,15 @@
 			<div class="content-header">
 				<div class="container-fluid">
 					<div class="row mb-2">
-						<div class="col-sm-6">
+						<div class="col-auto">
 							<h1 class="m-0">View Clinics</h1>
 						</div><!-- /.col -->
-						<div class="col-sm-6">
+						<div class="col-auto mr-auto">
+							<a th:href="@{/addClinicForm}" class="btn btn-info"><i
+									class="nav-icon fas fa-plus mr-2"></i>Add
+								Clinic</a>
+						</div><!-- /.col -->
+						<div class="col-auto">
 							<ol class="breadcrumb float-sm-right">
 								<li class="breadcrumb-item"><a href="#">Home</a></li>
 								<li class="breadcrumb-item active">Clinic</li>
@@ -36,17 +41,6 @@
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-12">
-							<div
-								class="d-flex flex-row mb-3 justify-content-between  align-items-center pt-3 pb-2 border-bottom">
-								<div class="p-2">
-
-								</div>
-								<div class="p-2">
-									<form th:action="@{/addClinicForm}">
-										<button type="submit" class="btn btn-info">Add Clinic</button>
-									</form>
-								</div>
-							</div>
 							<div class="card">
 								<div class="card-body">
 									<div class="table-responsive overflow-hidden">
@@ -69,7 +63,8 @@
 													<td th:text="${clinic.contact}">Contact</td>
 													<td th:text="${clinic.address}">Address</td>
 													<td align="center">
-														<div><a th:href="@{/deleteclinic/}+${clinic.id}">Delete</a></div>
+														<div><a th:href="@{/deleteclinic/}+${clinic.id}">Delete</a>
+														</div>
 														<div><a th:href="@{/viewclinic/}+${clinic.id}">View</a></div>
 													</td>
 												</tr>

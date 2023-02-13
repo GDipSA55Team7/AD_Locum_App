@@ -46,10 +46,8 @@ public class JobPostController {
 	private UserService userService;
 	@Autowired
 	private JobPostAdditionalRemarksService addRemarksService;
-
 	@Autowired
 	private AverageDailyRateRepository avgDailyRateRepo;
-
 	@Autowired
 	private EmailService emailService;
 
@@ -147,7 +145,8 @@ public class JobPostController {
 			case "System_Admin":
 				return "jobpost-view";
 			default:
-				if (jobPost.getStatus().equals(JobStatus.OPEN) || jobPost.getStatus().equals(JobStatus.CANCELLED)) {
+				if (jobPost.getStatus().equals(JobStatus.OPEN) || jobPost.getStatus().equals(JobStatus.CANCELLED)
+						|| jobPost.getStatus().equals(JobStatus.REMOVED)) {
 					return "jobpost-view";
 				}
 				return "jobpost-locum";
@@ -292,10 +291,11 @@ public class JobPostController {
 	}
 
 	@PostMapping("/{id}/confirmadminremove")
-	public String confirmDeleteJobPost(@PathVariable String id, JobAdditionalRemarks additionalRemarks) {
+	public String confirmDeleteJobPost(@PathVariable String id, JobAdditionalRemarks additionalRemarks,
+			HttpSession session) {
+		User user = (User) session.getAttribute("user");
 		System.out.println("Delete id:" + id);
 		JobPost jobPost = jobPostService.findJobPostById(id);
-		User user = userService.findById(Long.parseLong("4"));
 		jobPostService.remove(jobPost, additionalRemarks, user);
 		return "redirect:/jobpost/list";
 	}

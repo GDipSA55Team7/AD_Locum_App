@@ -18,10 +18,14 @@
 			<div class="content-header">
 				<div class="container-fluid">
 					<div class="row mb-2">
-						<div class="col-sm-6">
+						<div class="col-auto">
 							<h1 class="m-0">View Users</h1>
 						</div><!-- /.col -->
-						<div class="col-sm-6">
+						<div class="col-auto mr-auto">
+							<a th:href="@{/register/addUserForm}" class="btn btn-info"><i class="nav-icon fas fa-plus mr-2"></i>Add
+								User</a>
+						</div><!-- /.col -->
+						<div class="col-auto">
 							<ol class="breadcrumb float-sm-right">
 								<li class="breadcrumb-item"><a href="#">Home</a></li>
 								<li class="breadcrumb-item active">User</li>
@@ -37,17 +41,6 @@
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-12">
-							<div
-								class="d-flex flex-row mb-3 justify-content-between  align-items-center pt-3 pb-2 border-bottom">
-								<div class="p-2">
-
-								</div>
-								<div class="p-2">
-									<form th:action="@{/register/addUserForm}">
-										<button type="submit" class="btn btn-info">Add User</button>
-									</form>
-								</div>
-							</div>
 							<div class="card">
 								<div class="card-body">
 									<div class="table-responsive overflow-hidden">
@@ -72,8 +65,10 @@
 													<td th:text="${user.active}">Is Active</td>
 													<!-- <td th:text="${user.medicalLicenseNo}">Medical License No.</td> -->
 													<td align="center">
-														<div><a th:if="${user.id != currentUserId && user.active == true}" th:href="@{/deleteuser/}+${user.id}">Delete</a></div>
-														 <div><a  th:if="${user.active == true}"th:href="@{/viewUser/}+${user.id}">View</a></div>
+														<div><a th:if="${user.id != currentUserId && user.active == true}"
+																th:href="@{/deleteuser/}+${user.id}">Delete</a></div>
+														<div><a th:if="${user.active == true}"
+																th:href="@{/viewUser/}+${user.id}">View</a></div>
 													</td>
 												</tr>
 											</tbody>

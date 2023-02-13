@@ -31,6 +31,7 @@ public class CalendarController {
 		if (!user.getRole().getName().equals("System_Admin")) {
 			jobPosts = jobPosts.stream()
 					.filter(x -> x.getClinic().getOrganization().getId().equals(user.getOrganization().getId()))
+					.filter(x -> !x.getStatus().equals(JobStatus.REMOVED))
 					.collect(Collectors.toList());
 		}
 		for (JobPost j : jobPosts) {
