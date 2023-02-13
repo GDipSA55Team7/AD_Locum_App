@@ -730,6 +730,20 @@ public class AdLocumDoctorsApplication {
 			jr20.setClinicUser(testUser3);
 			jr20.setRatePerHour(88.8);
 			jobPostRepo.saveAndFlush(jr20);
+			
+			
+			//JobPost Time and Date clashes with mary_tan's existing jobs
+			JobPost jr21 = new JobPost();
+			jr20.setClinic(cNorth);
+			jr20.setTitle("Dummy for dateTime clash");
+			jr20.setDescription("Looking for locum occupational therapist");
+			jr20.setStartDateTime(LocalDateTime.of(2022, 12, 30, 15, 30, 0));
+			jr20.setEndDateTime(LocalDateTime.of(2022, 12, 30, 19, 30, 0));
+			jr20.setStatus(JobStatus.OPEN);
+			jr20.setClinicUser(testUser3);
+			jr20.setRatePerHour(88.8);
+			jobPostRepo.saveAndFlush(jr20);
+
 
 
 			// Seed data for Average Daily Rate

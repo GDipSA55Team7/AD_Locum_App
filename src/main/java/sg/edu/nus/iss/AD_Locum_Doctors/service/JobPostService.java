@@ -48,4 +48,5 @@ public interface JobPostService {
 	String convertAdditionalFeesToString(JobPost jobPost);
 
 	List<JobPost> findJobPostByUserId(String id);
+	
 }

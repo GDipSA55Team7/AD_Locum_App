@@ -130,29 +130,20 @@ public class FirebaseServiceImpl implements FirebaseService{
 			notificationService.saveNotification(notification);
 
 			//client logged in,server call FCM API with updated token
-			if(!newJobStatusMsg.equals("") && deviceToken.getIsLoggedIntoMobileApp()) {
-
-				System.out.println("server call FCM API for username : " + jobPost.getFreelancer().getUsername() + " "+ deviceToken.getToken());
-				sendNotification(deviceToken,
-						title,
-						body,
-						newJobStatusMsg,
-						jobPost.getId().toString());
-			}
 			//client not logged in,server call FCM API with last updated token
-			else if(!newJobStatusMsg.equals("") && !deviceToken.getIsLoggedIntoMobileApp()) {
-				System.out.println("server call FCM API for username : " + jobPost.getFreelancer().getUsername() + " "+ deviceToken.getToken());
+			if(!newJobStatusMsg.equals("")) {
 				sendNotification(deviceToken,
 						title,
 						body,
 						newJobStatusMsg,
 						jobPost.getId().toString());
 				
+				System.out.println("notification successfully push to username : " 
+						+ deviceToken.getUser().getUsername()
+						+ " token no. : " + deviceToken.getToken()
+								);
 			}
-			System.out.println("notification successfully push to username : " 
-			+ deviceToken.getUser().getUsername()
-			+ " token no. : " + deviceToken.getToken()
-					);
+
 		}
 		else {
 			System.out.println("UserName : " + jobPost.getFreelancer().getUsername() + " has not logged in from mobile before so there is no token linked to that account, so unable to push notificaitons");
