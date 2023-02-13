@@ -17,4 +17,6 @@ public class JobPostEventDTO {
 	private String color = "";
 
 	private String url = "";
+
+	private String display = "block";
 }

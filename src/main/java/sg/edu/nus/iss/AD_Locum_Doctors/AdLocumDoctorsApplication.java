@@ -269,8 +269,8 @@ public class AdLocumDoctorsApplication {
 			jp7.setClinic(c5);
 			jp7.setTitle("Urgent Request for RMG @ Raffles City");
 			jp7.setDescription("Raffles Medical Group in Raffles City looking for locum urgently!");
-			jp7.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
-			jp7.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
+			jp7.setStartDateTime(LocalDateTime.of(2023, 2, 3, 18, 30, 0));
+			jp7.setEndDateTime(LocalDateTime.of(2023, 2, 3, 21, 00, 0));
 			jp7.setRatePerHour(100);
 			jp7.setFreelancer(testUser2);
 			jp7.setClinicUser(testUser3);
@@ -281,8 +281,8 @@ public class AdLocumDoctorsApplication {
 			jp8.setClinic(c5);
 			jp8.setTitle("Urgent Request for RMG @ Raffles City");
 			jp8.setDescription("Looking for locum urgently!");
-			jp8.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
-			jp8.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
+			jp8.setStartDateTime(LocalDateTime.of(2023, 2, 3, 18, 30, 0));
+			jp8.setEndDateTime(LocalDateTime.of(2023, 2, 3, 21, 00, 0));
 			jp8.setRatePerHour(100);
 			jp8.setFreelancer(testUser2);
 			jp8.setClinicUser(testUser3);
@@ -293,8 +293,8 @@ public class AdLocumDoctorsApplication {
 			jp9.setClinic(c5);
 			jp9.setTitle("Urgent Request for RMG @ Raffles City");
 			jp9.setDescription("Looking for locum urgently!");
-			jp9.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
-			jp9.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
+			jp9.setStartDateTime(LocalDateTime.of(2023, 2, 3, 18, 30, 0));
+			jp9.setEndDateTime(LocalDateTime.of(2023, 2, 3, 21, 00, 0));
 			jp9.setRatePerHour(100);
 			jp9.setFreelancer(testUser2);
 			jp9.setClinicUser(testUser3);
@@ -305,10 +305,10 @@ public class AdLocumDoctorsApplication {
 			jp10.setClinic(c5);
 			jp10.setTitle("Urgent Request for RMG @ Raffles City");
 			jp10.setDescription("Looking for locum urgently!");
-			jp10.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
-			jp10.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
-			jp10.setActualStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
-			jp10.setActualEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
+			jp10.setStartDateTime(LocalDateTime.of(2023, 2, 3, 18, 30, 0));
+			jp10.setEndDateTime(LocalDateTime.of(2023, 2, 3, 21, 00, 0));
+			jp10.setActualStartDateTime(LocalDateTime.of(2023, 2, 3, 18, 30, 0));
+			jp10.setActualEndDateTime(LocalDateTime.of(2023, 2, 3, 21, 00, 0));
 			jp10.setRatePerHour(100);
 			jp10.setFreelancer(testUser2);
 			jp10.setClinicUser(testUser3);
@@ -319,8 +319,8 @@ public class AdLocumDoctorsApplication {
 			jp11.setClinic(c5);
 			jp11.setTitle("Urgent Request for RMG @ Raffles City");
 			jp11.setDescription("Looking for locum urgently!");
-			jp11.setStartDateTime(LocalDateTime.of(2022, 12, 30, 18, 30, 0));
-			jp11.setEndDateTime(LocalDateTime.of(2022, 12, 30, 21, 00, 0));
+			jp11.setStartDateTime(LocalDateTime.of(2023, 2, 3, 18, 30, 0));
+			jp11.setEndDateTime(LocalDateTime.of(2023, 2, 3, 21, 00, 0));
 			jp11.setRatePerHour(100);
 			jp11.setFreelancer(testUser2);
 			jp11.setClinicUser(testUser3);
@@ -421,6 +421,9 @@ public class AdLocumDoctorsApplication {
 					LocalDateTime.of(2021, 2, 20, 14, 30, 0), jp11, testUser3));
 			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
 					LocalDateTime.of(2021, 2, 19, 13, 0, 0), jp11, testUser3));
+
+			jobRemarksRepo.saveAndFlush(new JobAdditionalRemarks(RemarksCategory.CREATED, "",
+					LocalDateTime.of(2021, 2, 19, 13, 0, 0), jp12, testUser5));
 
 			// Seed data (for system admin dashboard chart)
 			DriverManager.registerDriver(new com.mysql.jdbc.Driver());

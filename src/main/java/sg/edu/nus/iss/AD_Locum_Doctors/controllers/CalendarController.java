@@ -50,7 +50,7 @@ public class CalendarController {
 			} else if (j.getStatus() == JobStatus.COMPLETED_PAYMENT_PROCESSED) {
 				jpEvent.setColor("#001F3F");
 			} else if (j.getStatus() == JobStatus.CANCELLED || j.getStatus() == JobStatus.REMOVED) {
-				jpEvent.setColor("#6C757D");
+				jpEvent.setColor("rgba(108,117,125,0.3)");
 			}
 			jobPostEvents.add(jpEvent);
 		}
