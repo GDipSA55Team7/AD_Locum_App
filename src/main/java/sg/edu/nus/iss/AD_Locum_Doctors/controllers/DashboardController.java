@@ -288,7 +288,8 @@ public class DashboardController {
 
 		// Clinic Users with Top Activity
 		Map<User, Long> activityByClinicUser = remarksService.findAll().stream()
-				.filter(r -> !r.getUser().getRole().getName().equals("Locum_Doctor"))
+				.filter(r -> !r.getUser().getRole().getName().equals("Locum_Doctor")
+						&& !r.getUser().getRole().getName().equals("System_Admin"))
 				.collect(Collectors.groupingBy(r -> r.getUser(),
 						Collectors.counting()));
 		Map<User, Long> finalMapByClinicUser = new LinkedHashMap<>();
