@@ -193,7 +193,8 @@
 															class="form-control input-group-text" value="?" readonly />
 													</div>
 												</div>
-												<div id="ratePerHour-trend-feedback"></div>
+												<div id="ratePerHour-trend-feedback-14"></div>
+												<div id="ratePerHour-trend-feedback-28"></div>
 												<div id="ratePerHour-feedback" class="invalid-feedback d-block"></div>
 												</div>
 											</div>
@@ -325,26 +326,37 @@
 		if (userDateInput.value){
 			var converted = new Date(startDate.value);
 			var dayNumber = converted.getDay();
-			var rate_per_hour_feedback = document.getElementById("ratePerHour-trend-feedback");
-			rate_per_hour_feedback.innerHTML = '';
-			var weekdayrate = /*[[${weekdayTrend}]]*/ 80;
-			console.log(weekdayrate)
-			var weekdayrate = parseFloat(weekdayrate);
-			var weekendrate = /*[[${weekendTrend}]]*/ 100;
-			console.log(weekendrate)
-			var weekendrate = parseFloat(weekendrate);
+			var rate_per_hour_feedback_14 = document.getElementById("ratePerHour-trend-feedback-14");
+			var rate_per_hour_feedback_28 = document.getElementById("ratePerHour-trend-feedback-28");
+			rate_per_hour_feedback_14.innerHTML = '';
+			rate_per_hour_feedback_28.innerHTML = '';
+			var weekdayrate14 = /*[[${weekdayTrend14}]]*/ 80;
+			var weekdayrate14 = parseFloat(weekdayrate14);
+			var weekendrate14 = /*[[${weekendTrend14}]]*/ 100;
+			var weekendrate14 = parseFloat(weekendrate14);
+			var weekdayrate28 = /*[[${weekdayTrend28}]]*/ 80;
+			var weekdayrate28 = parseFloat(weekdayrate28);
+			var weekendrate28 = /*[[${weekendTrend28}]]*/ 100;
+			var weekendrate28 = parseFloat(weekendrate28);
 			if (dayNumber == 0 || dayNumber == 6){
-				console.log((rateElem.valueAsNumber / weekendrate));
-				if ((rateElem.valueAsNumber / weekendrate) < 0.8 ){
-					rate_per_hour_feedback.innerHTML = 'Your proposed rate is substantially lower than the recent average trending rate for weekend ($' + weekendrate.toFixed(2) + "). You may wish to reconsider again to ensure a higher chance of the job post being filled.";
-					rate_per_hour_feedback.className= "text-danger";
+				if ((rateElem.valueAsNumber / weekendrate14) < 0.8 ){
+					rate_per_hour_feedback_14.innerHTML = 'Your proposed rate is substantially lower than the 14 days MA rate for weekend ($' + weekendrate28.toFixed(2) + "). You may wish to reconsider again to ensure a higher chance of the job post being filled.";
+					rate_per_hour_feedback_14.className= "text-danger";
+				}
+				if ((rateElem.valueAsNumber / weekendrate28) < 0.8 ){
+					rate_per_hour_feedback_28.innerHTML = 'Your proposed rate is substantially lower than the 28 days MA  rate for weekend ($' + weekendrate28.toFixed(2) + "). You may wish to reconsider again to ensure a higher chance of the job post being filled.";
+					rate_per_hour_feedback_28.className= "text-danger";
 				}
 			}
 			else{
-				if ((rateElem.valueAsNumber / weekdayrate) < 0.8 ){
-					rate_per_hour_feedback.innerHTML = 'Your proposed rate is substantially lower than the recent average trending rate for weekday ($' + weekdayrate.toFixed(2) + "). You may wish to reconsider again to ensure a higher chance of the job post being filled.";
-					rate_per_hour_feedback.className= "text-danger";
-				}		
+				if ((rateElem.valueAsNumber / weekdayrate14) < 0.8 ){
+					rate_per_hour_feedback_14.innerHTML = 'Your proposed rate is substantially lower than the 14 days MA rate for weekday ($' + weekdayrate28.toFixed(2) + "). You may wish to reconsider again to ensure a higher chance of the job post being filled.";
+					rate_per_hour_feedback_14.className= "text-danger";
+				}
+				if ((rateElem.valueAsNumber / weekdayrate28) < 0.8 ){
+					rate_per_hour_feedback_28.innerHTML = 'Your proposed rate is substantially lower than the 28 days MA  rate for weekday ($' + weekdayrate28.toFixed(2) + "). You may wish to reconsider again to ensure a higher chance of the job post being filled.";
+					rate_per_hour_feedback_28.className= "text-danger";
+				}			
 			}
 		}
 	}
