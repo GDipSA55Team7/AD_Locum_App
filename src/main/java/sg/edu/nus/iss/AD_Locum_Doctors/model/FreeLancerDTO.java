@@ -22,4 +22,6 @@ public class FreeLancerDTO {
 	    private String medicalLicenseNo;
 	    
 	    private String errorsFieldString;
+	    
+	    private String deviceToken;
 }

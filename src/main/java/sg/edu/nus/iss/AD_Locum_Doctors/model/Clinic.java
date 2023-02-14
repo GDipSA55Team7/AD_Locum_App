@@ -27,6 +27,8 @@ public class Clinic {
 
 	private String contact;
 
+	private String email;
+
 	@JsonIgnore
 	@ManyToOne
 	private Organization organization;

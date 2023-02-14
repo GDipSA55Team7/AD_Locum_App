@@ -1,11 +1,10 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
-import java.util.List;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
 
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 public interface JobPostService {
 	List<JobPost> findAll();
@@ -42,5 +41,16 @@ public interface JobPostService {
 
 	void remove(JobPost jobPost, JobAdditionalRemarks additionalRemarks, User user);
 
+	List<JobPost> findAppliedForRecommender();
+
+	Map<JobPost, Double> findAllRecommended(Long userId);
+
+	void delete(JobPost jobPost, JobAdditionalRemarks additionalRemarks, User user);
+
 	void setStatus(JobPost jobPost, JobStatus status, String userId, JobAdditionalRemarks additionalRemarks);
+
+	String convertAdditionalFeesToString(JobPost jobPost);
+
+	List<JobPost> findJobPostByUserId(String id);
+
 }

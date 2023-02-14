@@ -26,9 +26,11 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.ManyAdditionalFeeDetailsForm;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.RemarksCategory;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.AverageDailyRateRepository;
+import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.AdditionalFeeDetailsService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.EmailService;
+import sg.edu.nus.iss.AD_Locum_Doctors.service.FirebaseServiceImpl;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostAdditionalRemarksService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
@@ -38,16 +40,25 @@ import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 public class JobPostController {
 	@Autowired
 	private JobPostService jobPostService;
+
+	@Autowired
+	private FirebaseServiceImpl firebaseService;
+
 	@Autowired
 	private AdditionalFeeDetailsService additionalFeeDetailsService;
+
 	@Autowired
 	private ClinicService clinicService;
+
 	@Autowired
 	private UserService userService;
+
 	@Autowired
 	private JobPostAdditionalRemarksService addRemarksService;
+
 	@Autowired
 	private AverageDailyRateRepository avgDailyRateRepo;
+
 	@Autowired
 	private EmailService emailService;
 
@@ -207,6 +218,7 @@ public class JobPostController {
 		addRemarksService.createJobPostAdditionalRemarks(RemarksCategory.CANCELLATION, user, jp,
 				jobPost.getAdditionalRemarks());
 		sendCancelJobEmail(jobPost);
+		firebaseService.pushNotificationToFreeLancer(jp);
 		return "redirect:/jobpost/" + id;
 	}
 
@@ -221,6 +233,7 @@ public class JobPostController {
 		addRemarksService.createJobPostAdditionalRemarks(RemarksCategory.ACCEPTION, user, jp,
 				jobPost.getAdditionalRemarks());
 		sendConfirmEmail(jobPost);
+		firebaseService.pushNotificationToFreeLancer(jp);
 		return "redirect:/jobpost/" + id;
 	}
 
@@ -236,6 +249,9 @@ public class JobPostController {
 		jobPostService.saveJobPost(jp);
 		addRemarksService.createJobPostAdditionalRemarks(RemarksCategory.COMPLETED_JOB, user, jp,
 				jobPost.getAdditionalRemarks());
+
+		firebaseService.pushNotificationToFreeLancer(jp);
+
 		return "redirect:/jobpost/" + id;
 	}
 
@@ -249,6 +265,9 @@ public class JobPostController {
 		jobPostService.saveJobPost(jp);
 		addRemarksService.createJobPostAdditionalRemarks(RemarksCategory.PROCESSED_PAYMENT, user, jp,
 				jobPost.getAdditionalRemarks());
+
+		firebaseService.pushNotificationToFreeLancer(jp);
+
 		return "redirect:/jobpost/" + id;
 	}
 

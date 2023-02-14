@@ -13,6 +13,8 @@ public class JobPostApiDTO {
 
     private String description;
 
+    private String title;
+
     private String startDateTime;
 
     private String endDateTime;
@@ -20,12 +22,20 @@ public class JobPostApiDTO {
     private double ratePerHour;
 
     private double totalRate;
+    
+    private String additionalFeeListString;
 
     private JobStatus status;
 
-    private User clinicUser;
+    private UserDTO clinicUser;
 
-    private User freelancer;
+    private UserDTO freelancer;
 
     private Clinic clinic;
+
+    private double similarityScore;
+
+    private String paymentDate;
+    
+    private String paymentRefNo;
 }

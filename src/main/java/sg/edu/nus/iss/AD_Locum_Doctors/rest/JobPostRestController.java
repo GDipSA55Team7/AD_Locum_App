@@ -1,38 +1,25 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.rest;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import sg.edu.nus.iss.AD_Locum_Doctors.model.EmailDetails;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPostApiDTO;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.RemarksCategory;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
+import org.springframework.web.bind.annotation.*;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.EmailService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.JobPostService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 @RestController
 @RequestMapping("api/jobs")
 public class JobPostRestController {
-
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     @Autowired
     JobPostService jobPostService;
@@ -67,9 +54,19 @@ public class JobPostRestController {
         }
     }
 
+    @GetMapping("/job/user")
+    public ResponseEntity<List<JobPostApiDTO>> findByUserId(@RequestParam String id) {
+        try {
+            List<JobPost> jobPostList = jobPostService.findJobPostByUserId(id);
+            return getListResponseEntity(jobPostList);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/job")
     public ResponseEntity<JobPostApiDTO> setJobStatus(@RequestParam String id, @RequestParam String status,
-            @RequestParam String userId) {
+                                                      @RequestParam String userId) {
         try {
             JobPost jobPost = jobPostService.findJobPostById(id);
             User user = userService.findById(Long.valueOf(userId));
@@ -133,6 +130,35 @@ public class JobPostRestController {
         }
     }
 
+    @GetMapping("/allapplied")
+    public ResponseEntity<List<JobPostApiDTO>> findAppliedForRecommender() {
+        // retrieves all applied past 60 days only
+        try {
+            List<JobPost> jobPostList = jobPostService.findAppliedForRecommender();
+            return getListResponseEntity(jobPostList);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/recommended")
+    public ResponseEntity<List<JobPostApiDTO>> findJobRecommended(@RequestParam String id) {
+        Map<JobPost, Double> recJobsMap = jobPostService.findAllRecommended(Long.valueOf(id));
+        List<JobPostApiDTO> jobPostDTOList = new ArrayList<>();
+        try {
+            for (Map.Entry<JobPost, Double> entry : recJobsMap.entrySet()) {
+                JobPostApiDTO jobPostDTO = setJobPostDTO(entry.getKey(), entry.getValue());
+                jobPostDTOList.add(jobPostDTO);
+            }
+            if (jobPostDTOList.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(jobPostDTOList, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     private JobPostApiDTO setJobPostDTO(JobPost jobPost) {
         JobPostApiDTO jobPostDTO = new JobPostApiDTO();
         jobPostDTO.setId(jobPost.getId());
@@ -141,11 +167,49 @@ public class JobPostRestController {
         jobPostDTO.setEndDateTime(jobPost.getEndDateTime().toString());
         jobPostDTO.setClinic(jobPost.getClinic());
         jobPostDTO.setStatus(jobPost.getStatus());
+        jobPostDTO.setTitle(jobPost.getTitle());
         jobPostDTO.setTotalRate(jobPost.computeEstimatedTotalRate());
+        jobPostDTO.setAdditionalFeeListString(jobPostService.convertAdditionalFeesToString(jobPost));
         jobPostDTO.setRatePerHour(jobPost.getRatePerHour());
-        jobPostDTO.setClinicUser(jobPost.getClinicUser());
         jobPostDTO.setClinic(jobPost.getClinic());
-        jobPostDTO.setFreelancer(jobPost.getFreelancer());
+        jobPostDTO.setPaymentDate(String.valueOf(jobPost.getPaymentDate()));
+        jobPostDTO.setPaymentRefNo(jobPost.getPaymentReferenceNumber());
+
+        User freelancer = jobPost.getFreelancer();
+
+        // for open jobs freelancer will be null
+        if (freelancer != null) {
+            UserDTO freelancerDTO = buildUserDTO(freelancer);
+            jobPostDTO.setFreelancer(freelancerDTO);
+        }
+
+        User clinicUser = jobPost.getClinicUser();
+        UserDTO clinicUserDTO = buildUserDTO(clinicUser);
+        jobPostDTO.setClinicUser(clinicUserDTO);
+
+        return jobPostDTO;
+    }
+
+    private static UserDTO buildUserDTO(User user) {
+        return UserDTO.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .name(user.getName())
+                .email(user.getEmail())
+                .contact(user.getContact())
+                .medicalLicenseNo(user.getMedicalLicenseNo())
+                .organization(user.getOrganization())
+                .role(user.getRole())
+                .active(user.getActive())
+                .build();
+    }
+
+    // Overload for recommender
+    private JobPostApiDTO setJobPostDTO(JobPost jobPost, Double similarityScore) {
+
+        JobPostApiDTO jobPostDTO = setJobPostDTO(jobPost);
+
+        jobPostDTO.setSimilarityScore(similarityScore);
 
         return jobPostDTO;
     }

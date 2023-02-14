@@ -14,8 +14,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Temporal;
@@ -67,4 +69,9 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "freelancer", cascade = CascadeType.ALL)
     private List<JobPost> jobApplications = new ArrayList<>();
+    
+    @JsonIgnore
+    @OneToOne(optional = true)
+    @JoinColumn(name = "firebase_device_token_id")
+    private FirebaseDeviceToken firebaseDeviceToken;
 }

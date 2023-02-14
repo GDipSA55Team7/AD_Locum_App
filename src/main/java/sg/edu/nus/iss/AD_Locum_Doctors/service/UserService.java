@@ -28,7 +28,9 @@ public interface UserService {
 
 	FreeLancerDTO createFreeLancer(FreeLancerDTO freeLancerDTO);
 	
-	FreeLancerDTO loginFreeLancer(FreeLancerDTO freeLancerDTO);
+	FreeLancerDTO loginFreeLancerAndUpdateToken(FreeLancerDTO freeLancerDTO);
+	
+	void logoutFreeLancer(String username);
 	
 	FreeLancerDTO updateFreeLancer(FreeLancerDTO freeLancerDTO);
 	
