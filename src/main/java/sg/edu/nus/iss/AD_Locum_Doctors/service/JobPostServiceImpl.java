@@ -1,7 +1,6 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
-
-import sg.edu.nus.iss.AD_Locum_Doctors.repository.ClinicRepository;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.AdditionalFeeDetails;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.RecommendedJob;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.RemarksCategory;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobPostRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.RecommendedJobRepository;
@@ -31,9 +34,6 @@ public class JobPostServiceImpl implements JobPostService {
 
 	@Autowired
 	private JobPostAdditionalRemarksService remarksService;
-
-	@Autowired
-	private ClinicRepository clinicRepo;
 
 	@Autowired
 	private UserService userService;
@@ -94,11 +94,11 @@ public class JobPostServiceImpl implements JobPostService {
 		return jobPostRepo.findPaidAndUnpaidJobPosts(userOrgId);
 	}
 
-    @Override
-    public List<JobPost> findAppliedForRecommender() {
+	@Override
+	public List<JobPost> findAppliedForRecommender() {
 		LocalDateTime dateTime = LocalDateTime.now().minusDays(60);
-        return jobPostRepo.findByFreelancerNotNull(dateTime);
-    }
+		return jobPostRepo.findByFreelancerNotNull(dateTime);
+	}
 
 	@Override
 	public Map<JobPost, Double> findAllRecommended(Long userId) {
@@ -195,22 +195,22 @@ public class JobPostServiceImpl implements JobPostService {
 
 	@Override
 	public String convertAdditionalFeesToString(JobPost jobPost) {
- 	   String additionaFeeDetailsJSONString = "";
-       List<AdditionalFeeDetails> additionalDetailsFeeList = jobPost.getAdditionalFeeDetails();
-       if(!additionalDetailsFeeList.isEmpty()) {
-           for(Integer i = 0 ;  i < additionalDetailsFeeList.size() ; i++) {
-          	 double feeAmt =  additionalDetailsFeeList.get(i).getAdditionalFeesAmount();
-          	 String feeAmtTo2DP = String.format("%.2f",feeAmt);
-        	 String feeDescription =  additionalDetailsFeeList.get(i).getDescription();
-        	 additionaFeeDetailsJSONString += feeAmtTo2DP;
-        	 additionaFeeDetailsJSONString += ",";
-        	 additionaFeeDetailsJSONString += feeDescription;
-            if(i != additionalDetailsFeeList.size() - 1) {
-           	 additionaFeeDetailsJSONString += ";";
-            }
-          }
-       }
-       return additionaFeeDetailsJSONString;
+		String additionaFeeDetailsJSONString = "";
+		List<AdditionalFeeDetails> additionalDetailsFeeList = jobPost.getAdditionalFeeDetails();
+		if (!additionalDetailsFeeList.isEmpty()) {
+			for (Integer i = 0; i < additionalDetailsFeeList.size(); i++) {
+				double feeAmt = additionalDetailsFeeList.get(i).getAdditionalFeesAmount();
+				String feeAmtTo2DP = String.format("%.2f", feeAmt);
+				String feeDescription = additionalDetailsFeeList.get(i).getDescription();
+				additionaFeeDetailsJSONString += feeAmtTo2DP;
+				additionaFeeDetailsJSONString += ",";
+				additionaFeeDetailsJSONString += feeDescription;
+				if (i != additionalDetailsFeeList.size() - 1) {
+					additionaFeeDetailsJSONString += ";";
+				}
+			}
+		}
+		return additionaFeeDetailsJSONString;
 	}
 
 	@Override

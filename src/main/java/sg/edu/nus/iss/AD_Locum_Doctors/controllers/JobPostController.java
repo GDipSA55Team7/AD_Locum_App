@@ -26,7 +26,6 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.ManyAdditionalFeeDetailsForm;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.RemarksCategory;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.AverageDailyRateRepository;
-import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.AdditionalFeeDetailsService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.ClinicService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.EmailService;
@@ -85,7 +84,7 @@ public class JobPostController {
 	public String jobPostListByUser(Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		List<JobPost> jobPosts = jobPostService.findAll().stream()
-				.filter(x -> x.getClinicUser().getId() == user.getId()).toList();
+				.filter(x -> x.getClinicUser().getId().equals(user.getId())).toList();
 		model.addAttribute("jobPosts", jobPosts);
 		return "jobpost-list";
 	}
@@ -94,7 +93,7 @@ public class JobPostController {
 	public String createJobPostPage(Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		List<Clinic> clinics = clinicService.findAll().stream()
-				.filter(x -> x.getOrganization().getId() == user.getOrganization().getId()).toList();
+				.filter(x -> x.getOrganization().getId().equals(user.getOrganization().getId())).toList();
 		model.addAttribute("clinics", clinics);
 		model.addAttribute("jobPost", new JobPost());
 		Double weekdayTrend28 = null;
@@ -107,10 +106,10 @@ public class JobPostController {
 			weekendTrend28 = rateTrend.getWeekend_28_MA();
 			weekdayTrend14 = rateTrend.getWeekday_14_MA();
 			weekendTrend14 = rateTrend.getWeekend_14_MA();
-		}
-		catch(Exception e){
-			//Default values to be used if no data exist as yet.
-			//The rates are derived by using the lower range of surveyed existing market rates as referenced.
+		} catch (Exception e) {
+			// Default values to be used if no data exist as yet.
+			// The rates are derived by using the lower range of surveyed existing market
+			// rates as referenced.
 			weekdayTrend28 = (double) 80;
 			weekendTrend28 = (double) 100;
 			weekdayTrend14 = (double) 80;
@@ -151,7 +150,7 @@ public class JobPostController {
 		jobPost.setAdditionalRemarks("");
 		model.addAttribute("jobPost", jobPost);
 		List<JobAdditionalRemarks> remarksList = addRemarksService.findAll().stream()
-				.filter(x -> x.getJobPost().getId() == jobPost.getId())
+				.filter(x -> x.getJobPost().getId().equals(jobPost.getId()))
 				.sorted(Comparator.comparing(JobAdditionalRemarks::getDateTime).reversed()).toList();
 		model.addAttribute("remarksList", remarksList);
 		ManyAdditionalFeeDetailsForm additional = new ManyAdditionalFeeDetailsForm();
@@ -177,9 +176,9 @@ public class JobPostController {
 		User user = (User) session.getAttribute("user");
 		JobPost jobPost = jobPostService.findJobPostById(id);
 		if (jobPost.getStatus().equals(JobStatus.OPEN)
-				&& user.getOrganization().getId() == jobPost.getClinicUser().getOrganization().getId()) {
+				&& user.getOrganization().getId().equals(jobPost.getClinicUser().getOrganization().getId())) {
 			List<Clinic> clinics = clinicService.findAll().stream()
-					.filter(x -> x.getOrganization().getId() == user.getOrganization().getId()).toList();
+					.filter(x -> x.getOrganization().getId().equals(user.getOrganization().getId())).toList();
 			model.addAttribute("clinics", clinics);
 			model.addAttribute("jobPost", jobPost);
 			return "jobpost-edit";
