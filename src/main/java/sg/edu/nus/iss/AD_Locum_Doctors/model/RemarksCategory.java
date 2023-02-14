@@ -9,7 +9,7 @@ public enum RemarksCategory {
 	GENERAL("General"),
 	CREATED("Created"),
 	DELETION("Deleted"),
-	PENDING("Pending Confirmation"),
+	APPLIED("Locum Applied"),
 	ACCEPTION("Accepted Locum"),
 	CANCELLATION("Cancelled"),
 	REMOVED("Removed By Admin"),

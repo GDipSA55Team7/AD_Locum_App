@@ -18,18 +18,13 @@
 			<div class="content-header">
 				<div class="container-fluid">
 					<div class="row mb-2">
-						<div class="col-auto">
-							<h1 class="m-0">View Users</h1>
+						<div class="col-sm-6">
+							<h1 class="m-0">View Organizations</h1>
 						</div><!-- /.col -->
-						<div class="col-auto mr-auto">
-							<a th:href="@{/register/addUserForm}" class="btn btn-info"><i
-									class="nav-icon fas fa-plus mr-2"></i>Add
-								User</a>
-						</div><!-- /.col -->
-						<div class="col-auto">
+						<div class="col-sm-6">
 							<ol class="breadcrumb float-sm-right">
 								<li class="breadcrumb-item"><a href="#">Home</a></li>
-								<li class="breadcrumb-item active">User</li>
+								<li class="breadcrumb-item active">Organization</li>
 							</ol>
 						</div>
 					</div><!-- /.row -->
@@ -42,58 +37,51 @@
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-12">
+							<div
+								class="d-flex flex-row mb-3 justify-content-between  align-items-center pt-3 pb-2 border-bottom">
+								<div class="p-2">
+
+								</div>
+								<div class="p-2">
+
+								</div>
+							</div>
 							<div class="card">
 								<div class="card-body">
 									<div class="table-responsive overflow-hidden">
 										<table id="example1" class="table table-bordered table-hover">
 											<thead>
 												<tr>
-													<th>Username</th>
-													<th>Name</th>
-													<th>Email</th>
-													<th>User Type</th>
-													<th>User Status</th>
+													<th>ID</th>
+													<th>Organization Name</th>
+													<th>UEN</th>
+													<th>Address</th>
 													<th>Contact</th>
-													<th>Organization</th>
-													<th>Medical License No.</th>
+													<th>Status</th>
 													<th>Actions</th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr th:each="user : ${userList}" class="listRecord">
-													<td th:text="${user.username}">UserName</td>
-													<td th:text="${user.name}">Name</td>
-													<td th:text="${user.email}">Email</td>
-													<td th:text="${user.role.name}">User Type</td>
+												<tr th:each="org : ${orgList}" class="listRecord">
+													<td th:text="${org.id}">Organization ID</td>
+													<td th:text="${org.name}">Organization Name</td>
+													<td th:text="${org.UEN}">UEN</td>
+													<td th:text="${org.address}" class="col-5">Address</td>
+													<td th:text="${org.contact}">Contact</td>
 													<td>
-														<span th:if="${user.active == true}" th:text="Active"></span>
-														<span th:unless="${user.active == true}"
+														<span th:if="${org.active == true}" th:text="Active"></span>
+														<span th:unless="${org.active == true}"
 															th:text="Deactivated"></span>
-													</td>
-													<td th:text="${user.contact}">Contact</td>
-													<td>
-														<span th:if="${user.organization !=null}"
-															th:text="${user.organization.name}"></span>
-														<span th:unless="${user.organization !=nuxll}">
-															<span>
-																-
-															</span>
-														</span>
-													</td>
-													<td>
-														<span th:if="${user.role.id == 1}"
-															th:text="${user.medicalLicenseNo}">Medical License
-															No.</span>
-														<span th:unless="${user.role.id == 1}">-</span>
 													</td>
 													<td align="center">
 														<div>
-															<a th:if="${user.active == true}"
-																th:href="@{/deactivateUser/}+${user.id}">Deactivate</a>
-															<a th:unless="${user.active == true}"
-																th:href="@{/reactivateUser/}+${user.id}">Activate</a>
+															<a th:if="${org.active == true}"
+																th:href="@{/organization/disable/}+${org.id}">Deactivate</a>
+															<a th:unless="${org.active == true}"
+																th:href="@{/reactivateOrganization/}+${org.id}">Activate</a>
 														</div>
-														<div><a th:href="@{/viewUser/}+${user.id}">Edit</a></div>
+														<div><a th:href="@{/organization/viewDetails/}+${org.id}">View
+																Details</a></div>
 													</td>
 												</tr>
 											</tbody>
@@ -102,6 +90,8 @@
 								</div>
 								<!-- /.card-body -->
 							</div>
+							
+							
 							<!-- /.card -->
 						</div>
 						<!-- /.col -->

@@ -65,6 +65,11 @@ public class JobPostServiceImpl implements JobPostService {
 	}
 
 	@Override
+	public JobPost findJobPostById(Long id) {
+		return jobPostRepo.findById(id).orElse(null);
+	}
+
+	@Override
 	public JobPost findJobPostById(String id) {
 		return jobPostRepo.findById(Long.parseLong(id)).orElse(null);
 	}
@@ -183,10 +188,10 @@ public class JobPostServiceImpl implements JobPostService {
 	}
 
 	@Override
-	public void delete(JobPost jobpost, JobAdditionalRemarks additionalRemarks, User user) {
+	public void remove(JobPost jobpost, JobAdditionalRemarks additionalRemarks, User user) {
 		jobpost.setStatus(JobStatus.REMOVED);
 		jobPostRepo.saveAndFlush(jobpost);
-		additionalRemarks.setCategory(RemarksCategory.DELETION);
+		additionalRemarks.setCategory(RemarksCategory.REMOVED);
 		additionalRemarks.setDateTime(LocalDateTime.now());
 		additionalRemarks.setJobPost(jobpost);
 		additionalRemarks.setUser(user);

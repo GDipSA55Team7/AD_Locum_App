@@ -43,7 +43,17 @@ public class CommonController {
 	@Autowired
 	private PasswordResetCheckerService passwordResetCheckerService;
 
-	@GetMapping(value = { "/", "/login" })
+	@GetMapping(value = { "/", "/dashboard" })
+	public String index(HttpSession session) {
+		User u = (User) session.getAttribute("user");
+		if (u.getRole().getName().equals("System_Admin")) {
+			return "redirect:/dashboard/system-admin";
+		} else {
+			return "redirect:/dashboard/clinic";
+		}
+	}
+
+	@GetMapping("/login")
 	public String login(Model model) {
 		model.addAttribute("user", new User());
 		return "login";
@@ -53,22 +63,13 @@ public class CommonController {
 	public String authenticate(User user, Model model, HttpSession session) {
 		User u = userService.authenticate(user.getUsername(), user.getPassword());
 		session.setAttribute("user", u);
-		if (u.getRole().getName().equals("System_Admin")) {
-			return "redirect:/system-admin";
-		} else {
-			return "redirect:/dashboard/clinic";
-		}
+		return "redirect:/dashboard";
 	}
 
 	@GetMapping(value = "/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
 		return "redirect:/login";
-	}
-
-	@GetMapping("/system-admin")
-	public String systemAdminPage() {
-		return "home-system-admin";
 	}
 
 	@GetMapping("/password_reset/{userID}/email_trigger")

@@ -28,4 +28,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Organization findById(Long id) {
        return organizationRepository.findById(id).get();
     }
+    
+    public Organization updateOrganizationDetails(Organization organization) {
+    	return organizationRepository.saveAndFlush(organization);
+    }
 }

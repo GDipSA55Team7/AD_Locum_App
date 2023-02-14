@@ -20,7 +20,9 @@ public interface UserService {
 
     void deleteUser(User user);
     
-    void deactivateUser(User user);
+    User deactivateUser(User user);
+
+    User reactivateUser(User user);
 
     List<User> findByOrganizationId(Long id);
 
@@ -33,5 +35,5 @@ public interface UserService {
 	FreeLancerDTO updateFreeLancer(FreeLancerDTO freeLancerDTO);
 	
 	String checkIfFieldIsUnique(List<User> checkAgainstUsers,String fieldName,String fieldValue);
-
+	
 }

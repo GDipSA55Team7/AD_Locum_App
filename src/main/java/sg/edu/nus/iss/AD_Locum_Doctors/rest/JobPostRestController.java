@@ -69,11 +69,17 @@ public class JobPostRestController {
                                                       @RequestParam String userId) {
         try {
             JobPost jobPost = jobPostService.findJobPostById(id);
+            User user = userService.findById(Long.valueOf(userId));
             if (jobPost != null) {
                 if (Objects.equals(status, "apply")) {
-                    jobPostService.setStatus(jobPost, JobStatus.PENDING_CONFIRMATION_BY_CLINIC, userId, null);
+                    JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
+                    additionalRemarks.setCategory(RemarksCategory.APPLIED);
+                    additionalRemarks.setRemarks("Applied by Locum");
+                    additionalRemarks.setDateTime(LocalDateTime.now());
+                    additionalRemarks.setJobPost(jobPost);
+                    additionalRemarks.setUser(user);
+                    jobPostService.setStatus(jobPost, JobStatus.PENDING_CONFIRMATION_BY_CLINIC, userId, additionalRemarks);
                 } else if (Objects.equals(status, "cancel")) {
-                    User user = userService.findById(Long.valueOf(userId));
                     JobAdditionalRemarks additionalRemarks = new JobAdditionalRemarks();
                     additionalRemarks.setCategory(RemarksCategory.CANCELLATION);
                     additionalRemarks.setRemarks("Application Cancelled");

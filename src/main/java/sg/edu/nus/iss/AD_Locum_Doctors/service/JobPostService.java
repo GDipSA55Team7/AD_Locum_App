@@ -19,6 +19,8 @@ public interface JobPostService {
 
 	JobPost createJobPost(JobPost jobPost, User user);
 
+	JobPost findJobPostById(Long id);
+
 	JobPost findJobPostById(String id);
 
 	void cancel(JobPost jobPost);
@@ -37,6 +39,8 @@ public interface JobPostService {
 
 	List<JobPost> findPaidandUnpaidJobPosts(Long userOrgId);
 
+	void remove(JobPost jobPost, JobAdditionalRemarks additionalRemarks, User user);
+
 	List<JobPost> findAppliedForRecommender();
 
 	Map<JobPost, Double> findAllRecommended(Long userId);
@@ -48,5 +52,5 @@ public interface JobPostService {
 	String convertAdditionalFeesToString(JobPost jobPost);
 
 	List<JobPost> findJobPostByUserId(String id);
-	
+
 }

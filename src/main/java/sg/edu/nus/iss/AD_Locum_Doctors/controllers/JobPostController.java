@@ -15,7 +15,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpSession;
-import sg.edu.nus.iss.AD_Locum_Doctors.model.*;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.AdditionalFeeDetails;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.AverageDailyRate;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.Clinic;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.EmailDetails;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobAdditionalRemarks;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobPost;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.JobStatus;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.ManyAdditionalFeeDetailsForm;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.RemarksCategory;
+import sg.edu.nus.iss.AD_Locum_Doctors.model.User;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.AverageDailyRateRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.repository.JobAdditionalRemarksRepository;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.AdditionalFeeDetailsService;
@@ -61,15 +70,15 @@ public class JobPostController {
 		switch (user.getRole().getName()) {
 			case "System_Admin":
 				model.addAttribute("jobPosts", jobPosts);
-				return "admin_jobpost_list";
+				break;
 			default:
 				jobPosts = jobPosts.stream()
-						.filter(x -> x.getClinic().getOrganization().getId() == user.getOrganization().getId())
+						.filter(x -> x.getClinic().getOrganization().getId().equals(user.getOrganization().getId()))
 						.filter(x -> !x.getStatus().equals(JobStatus.REMOVED))
 						.collect(Collectors.toList());
 				model.addAttribute("jobPosts", jobPosts);
-				return "jobpost-list";
 		}
+		return "jobpost-list";
 	}
 
 	@GetMapping("/me")
@@ -147,7 +156,8 @@ public class JobPostController {
 			case "System_Admin":
 				return "jobpost-view";
 			default:
-				if (jobPost.getStatus().equals(JobStatus.OPEN) || jobPost.getStatus().equals(JobStatus.CANCELLED)) {
+				if (jobPost.getStatus().equals(JobStatus.OPEN) || jobPost.getStatus().equals(JobStatus.CANCELLED)
+						|| jobPost.getStatus().equals(JobStatus.REMOVED)) {
 					return "jobpost-view";
 				}
 				return "jobpost-locum";
@@ -300,36 +310,37 @@ public class JobPostController {
 	}
 
 	@PostMapping("/{id}/confirmadminremove")
-	public String confirmDeleteJobPost(@PathVariable String id, JobAdditionalRemarks additionalRemarks) {
+	public String confirmDeleteJobPost(@PathVariable String id, JobAdditionalRemarks additionalRemarks,
+			HttpSession session) {
+		User user = (User) session.getAttribute("user");
 		System.out.println("Delete id:" + id);
 		JobPost jobPost = jobPostService.findJobPostById(id);
-		User user = userService.findById(Long.parseLong("4"));
-		jobPostService.delete(jobPost, additionalRemarks, user);
+		jobPostService.remove(jobPost, additionalRemarks, user);
 		return "redirect:/jobpost/list";
 	}
 
-	private String sendConfirmEmail(JobPost jobpost){
+	private String sendConfirmEmail(JobPost jobpost) {
 		jobpost = jobPostService.findJobPostById(jobpost.getId().toString());
 		EmailDetails testEmail = new EmailDetails();
-		User user = userService.findById(jobpost.getFreelancer().getId() );
+		User user = userService.findById(jobpost.getFreelancer().getId());
 		testEmail.setRecipient(user.getEmail());
 		testEmail.setSubject("Confirm Job:" + jobpost.getTitle());
 		String emailMessage = "Dear {0}, \n\nYour application for {1} has been confirmed. \n\nIf this request did not come from you, please inform us immediately.\n\nYours Sincerely,\nSG Locum Administrator";
-		String formattedEmail = java.text.MessageFormat.format(emailMessage, user.getName(),jobpost.getTitle());
+		String formattedEmail = java.text.MessageFormat.format(emailMessage, user.getName(), jobpost.getTitle());
 		testEmail.setMsgBody(formattedEmail);
 		String status = emailService.sendSimpleMail(testEmail);
 		System.out.println(status);
 		return status;
 	}
 
-	private String sendCancelJobEmail(JobPost jobpost){
+	private String sendCancelJobEmail(JobPost jobpost) {
 		jobpost = jobPostService.findJobPostById(jobpost.getId().toString());
 		EmailDetails testEmail = new EmailDetails();
-		User user = userService.findById(jobpost.getFreelancer().getId() );
+		User user = userService.findById(jobpost.getFreelancer().getId());
 		testEmail.setRecipient(user.getEmail());
 		testEmail.setSubject("Cancel Job:" + jobpost.getTitle());
 		String emailMessage = "Dear {0}, \n\nYour application for {1} has been cancelled. \n\nIf this request did not come from you, please inform us immediately.\n\nYours Sincerely,\nSG Locum Administrator";
-		String formattedEmail = java.text.MessageFormat.format(emailMessage, user.getName(),jobpost.getTitle());
+		String formattedEmail = java.text.MessageFormat.format(emailMessage, user.getName(), jobpost.getTitle());
 		testEmail.setMsgBody(formattedEmail);
 		String status = emailService.sendSimpleMail(testEmail);
 		System.out.println(status);

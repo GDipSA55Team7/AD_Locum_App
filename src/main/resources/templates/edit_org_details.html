@@ -2,10 +2,7 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
 	layout:decorate="~{fragments/layout}">
 
-<head>
-	<div th:replace="fragments/layout.html :: html_head" />
-	<div th:replace="fragments/layout.html :: datatable_css" />
-</head>
+<head th:replace="fragments/layout.html :: html_head" />
 
 <body class="hold-transition sidebar-mini">
 	<div class="wrapper">
@@ -17,18 +14,14 @@
 			<div class="content-header">
 				<div class="container-fluid">
 					<div class="row mb-2">
-						<div class="col-auto">
-							<h1 class="m-0">View Clinics</h1>
+						<div class="col-sm-6">
+							<h1 class="m-0">Edit Organization</h1>
 						</div><!-- /.col -->
-						<div class="col-auto mr-auto">
-							<a th:href="@{/addClinicForm}" class="btn btn-info"><i
-									class="nav-icon fas fa-plus mr-2"></i>Add
-								Clinic</a>
-						</div><!-- /.col -->
-						<div class="col-auto">
+						<div class="col-sm-6">
 							<ol class="breadcrumb float-sm-right">
 								<li class="breadcrumb-item"><a href="#">Home</a></li>
-								<li class="breadcrumb-item active">Clinic</li>
+								<li class="breadcrumb-item"><a th:href="@{/UserList}">User</a></li>
+								<li class="breadcrumb-item active">Edit</li>
 							</ol>
 						</div>
 					</div><!-- /.row -->
@@ -41,6 +34,43 @@
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-12">
+							<div class="card" >
+								<div class="card-body">
+									<form action="#" th:action="@{'/organization/editOrgDetails/'} + ${org.id}"
+										th:object="${org}" method="post">
+										<input type="hidden" th:field="*{id}" />
+										<div class="mb-3 form-group col-8">
+											<label class="form-label">Organization Name</label>
+											<input th:field="*{name}" type="text" class="form-control" readonly>
+										</div>
+										<div class="mb-3 form-group col-8">
+											<label class="form-label">UEN</label>
+											<input th:field="*{UEN}" type="text" class="form-control" readonly>
+										</div>
+										<div class="mb-3 form-group col-8">
+											<label class="form-label">Address</label>
+											<input th:field="*{address}" type="text" required class="form-control">
+										</div>
+										<div class="mb-3 form-group col-8">
+											<label class="form-label">Contact Person Name</label>
+											<input th:field="*{contact_person_name}" type="text" required
+												class="form-control">
+										</div>
+										<div class="mb-3 form-group col-8">
+											<label class="form-label">Contact Details</label>
+											<input th:field="*{contact}" type="text" required class="form-control">
+										</div>
+										<button type="submit" class="btn btn-info">Save</button>
+										<button type="button" class="btn btn-info"
+											onclick="location.href='/organization/list'">Back</button>
+									</form>
+								</div>
+								<!-- /.card-body -->
+							</div>
+							<div class="col-sm-6">
+								<h3 class="m-0">Clinics List</h3>
+							</div><!-- /.col -->
+							<br>
 							<div class="card">
 								<div class="card-body">
 									<div class="table-responsive overflow-hidden">
@@ -52,7 +82,6 @@
 													<th>Postal Code</th>
 													<th>Contact</th>
 													<th>Address</th>
-													<th>Actions</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -62,11 +91,6 @@
 													<td th:text="${clinic.postalCode}">Postal Code</td>
 													<td th:text="${clinic.contact}">Contact</td>
 													<td th:text="${clinic.address}">Address</td>
-													<td align="center">
-														<div><a th:href="@{/deleteclinic/}+${clinic.id}">Delete</a>
-														</div>
-														<div><a th:href="@{/viewclinic/}+${clinic.id}">View</a></div>
-													</td>
 												</tr>
 											</tbody>
 										</table>
@@ -74,7 +98,6 @@
 								</div>
 								<!-- /.card-body -->
 							</div>
-							<!-- /.card -->
 						</div>
 						<!-- /.col -->
 					</div>
@@ -86,8 +109,6 @@
 		</div>
 		<div th:replace="fragments/layout.html :: footer" />
 		<div th:replace="fragments/layout.html :: script" />
-		<div th:replace="fragments/layout.html :: datatable_script" />
-
 		<script>
 			$(function () {
 				$("#example1").DataTable({
@@ -96,6 +117,7 @@
 				}).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 			});
 		</script>
+
 	</div>
 </body>
 

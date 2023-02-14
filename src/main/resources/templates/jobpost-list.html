@@ -21,13 +21,18 @@
 			<div class="content-header">
 				<div class="container-fluid">
 					<div class="row mb-2">
-						<div class="col-sm-6">
+						<div class="col-auto">
 							<h1 class="m-0">View Job Posts</h1>
 						</div><!-- /.col -->
-						<div class="col-sm-6">
+						<div class="col-auto mr-auto">
+							<a th:href="@{/jobpost/create}" class="btn btn-info"><i
+									class="nav-icon fas fa-plus mr-2"></i>Add
+								Job Post</a>
+						</div><!-- /.col -->
+						<div class="col-auto">
 							<ol class="breadcrumb float-sm-right">
 								<li class="breadcrumb-item"><a href="#">Home</a></li>
-								<li class="breadcrumb-item active">Job Post</li>
+								<li class="breadcrumb-item active">View Job Posts</li>
 							</ol>
 						</div>
 					</div><!-- /.row -->
@@ -42,7 +47,8 @@
 						<div class="col-12">
 							<div class="col">
 								<div class="card card-primary card-outline card-outline-tabs">
-									<div class="card-header p-0 border-bottom-0">
+									<div th:if="${session.user.role.name !='System_Admin' }"
+										class="card-header p-0 border-bottom-0">
 										<ul class="nav nav-tabs">
 											<li class="nav-item"><a class="nav-link"
 													th:classappend="${#ctx.springRequestContext.requestUri == '/jobpost/list'} ? active"
@@ -50,11 +56,6 @@
 											<li class="nav-item"><a th:href="@{/jobpost/me}" class="nav-link"
 													th:classappend="${#ctx.springRequestContext.requestUri == '/jobpost/me'} ? active">Posted
 													by Me</a></li>
-											<li class="nav-item ml-auto"
-												th:if="${session.user.role.name != 'System_Admin'}"><a class="nav-link"
-													th:href="@{/jobpost/create}"><i class="nav-icon fas fa-plus"></i>
-													Add Job Post</a>
-											</li>
 										</ul>
 									</div>
 									<div class="card-body">
@@ -118,7 +119,15 @@
 																</div>
 																<div
 																	th:unless="${jp.status.name == 'OPEN' OR jp.status.name == 'CANCELLED' OR jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}">
-																	Update
+																	<span
+																		th:if="${session.user.role.name == 'System_Admin'}">View</span>
+																	<span
+																		th:unless="${session.user.role.name == 'System_Admin'}">Update</span>
+																</div>
+																<div th:switch="${#strings.toString(jp.status.name)}">
+																	<a th:if="${session.user.role.name == 'System_Admin'}"
+																		th:case="'OPEN'"
+																		th:href="@{/jobpost/}+${jp.id}+@{/adminremove}">Remove</a>
 																</div>
 															</a>
 														</td>

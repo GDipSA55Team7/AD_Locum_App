@@ -20,8 +20,8 @@
 						<div class="col-auto d-flex justify-content-center">
 							<span th:if="${jobPost.status.name == 'OPEN'}" class="bg-lightblue badge my-auto"
 								th:text="${jobPost.status.value}"></span>
-							<span th:if="${jobPost.status.name == 'CANCELLED'}" class="bg-gray badge my-auto"
-								th:text="${jobPost.status.value}"></span>
+							<span th:if="${jobPost.status.name == 'CANCELLED' || jobPost.status.name == 'REMOVED'}"
+								class="bg-gray badge my-auto" th:text="${jobPost.status.value}"></span>
 							<span th:if="${jobPost.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
 								class="bg-warning badge my-auto" th:text="${jobPost.status.value}"></span>
 							<span th:if="${jobPost.status.name == 'ACCEPTED'}" class="bg-success badge my-auto"

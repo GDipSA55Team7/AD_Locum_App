@@ -2,7 +2,10 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
 	layout:decorate="~{fragments/layout}">
 
-<head th:replace="fragments/layout.html :: html_head" />
+<head>
+	<div th:replace="fragments/layout.html :: html_head" />
+	<script type="text/javascript" src="../plugins/chart.js/chart.utils.js"></script>
+</head>
 
 <body class="hold-transition sidebar-mini">
 	<div class="wrapper">
@@ -32,12 +35,326 @@
 			<div class="content">
 				<div class="container-fluid">
 					<div class="row">
-						<div class="col-12">
-							<div class="card">
-								<div class="card-body">
-
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="info-box">
+								<span class="info-box-icon" style="background-color: #4C737E; color: white;"><i
+										class="fas fa-user-doctor"></i></span>
+								<div class="info-box-content">
+									<span class="h3 info-box-number" th:text="${registeredLocumsThisMonth}"></span>
+									<span class="info-box-text"
+										th:text="'Locums registered in '+${#calendars.format(#calendars.createNow(), 'MMMM')}"></span>
 								</div>
 							</div>
+						</div><!-- /.col -->
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="info-box">
+								<span class="info-box-icon bg-info"><i class="fas fa-clinic-medical"></i></span>
+								<div class="info-box-content d-flex">
+									<span class="h3 info-box-number d-inline"
+										th:text="${registeredClinicUsersThisMonth}"></span>
+									<span class="info-box-text"
+										th:text="'Clinic Users registered in '+${#calendars.format(#calendars.createNow(), 'MMMM')}"></span>
+								</div>
+							</div>
+						</div><!-- /.col -->
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="info-box">
+								<span class="info-box-icon" style="background-color: #68b2c7; color: white;"><i
+										class="fas fa-building"></i></span>
+								<div class="info-box-content">
+									<span class="h3 info-box-number" th:text="${registeredOrgThisMonth}"></span>
+									<span class="info-box-text"
+										th:text="'Organizations registered in '+${#calendars.format(#calendars.createNow(), 'MMMM')}"></span>
+								</div>
+							</div>
+						</div><!-- /.col -->
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="info-box">
+								<span class="info-box-icon" style="background-color: #68b2c7; color: white;"><i
+										class="fas fa-briefcase"></i></span>
+								<div class="info-box-content">
+									<span class="h3 info-box-number" th:text="${jobsProcessed}"></span>
+									<span class="info-box-text">Jobs Processed</span>
+								</div>
+							</div>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="card">
+								<div class="card-header">
+									<h3 class="card-title">User Category</h3>
+								</div>
+								<!-- /.card-header -->
+								<div class="card-body">
+									<canvas id="user-category-pie"></canvas>
+								</div>
+								<!-- /.card-body -->
+							</div>
+							<!-- /.card -->
+							<div class="card">
+								<div class="card-header">
+									<h3 class="card-title">Clinic Users with Top Activities</h3>
+								</div>
+								<!-- /.card-header -->
+								<div class="card-body p-0">
+									<div class="table-responsive">
+										<table class="table m-0 table-sm table-striped table-valign-middle">
+											<thead>
+												<tr>
+													<th></th>
+													<th></th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Activity<br> Count</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Total<br> Jobs<br> Created</th>
+													<th class="align-middle small" style="white-space: nowrap;">Open
+													</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Cancelled</th>
+													<th class="align-middle small" style="white-space: nowrap;">Accepted
+													</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Pending<br> Confirmation</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Completed<br> (Pending<br> Payment)</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Completed<br> (Payment<br> Processed)</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="row, iStat : ${activityByClinicUser}">
+													<td width="5%"><span class="badge badge-pill bg-info">#<span
+																th:text="${iStat.index + 1}"></span></span>
+													</td>
+													<td width="20%"><strong><span
+																th:text="${row.key.name}"></span></strong></td>
+													<td width="5%"><strong><span th:text="${row.value}"></span></strong></td>
+													<td width="5%"><strong><span
+																th:text="${row.key.getJobPosts.size()}"></span></strong>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobPosts.?[status.name == 'OPEN']}">
+															<strong><span class="badge badge-pill bg-lightblue"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobPosts.?[status.name == 'CANCELLED']}">
+															<strong><span class="badge badge-pill bg-gray"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobPosts.?[status.name == 'PENDING_CONFIRMATION_BY_CLINIC']}">
+															<strong><span class="badge badge-pill bg-warning"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobPosts.?[status.name == 'ACCEPTED']}">
+															<strong><span class="badge badge-pill bg-success"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobPosts.?[status.name == 'COMPLETED_PENDING_PAYMENT']}">
+															<strong><span class="badge badge-pill bg-danger"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobPosts.?[status.name == 'COMPLETED_PAYMENT_PROCESSED']}">
+															<strong><span class="badge badge-pill bg-navy"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!-- /.card-body -->
+							</div>
+							<!-- /.card -->
+							<div class="card">
+								<div class="card-header">
+									<h3 class="card-title">Locum Doctors with Top Activities</h3>
+								</div>
+								<!-- /.card-header -->
+								<div class="card-body p-0">
+									<div class="table-responsive">
+										<table class="table m-0 table-sm table-striped table-valign-middle">
+											<thead>
+												<tr>
+													<th></th>
+													<th></th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Activity<br> Count</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Total<br> Jobs<br>Applied</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Cancelled</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Pending<br> Confirmation</th>
+													<th class="align-middle small" style="white-space: nowrap;">Accepted
+													</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Completed<br> (Pending<br> Payment)</th>
+													<th class="align-middle small" style="white-space: nowrap;">
+														Completed<br> (Payment<br> Processed)</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="row, iStat : ${activityByLocum}">
+													<td width="5%"><span class="badge badge-pill"
+															style="background-color: #4C737E; color: white;"> #<span
+																th:text="${iStat.index + 1}"></span></span>
+													</td>
+													<td width="20%"><strong><span
+																th:text="${row.key.name}"></span></strong></td>
+													<td width="7.5%"><strong><span
+																th:text="${row.key.getJobApplications.size()}"></span></strong>
+													</td>
+													<td width="7.5%"><strong><span th:text="${row.value}"></span></strong></td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobApplications.?[status.name == 'CANCELLED']}">
+															<strong><span class="badge badge-pill bg-gray"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobApplications.?[status.name == 'PENDING_CONFIRMATION_BY_CLINIC']}">
+															<strong><span class="badge badge-pill bg-warning"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobApplications.?[status.name == 'ACCEPTED']}">
+															<strong><span class="badge badge-pill bg-success"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobApplications.?[status.name == 'COMPLETED_PENDING_PAYMENT']}">
+															<strong><span class="badge badge-pill bg-danger"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+													<td width="5%"><span
+															th:with="filtered=${row.key.getJobApplications.?[status.name == 'COMPLETED_PAYMENT_PROCESSED']}">
+															<strong><span class="badge badge-pill bg-navy"
+																	th:text="${filtered.size()}"></span></strong>
+														</span>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!-- /.card-body -->
+							</div>
+							<!-- /.card -->
+							<div class="card">
+								<div class="card-header">
+									<h3 class="card-title">Latest Organizations</h3>
+								</div>
+								<!-- /.card-header -->
+								<div class="card-body p-0">
+									<div class="table-responsive">
+										<table class="table m-0 table-sm table-valign-middle">
+											<tbody>
+												<tr th:each="org : ${latestOrganizations}">
+													<td width="100%"><strong><span
+																th:text="${org.name}"></span></strong></td>
+													<td class="small" style="white-space: nowrap;">Registered on <span
+															th:text="${org.getDateRegisteredString}"></span>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!-- /.card-body -->
+								<div class="card-footer text-center">
+									<a th:href="@{'/UserList'}">View All Organizations & Users</a>
+								</div>
+								<!-- /.card-footer -->
+							</div>
+							<!-- /.card -->
+						</div>
+						<div class="col-lg-6">
+							<div class="card">
+								<div class="card-header">
+									<h3 class="card-title">Number of New Users Registered By Month</h3>
+									<div class="card-tools">
+										<!-- Maximize Button -->
+										<button type="button" class="btn btn-tool" data-card-widget="maximize"><i
+												class="fas fa-expand"></i></button>
+									</div>
+									<!-- /.card-tools -->
+								</div>
+								<!-- /.card-header -->
+								<div class="card-body">
+									<canvas id="new-users-line"></canvas>
+								</div>
+								<!-- /.card-body -->
+							</div>
+							<!-- /.card -->
+							<div class="card">
+								<div class="card-header">
+									<h3 class="card-title">Latest Job Posts</h3>
+								</div>
+								<!-- /.card-header -->
+								<div class="card-body p-0">
+									<div class="table-responsive">
+										<table class="table table-striped m-0">
+											<thead>
+												<tr>
+													<th>ID</th>
+													<th>Job Post Title</th>
+													<th>Status</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="jp : ${latestJobPosts}">
+													<td><a th:href="@{/jobpost}+${'/'+jp.id}"
+															th:text="${'#'+jp.id}"></a>
+													</td>
+													<td th:text="${jp.title}"></td>
+													<td>
+														<span th:if="${jp.status.name == 'OPEN'}"
+															class="badge bg-lightblue" th:text="${jp.status.value}">
+														</span>
+														<span
+															th:if="${jp.status.name == 'CANCELLED' OR jp.status.name == 'REMOVED'}"
+															class="bg-gray badge" th:text="${jp.status.value}"></span>
+														<span
+															th:if="${jp.status.name == 'PENDING_CONFIRMATION_BY_CLINIC'}"
+															class="bg-warning badge" th:text="${jp.status.value}">
+														</span>
+														<span th:if="${jp.status.name == 'ACCEPTED'}"
+															class="bg-success badge" th:text="${jp.status.value}">
+														</span>
+														<span th:if="${jp.status.name == 'COMPLETED_PENDING_PAYMENT'}"
+															class="bg-danger badge" th:text="${jp.status.value}">
+														</span>
+														<span th:if="${jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+															class="bg-navy badge" th:text="${jp.status.value}"></span>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!-- /.card-body -->
+								<div class="card-footer text-center">
+									<a th:href="@{'/jobpost/list'}">View
+										All Job Posts</a>
+								</div>
+								<!-- /.card-footer -->
+							</div>
+							<!-- /.card -->
 						</div>
 						<!-- /.col -->
 					</div>
@@ -48,6 +365,92 @@
 		<div th:replace="fragments/layout.html :: footer" />
 		<div th:replace="fragments/layout.html :: script" />
 	</div>
+	<script src="../plugins/chart.js/Chart.min.js"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		/* PIE CHART */
+		const ctx = document.getElementById('user-category-pie');
+		var userCategories = /*[[${userCategories}]]*/ {};
+		var totalsByUserCategories = /*[[${totalsByUserCategories}]]*/ {};
+		var pieOptions = {
+			legend: {
+				position: 'right',
+				labels: {
+					usePointStyle: true,
+					pointStyle: 'circle',
+					padding: 15
+				}
+			}
+		};
+		const userCategoriesChart = new Chart(ctx, {
+			type: 'pie',
+			data: {
+				labels: userCategories,
+				datasets: [{
+					data: totalsByUserCategories,
+					backgroundColor: ['rgba(7, 60, 75, 0.7)', 'rgba(75, 192, 192, 0.7)'],
+					hoverOffset: 4
+				}]
+			},
+			options: pieOptions
+		});
+		/* LINE CHART - MONTHLY USER REGISTRATION */
+		var userChartDates = /*[[${userChartDates}]]*/ {};
+		var clinicUserCounts = /*[[${clinicUserCounts}]]*/ {};
+		var locumCounts = /*[[${locumCounts}]]*/ {};
+		var locumDoctorSMA = /*[[${locumDoctorSMA}]]*/ {};
+		var clinicUserSMA = /*[[${clinicUserSMA}]]*/ {};
+		const usersChartCtx = document.getElementById('new-users-line');
+		var lineOptions = {
+			legend: {
+				align: 'end',
+				position: 'top',
+				labels: {
+					boxWidth: 10
+				}
+			},
+			scales: {
+				yAxes: [{ ticks: { beginAtZero: true } }]
+			}
+		};
+		const usersChart = new Chart(usersChartCtx, {
+			type: 'bar',
+			data: {
+				datasets: [{
+					label: 'Locum Doctors',
+					data: locumCounts,
+					backgroundColor: 'rgba(7, 60, 75, 0.7)'
+				}, {
+					label: 'Clinic Users',
+					data: clinicUserCounts,
+					backgroundColor: 'rgba(75, 192, 192, 0.7)'
+				}
+					, {
+					label: 'Locum Doctors (3 Months SMA)',
+					data: locumDoctorSMA,
+					borderColor: 'rgb(7, 60, 75)',
+					type: 'line',
+					fill: false,
+					tension: 0
+				}, {
+					label: 'Clinic Users (3 Months SMA)',
+					data: clinicUserSMA,
+					borderColor: 'rgb(75, 192, 192)',
+					type: 'line',
+					fill: false,
+					tension: 0
+				}],
+				labels: userChartDates
+			},
+			options: lineOptions,
+			scales: {
+				y: {
+					beginAtZero: true
+				}
+			}
+		});
+		/*]]>*/
+	</script>
 </body>
 
 </html>
