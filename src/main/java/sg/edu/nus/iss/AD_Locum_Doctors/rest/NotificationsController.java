@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import sg.edu.nus.iss.AD_Locum_Doctors.model.Notification;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.NotificationService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,13 +32,14 @@ public class NotificationsController {
     public ResponseEntity<List<Notification>> setAsRead(@RequestParam Long notificationId) {
         try {
             Optional<Notification> notification_optional = notificationService.findById(notificationId);
-
+            List<Notification> notificationList = new ArrayList<>();
             if (notification_optional.isPresent()) {
                 Notification notification = notification_optional.get();
                 notification.setRead(true);
+                notificationList.add(notification);
                 notificationService.saveNotification(notification);
             }
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(notificationList, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

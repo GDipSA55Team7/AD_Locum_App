@@ -267,7 +267,6 @@ public class AdLocumDoctorsApplication {
 			jp5.setActualEndDateTime(LocalDateTime.of(2023, 01, 15, 22, 30, 0));
 			jp5.setRatePerHour(100);
 			jp5.setClinicUser(testUser5);
-			jp5.setFreelancer(testUser2);
 			jp5.setStatus(JobStatus.OPEN);
 			jobPostRepo.saveAndFlush(jp5);
 
@@ -281,7 +280,6 @@ public class AdLocumDoctorsApplication {
 			jp6.setActualEndDateTime(LocalDateTime.of(2023, 01, 20, 20, 30, 0));
 			jp6.setRatePerHour(100);
 			jp6.setClinicUser(testUser5);
-			jp6.setFreelancer(testUser2);
 			jp6.setStatus(JobStatus.OPEN);
 			jobPostRepo.saveAndFlush(jp6);
 

@@ -124,6 +124,7 @@ public class FirebaseServiceImpl implements FirebaseService{
 					.isRead(false)
 					.title(title)
 					.body(body)
+					.userId(jobPost.getFreelancer().getId())
 					.jobId(jobPost.getId())
 					.build();
 
