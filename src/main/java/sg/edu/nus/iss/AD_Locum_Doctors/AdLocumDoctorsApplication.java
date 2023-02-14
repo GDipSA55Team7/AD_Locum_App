@@ -148,7 +148,6 @@ public class AdLocumDoctorsApplication {
 			testUser1.setContact("97117782");
 			testUser1.setMedicalLicenseNo("M31234H");
 			testUser1.setRole(locumDoctor);
-			testUser1.setRole(r1);
 			testUser1.setFirebaseDeviceToken(RobertFireBase);
 			userRepo.saveAndFlush(testUser1);
 
@@ -161,7 +160,6 @@ public class AdLocumDoctorsApplication {
 			testUser2.setContact("92231880");
 			testUser2.setMedicalLicenseNo("M11266G");
 			testUser2.setRole(locumDoctor);
-			testUser2.setRole(r1);
 			testUser2.setFirebaseDeviceToken(MaryFireBase);
 			userRepo.saveAndFlush(testUser2);
 
@@ -456,7 +454,7 @@ public class AdLocumDoctorsApplication {
 			recoUser.setPassword("luffy");
 			recoUser.setContact("81381332");
 			recoUser.setMedicalLicenseNo("M31223H");
-			recoUser.setRole(r1);
+			recoUser.setRole(locumDoctor);
 			recoUser.setFirebaseDeviceToken(LuffyFireBase);
 			userRepo.saveAndFlush(recoUser);
 
