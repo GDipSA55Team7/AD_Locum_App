@@ -2,12 +2,10 @@ package sg.edu.nus.iss.AD_Locum_Doctors.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.Objects;
 
 @Entity
 @Data
@@ -24,7 +22,7 @@ public class FirebaseDeviceToken {
     private String userName;
     
     @JsonIgnore
-    @OneToOne(mappedBy = "firebaseDeviceToken")
+    @OneToOne(mappedBy = "firebaseDeviceToken",cascade = CascadeType.ALL)
     private User user;
 
     public FirebaseDeviceToken() {
@@ -34,5 +32,10 @@ public class FirebaseDeviceToken {
     		this.token = token;
 			this.isLoggedIntoMobileApp = isLoggedIntoMobileApp;
 			this.userName =userName;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, token, isLoggedIntoMobileApp, userName);
     }
 }

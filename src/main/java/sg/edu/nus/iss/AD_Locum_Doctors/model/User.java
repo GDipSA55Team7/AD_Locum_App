@@ -3,6 +3,7 @@ package sg.edu.nus.iss.AD_Locum_Doctors.model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -74,4 +75,9 @@ public class User {
     @OneToOne(optional = true)
     @JoinColumn(name = "firebase_device_token_id")
     private FirebaseDeviceToken firebaseDeviceToken;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, name, email, contact, medicalLicenseNo, active, dateRegistered);
+    }
 }

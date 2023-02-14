@@ -167,11 +167,6 @@ public class JobPostServiceImpl implements JobPostService {
 	}
 
 	@Override
-	public void delete(JobPost jobPost) {
-		jobPostRepo.delete(jobPost);
-	}
-
-	@Override
 	public List<JobPost> findJobPostsCreatedByUser(User user) {
 		return jobPostRepo.findByClinicUser(user);
 	}
@@ -223,5 +218,9 @@ public class JobPostServiceImpl implements JobPostService {
 		return jobPostRepo.findByFreelancer_Id(Long.valueOf(id));
 	}
 
+	@Override
+	public void delete(JobPost jobPost) {
+		jobPostRepo.delete(jobPost);
+	}
 
 }

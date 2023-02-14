@@ -267,7 +267,6 @@ public class AdLocumDoctorsApplication {
 			jp5.setActualEndDateTime(LocalDateTime.of(2023, 01, 15, 22, 30, 0));
 			jp5.setRatePerHour(100);
 			jp5.setClinicUser(testUser5);
-			jp5.setFreelancer(testUser2);
 			jp5.setStatus(JobStatus.OPEN);
 			jobPostRepo.saveAndFlush(jp5);
 
@@ -281,7 +280,6 @@ public class AdLocumDoctorsApplication {
 			jp6.setActualEndDateTime(LocalDateTime.of(2023, 01, 20, 20, 30, 0));
 			jp6.setRatePerHour(100);
 			jp6.setClinicUser(testUser5);
-			jp6.setFreelancer(testUser2);
 			jp6.setStatus(JobStatus.OPEN);
 			jobPostRepo.saveAndFlush(jp6);
 
@@ -768,15 +766,15 @@ public class AdLocumDoctorsApplication {
 
 
 			// Seed data for Average Daily Rate
-			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-			String mysqlUrl = env.getProperty("spring.datasource.url");
-			Connection con = DriverManager.getConnection(mysqlUrl, env.getProperty("spring.datasource.username"),
-					env.getProperty("spring.datasource.password"));
-			System.out.println("Connection established......");
-			ScriptRunner sr = new ScriptRunner(con);
-			Reader reader = new BufferedReader(new FileReader(
-					"src/main/resources/sql/average_daily_rate.sql"));
-			sr.runScript(reader);
+//			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+//			String mysqlUrl = env.getProperty("spring.datasource.url");
+//			Connection con = DriverManager.getConnection(mysqlUrl, env.getProperty("spring.datasource.username"),
+//					env.getProperty("spring.datasource.password"));
+//			System.out.println("Connection established......");
+//			ScriptRunner sr = new ScriptRunner(con);
+//			Reader reader = new BufferedReader(new FileReader(
+//					"src/main/resources/sql/average_daily_rate.sql"));
+//			sr.runScript(reader);
 		};
 	}
 }

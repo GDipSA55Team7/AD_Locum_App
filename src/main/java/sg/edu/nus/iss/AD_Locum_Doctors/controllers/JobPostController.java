@@ -97,21 +97,29 @@ public class JobPostController {
 				.filter(x -> x.getOrganization().getId() == user.getOrganization().getId()).toList();
 		model.addAttribute("clinics", clinics);
 		model.addAttribute("jobPost", new JobPost());
-		Double weekdayTrend = null;
-		Double weekendTrend = null;
+		Double weekdayTrend28 = null;
+		Double weekendTrend28 = null;
+		Double weekdayTrend14 = null;
+		Double weekendTrend14 = null;
 		try {
 			AverageDailyRate rateTrend = avgDailyRateRepo.findById(LocalDate.now()).get();
-			weekdayTrend = rateTrend.getWeekday_28_MA();
-			weekendTrend = rateTrend.getWeekend_28_MA();
-		} catch (Exception e) {
-			// Default values to be used if no data exist as yet.
-			// The rates are derived by using the lower range of surveyed existing market
-			// rates as referenced.
-			weekdayTrend = (double) 80;
-			weekendTrend = (double) 100;
+			weekdayTrend28 = rateTrend.getWeekday_28_MA();
+			weekendTrend28 = rateTrend.getWeekend_28_MA();
+			weekdayTrend14 = rateTrend.getWeekday_14_MA();
+			weekendTrend14 = rateTrend.getWeekend_14_MA();
 		}
-		model.addAttribute("weekdayTrend", weekdayTrend);
-		model.addAttribute("weekendTrend", weekendTrend);
+		catch(Exception e){
+			//Default values to be used if no data exist as yet.
+			//The rates are derived by using the lower range of surveyed existing market rates as referenced.
+			weekdayTrend28 = (double) 80;
+			weekendTrend28 = (double) 100;
+			weekdayTrend14 = (double) 80;
+			weekendTrend14 = (double) 100;
+		}
+		model.addAttribute("weekdayTrend14", weekdayTrend14);
+		model.addAttribute("weekendTrend14", weekendTrend14);
+		model.addAttribute("weekdayTrend28", weekdayTrend28);
+		model.addAttribute("weekendTrend28", weekendTrend28);
 		return "jobpost-create";
 	}
 
