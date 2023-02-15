@@ -78,7 +78,7 @@ public class CommonController {
 		User user = userService.findById(Long.parseUnsignedLong(userID));
 		testEmail.setRecipient(user.getEmail());
 		testEmail.setSubject("Your request via your administrator to reset your password");
-		String resetPasswordURL = "http://localhost:8080/password_reset/admin_triggered?pwresetkey={0}&userid={1}";
+		String resetPasswordURL = "http://locum-env.eba-kvkzfiyv.ap-northeast-1.elasticbeanstalk.com/password_reset/admin_triggered?pwresetkey={0}&userid={1}";
 		ResetPasswordChecker resetPWChecker = new ResetPasswordChecker();
 		resetPWChecker.setUserID(user.getId());
 		passwordResetCheckerService.createResetPasswordChecker(resetPWChecker);
