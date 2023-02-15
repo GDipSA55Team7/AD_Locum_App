@@ -109,12 +109,14 @@
 												<i class="fas fa-envelope bg-lightgray"></i>
 												<i th:if="${v.category.name == 'CREATED'}"
 													class="fas fa-plus bg-lightgray"></i>
+												<i th:if="${v.category.name == 'APPLIED'}"
+													class="fas fa-user-doctor bg-lightgray"></i>
 												<i th:if="${v.category.name == 'DELETION'}"
 													class="fas fa-trash bg-lightgray"></i>
 												<i th:if="${v.category.name == 'PENDING'}"
 													class="fas fa-exclamation bg-lightgray"></i>
 												<i th:if="${v.category.name == 'ACCEPTION'}"
-													class="fas fa-user-doctor bg-lightgray"></i>
+													class="fas fa-calendar-check bg-lightgray"></i>
 												<i th:if="${v.category.name == 'CANCELLATION'}"
 													class="fas fa-xmark bg-lightgray"></i>
 												<i th:if="${v.category.name == 'REMOVED'}"
