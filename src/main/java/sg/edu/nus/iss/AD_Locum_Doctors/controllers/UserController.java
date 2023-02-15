@@ -115,7 +115,7 @@ public class UserController {
     @PostMapping("/editUser")
     public String editUser(@ModelAttribute("user") @Valid User user, BindingResult result,
             Model model) {
-        userService.saveUser(user);
+        userService.editUser(user);
         return "redirect:/UserList";
     }
 

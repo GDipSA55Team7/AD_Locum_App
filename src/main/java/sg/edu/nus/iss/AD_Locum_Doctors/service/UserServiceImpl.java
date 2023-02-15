@@ -23,14 +23,24 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	RoleRepository roleRepo;
-	
+
 	@Autowired
 	FirebaseRepository firebaseRepo;
 
 	@Override
 	public void saveUser(User user) {
 		userRepo.saveAndFlush(user);
+	}
 
+	@Override
+	public void editUser(User user) {
+		var dbUser = findById(user.getId());
+		dbUser.setName(user.getName());
+		dbUser.setEmail(user.getEmail());
+		dbUser.setContact(user.getContact());
+		dbUser.setMedicalLicenseNo(user.getMedicalLicenseNo());
+		dbUser.setRole(user.getRole());
+		userRepo.saveAndFlush(dbUser);
 	}
 
 	@Override
@@ -45,7 +55,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User authenticate(String username, String pwd) {
-		return userRepo.findAll().stream().filter(u -> u.getPassword().equals(pwd) && u.getUsername().equals(username)&& u.getActive()==true)
+		return userRepo.findAll().stream()
+				.filter(u -> u.getPassword().equals(pwd) && u.getUsername().equals(username) && u.getActive())
 				.findFirst().get();
 	}
 
@@ -53,13 +64,13 @@ public class UserServiceImpl implements UserService {
 	public void deleteUser(User user) {
 		userRepo.delete(user);
 	}
-	
+
 	@Override
 	public User deactivateUser(User user) {
 		user.setActive(false);
 		return userRepo.saveAndFlush(user);
 	}
-	
+
 	@Override
 	public User reactivateUser(User user) {
 		user.setActive(true);
@@ -68,8 +79,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public FreeLancerDTO createFreeLancer(FreeLancerDTO freeLancerDTO) {
-		
-		// Check against all Registered users. Username,Email,medicalLicenseNo must be unique
+
+		// Check against all Registered users. Username,Email,medicalLicenseNo must be
+		// unique
 		String errorsFieldString = "";
 		List<User> allRegisteredUsersList = userRepo.findAll();
 		if (!allRegisteredUsersList.isEmpty()) {
@@ -89,7 +101,7 @@ public class UserServiceImpl implements UserService {
 				}
 			}
 		}
-		
+
 		// Username/email/medicalLicense is not unique, already present in DB record
 		if (!errorsFieldString.isEmpty()) {
 			freeLancerDTO.setErrorsFieldString(errorsFieldString);
@@ -108,15 +120,15 @@ public class UserServiceImpl implements UserService {
 			// set role
 			Role locumDoctorRole = roleRepo.findRole("Locum_Doctor");
 			newFreeLancerUser.setRole(locumDoctorRole);
-			//set firebasetoken
-			FirebaseDeviceToken newFirebaseForUser = new FirebaseDeviceToken(freeLancerDTO.getDeviceToken(),true,freeLancerDTO.getUsername());
+			// set firebasetoken
+			FirebaseDeviceToken newFirebaseForUser = new FirebaseDeviceToken(freeLancerDTO.getDeviceToken(), true,
+					freeLancerDTO.getUsername());
 			firebaseRepo.saveAndFlush(newFirebaseForUser);
 			newFreeLancerUser.setFirebaseDeviceToken(newFirebaseForUser);
 			userRepo.saveAndFlush(newFreeLancerUser);
 
 			freeLancerDTO.setId(newFreeLancerUser.getId().toString());
-		}
-		 catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return freeLancerDTO;
@@ -135,17 +147,17 @@ public class UserServiceImpl implements UserService {
 			freeLancerDTO.setContact(existingUser.getContact());
 			freeLancerDTO.setEmail(existingUser.getEmail());
 			freeLancerDTO.setMedicalLicenseNo(existingUser.getMedicalLicenseNo());
-			
+
 			System.out.println("username: " + freeLancerDTO.getUsername());
 			System.out.println("device Token: " + freeLancerDTO.getDeviceToken());
-			
-			//Update Device Token
+
+			// Update Device Token
 			FirebaseDeviceToken existingUserFireBase = existingUser.getFirebaseDeviceToken();
 
 			if (existingUserFireBase != null) {
-			    existingUserFireBase.setToken(freeLancerDTO.getDeviceToken());
-			    existingUserFireBase.setIsLoggedIntoMobileApp(true);
-			} 
+				existingUserFireBase.setToken(freeLancerDTO.getDeviceToken());
+				existingUserFireBase.setIsLoggedIntoMobileApp(true);
+			}
 
 			existingUser.setFirebaseDeviceToken(existingUserFireBase);
 			userRepo.saveAndFlush(existingUser);
@@ -173,7 +185,7 @@ public class UserServiceImpl implements UserService {
 				existingUser.setPassword(freeLancerDTO.getPassword());
 			}
 
-			//check if  new email and medicalLicenseNo exists in DB record
+			// check if new email and medicalLicenseNo exists in DB record
 			if (!checkAgainstUsers.isEmpty()) {
 				String errString = "";
 				if (!freeLancerDTO.getEmail().equalsIgnoreCase(existingUser.getEmail())) {
@@ -204,12 +216,12 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void logoutFreeLancer(String username) {
 		User freeLancerToLogOut = userRepo.findByUsername(username);
-		if(freeLancerToLogOut != null && freeLancerToLogOut.getFirebaseDeviceToken() != null) {
+		if (freeLancerToLogOut != null && freeLancerToLogOut.getFirebaseDeviceToken() != null) {
 			freeLancerToLogOut.getFirebaseDeviceToken().setIsLoggedIntoMobileApp(false);
 			userRepo.saveAndFlush(freeLancerToLogOut);
 		}
 	}
-	
+
 	@Override
 	public String checkIfFieldIsUnique(List<User> checkAgainstUsers, String fieldName, String fieldValue) {
 		String errStr = "err";
@@ -240,6 +252,5 @@ public class UserServiceImpl implements UserService {
 	public List<User> findByOrganizationId(Long id) {
 		return userRepo.findByOrganizationId(id);
 	}
-
 
 }
