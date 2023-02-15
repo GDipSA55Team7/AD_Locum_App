@@ -35,7 +35,7 @@ public class NotificationsController {
             List<Notification> notificationList = new ArrayList<>();
             if (notification_optional.isPresent()) {
                 Notification notification = notification_optional.get();
-                notification.setRead(true);
+                notification.setNotificationRead(true);
                 notificationList.add(notification);
                 notificationService.saveNotification(notification);
             }

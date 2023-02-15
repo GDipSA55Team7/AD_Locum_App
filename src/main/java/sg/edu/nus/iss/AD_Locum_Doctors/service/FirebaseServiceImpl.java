@@ -121,7 +121,7 @@ public class FirebaseServiceImpl implements FirebaseService{
 			body = "The status is now " + newJobStatusMsg;
 
 			Notification notification = Notification.builder()
-					.isRead(false)
+					.notificationRead(false)
 					.title(title)
 					.body(body)
 					.userId(jobPost.getFreelancer().getId())

@@ -25,6 +25,6 @@ public class Notification {
 
     private String body;
 
-    private boolean isRead;
+    private boolean notificationRead;
 
 }
