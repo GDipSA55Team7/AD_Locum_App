@@ -28,6 +28,21 @@ public class NotificationsController {
         }
     }
 
+    @GetMapping("/check")
+    public ResponseEntity<Boolean> checkNotification(@RequestParam Long userId) {
+        try {
+            List<Notification> notificationList = notificationService.getNotifications(userId);
+            for (Notification n : notificationList) {
+                if (!n.isNotificationRead()) {
+                    return new ResponseEntity<>(false, HttpStatus.OK);
+                }
+            }
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/setread")
     public ResponseEntity<List<Notification>> setAsRead(@RequestParam Long notificationId) {
         try {
@@ -35,7 +50,7 @@ public class NotificationsController {
             List<Notification> notificationList = new ArrayList<>();
             if (notification_optional.isPresent()) {
                 Notification notification = notification_optional.get();
-                notification.setRead(true);
+                notification.setNotificationRead(true);
                 notificationList.add(notification);
                 notificationService.saveNotification(notification);
             }
