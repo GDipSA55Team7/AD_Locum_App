@@ -34,7 +34,7 @@ public class PaymentSummaryController {
 	@GetMapping(value= {""})
 	public String UnpaidjobPostsListPage(Model model) {
 		loadReference();
-		List<JobPost> jobPosts = jobPostService.findJobPostsWithOutstandingPayment(userOrganization.getId());;
+		List<JobPost> jobPosts = jobPostService.findJobPostsWithOutstandingPayment(userOrganization.getId());
 		model.addAttribute("jobPosts", jobPosts);
 		return "Outstanding_Payment";
 	}

@@ -88,7 +88,7 @@
 													</td>
 													<td align="center">
 														<div>
-															<a th:if="${user.active == true}"
+															<a th:if="${user.active == true && user.id != session.user.id}"
 																th:href="@{/deactivateUser/}+${user.id}">Deactivate</a>
 															<a th:unless="${user.active == true}"
 																th:href="@{/reactivateUser/}+${user.id}">Activate</a>
