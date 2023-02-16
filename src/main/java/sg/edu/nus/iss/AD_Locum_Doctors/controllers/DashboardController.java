@@ -4,10 +4,13 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -160,13 +163,15 @@ public class DashboardController {
 				.collect(Collectors.toList()));
 
 		// User Recent Activities
-		Map<LocalDate, List<JobAdditionalRemarks>> dateTimeToRemarks = new LinkedHashMap<>();
+		Map<LocalDate, List<JobAdditionalRemarks>> dateTimeToRemarks = new HashMap<>();
 		dateTimeToRemarks = remarksService.findAll().stream()
 				.filter(x -> x.getJobPost().getClinicUser().getId() == user.getId())
 				.filter(x -> x.getDateTime() != null)
 				.sorted(Comparator.comparing(JobAdditionalRemarks::getDateTime).reversed()).limit(10)
 				.collect(Collectors.groupingBy(JobAdditionalRemarks::getDateOnly));
-		model.addAttribute("recentActivities", dateTimeToRemarks);
+		TreeMap<LocalDate, List<JobAdditionalRemarks>> sortedActivities = new TreeMap<>(Collections.reverseOrder());
+		sortedActivities.putAll(dateTimeToRemarks);
+		model.addAttribute("recentActivities", sortedActivities);
 		return "home-clinic";
 	}
 

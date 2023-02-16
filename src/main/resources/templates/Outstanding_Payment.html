@@ -71,13 +71,12 @@
 														<td th:text="${jp.description}">Job Description</td>
 														<td th:text="${jp.clinic.name}">Clinic Location</td>
 														<td th:id="status_column">
-															<p style="pointer-events:none" type="button"
+															<p type="button"
 																th:if="${jp.status.name == 'COMPLETED_PENDING_PAYMENT'}"
-																class="bg-danger btn btn-sm my-auto"
+																class="bg-danger badge my-auto"
 																th:text="${jp.status.value}"></p>
-															<p style="pointer-events:none"
-																th:if="${jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
-																class="bg-navy btn btn-sm my-auto"
+															<p th:if="${jp.status.name == 'COMPLETED_PAYMENT_PROCESSED'}"
+																class="bg-navy badge my-auto"
 																th:text="${jp.status.value}"></p>
 														</td>
 														<td>

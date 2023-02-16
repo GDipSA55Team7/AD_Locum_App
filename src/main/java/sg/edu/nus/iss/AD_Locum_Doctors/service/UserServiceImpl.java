@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User authenticate(String username, String pwd) {
 		return userRepo.findAll().stream()
-				.filter(u -> u.getPassword().equals(pwd) && u.getUsername().equals(username) && u.getActive())
+				.filter(u -> u.getPassword().equals(pwd) && u.getUsername().equalsIgnoreCase(username) && u.getActive())
 				.findFirst().get();
 	}
 

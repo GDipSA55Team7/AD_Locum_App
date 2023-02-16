@@ -37,15 +37,6 @@
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-12">
-							<div
-								class="d-flex flex-row mb-3 justify-content-between  align-items-center pt-3 pb-2 border-bottom">
-								<div class="p-2">
-
-								</div>
-								<div class="p-2">
-
-								</div>
-							</div>
 							<div class="card">
 								<div class="card-body">
 									<div class="table-responsive overflow-hidden">
@@ -78,7 +69,7 @@
 															<a th:if="${org.active == true}"
 																th:href="@{/organization/disable/}+${org.id}">Deactivate</a>
 															<a th:unless="${org.active == true}"
-																th:href="@{/reactivateOrganization/}+${org.id}">Activate</a>
+																th:href="@{/organization/activate/}+${org.id}">Activate</a>
 														</div>
 														<div><a th:href="@{/organization/viewDetails/}+${org.id}">View
 																Details</a></div>
@@ -90,8 +81,8 @@
 								</div>
 								<!-- /.card-body -->
 							</div>
-							
-							
+
+
 							<!-- /.card -->
 						</div>
 						<!-- /.col -->

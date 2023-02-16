@@ -50,8 +50,11 @@ public class AdLocumDoctorsApplication {
 			ScriptRunner sr = new ScriptRunner(con);
 			Reader reader = new BufferedReader(new FileReader("src/main/resources/sql/data.sql"));
 			sr.runScript(reader);
-			Reader reader_avgDailyRate = new BufferedReader(new FileReader("src/main/resources/sql/average_daily_rate.sql"));
-			sr.runScript(reader_avgDailyRate);
+			
+			// Reader reader_avgDailyRate = new BufferedReader(new FileReader("src/main/resources/sql/average_daily_rate.sql"));
+			// sr.runScript(reader_avgDailyRate);
+			// Reader reader_recommendedJob = new BufferedReader(new FileReader("src/main/resources/sql/recommended_job.sql"));
+			// sr.runScript(reader_recommendedJob);
 		};
 	}
 }

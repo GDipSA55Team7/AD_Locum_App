@@ -122,20 +122,6 @@ public class JobPostController {
 		return "jobpost-create";
 	}
 
-	// Using this for testing - Shaun ... To delete later ...
-	@GetMapping("/shauntest")
-	public String testpage(Model model, HttpSession session) {
-		LocalDate myDate = LocalDate.of(2023, 02, 01);
-		AverageDailyRate testID = avgDailyRateRepo.findById(myDate).get();
-		List<AverageDailyRate> myList = avgDailyRateRepo.findAll();
-		model.addAttribute("testID", testID.getDate());
-		model.addAttribute("localdate", LocalDate.now());
-		model.addAttribute("testdate", myList.get(1).getDate());
-		model.addAttribute("weekday", myList.get(1).getAverage_daily_rate_weekday());
-		model.addAttribute("weekend", myList.get(1).getAverage_daily_rate_weekend());
-		return "test";
-	}
-
 	@PostMapping("/create")
 	public String createJobPost(JobPost jobPost, Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
