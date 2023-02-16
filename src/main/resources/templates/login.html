@@ -45,6 +45,7 @@
 							</div>
 						</div>
 					</div>
+					<p class="small text-danger d-block" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
 					<div class="text-center mt-2 mb-3">
 						<button type="submit" href="#" class="btn btn-block btn-primary">
 							Sign in

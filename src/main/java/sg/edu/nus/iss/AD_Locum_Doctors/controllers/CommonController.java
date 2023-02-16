@@ -23,16 +23,24 @@ import sg.edu.nus.iss.AD_Locum_Doctors.service.EmailService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.PasswordResetCheckerService;
 import sg.edu.nus.iss.AD_Locum_Doctors.service.UserService;
 import sg.edu.nus.iss.AD_Locum_Doctors.validator.AdminTriggeredPasswordResetValidator;
+import sg.edu.nus.iss.AD_Locum_Doctors.validator.UserValidator;
 
 @Controller
 public class CommonController {
 
 	@Autowired
 	private AdminTriggeredPasswordResetValidator adminTriggeredPasswordResetValidator;
+	@Autowired
+	private UserValidator userValidator;
 
 	@InitBinder("passwordForm")
 	private void initAdminTriggeredPasswordResetValidator(WebDataBinder binder) {
 		binder.addValidators(this.adminTriggeredPasswordResetValidator);
+	}
+
+	@InitBinder("user")
+	private void initUserStaffFormBinder(WebDataBinder binder) {
+		binder.addValidators(userValidator);
 	}
 
 	@Autowired
@@ -52,9 +60,10 @@ public class CommonController {
 		User u = (User) session.getAttribute("user");
 		if (u.getRole().getName().equals("System_Admin")) {
 			return "redirect:/dashboard/system-admin";
-		} else {
+		} else if (!u.getRole().getName().equals("Locum_Doctor")) {
 			return "redirect:/dashboard/clinic";
 		}
+		return "redirect:/login";
 	}
 
 	@GetMapping("/login")
@@ -64,7 +73,10 @@ public class CommonController {
 	}
 
 	@PostMapping("/home/authenticate")
-	public String authenticate(User user, Model model, HttpSession session) {
+	public String authenticate(@Valid @ModelAttribute("user") User user, BindingResult result, Model model, HttpSession session) {
+		if (result.hasErrors()) {
+			return "login";
+		}
 		User u = userService.authenticate(user.getUsername(), user.getPassword());
 		session.setAttribute("user", u);
 		return "redirect:/dashboard";
@@ -82,7 +94,8 @@ public class CommonController {
 		User user = userService.findById(Long.parseUnsignedLong(userID));
 		testEmail.setRecipient(user.getEmail());
 		testEmail.setSubject("Your request via your administrator to reset your password");
-		String resetPasswordURL = env.getProperty("mail.url") + "password_reset/admin_triggered?pwresetkey={0}&userid={1}";
+		String resetPasswordURL = env.getProperty("mail.url")
+				+ "password_reset/admin_triggered?pwresetkey={0}&userid={1}";
 		ResetPasswordChecker resetPWChecker = new ResetPasswordChecker();
 		resetPWChecker.setUserID(user.getId());
 		passwordResetCheckerService.createResetPasswordChecker(resetPWChecker);
