@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,6 +42,7 @@ public class Organization {
 	
 	private Boolean active = true;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "organization")
 	private List<User> users;
 

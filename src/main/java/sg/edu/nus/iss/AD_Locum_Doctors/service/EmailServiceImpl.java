@@ -16,8 +16,8 @@ import sg.edu.nus.iss.AD_Locum_Doctors.model.EmailDetails;
 @Service
 public class EmailServiceImpl implements EmailService {
 
-//    @Autowired
-//    private JavaMailSender javaMailSender;
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
     private String sender;
@@ -39,7 +39,7 @@ public class EmailServiceImpl implements EmailService {
             System.out.println("Sender : " + sender);
             System.out.println("recipient :" + details.getRecipient());
             // Sending the mail
-           // javaMailSender.send(mailMessage);
+            javaMailSender.send(mailMessage);
             return "Mail Sent Successfully...";
         }
 

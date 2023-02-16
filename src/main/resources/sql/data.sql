@@ -234,7 +234,7 @@ REPLACE INTO `job_post` (`id`, `actual_end_date_time`, `actual_start_date_time`,
 CREATE TABLE IF NOT EXISTS `notification` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `body` varchar(255) DEFAULT NULL,
-  `is_read` bit(1) NOT NULL,
+  `notification_read` bit(1) NOT NULL,
   `job_id` bigint DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `user_id` bigint DEFAULT NULL,

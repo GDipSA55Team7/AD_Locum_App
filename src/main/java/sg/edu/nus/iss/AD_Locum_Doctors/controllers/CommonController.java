@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.AD_Locum_Doctors.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,6 +42,9 @@ public class CommonController {
 	private EmailService emailService;
 
 	@Autowired
+	Environment env;
+
+	@Autowired
 	private PasswordResetCheckerService passwordResetCheckerService;
 
 	@GetMapping(value = { "/", "/dashboard" })
@@ -78,7 +82,7 @@ public class CommonController {
 		User user = userService.findById(Long.parseUnsignedLong(userID));
 		testEmail.setRecipient(user.getEmail());
 		testEmail.setSubject("Your request via your administrator to reset your password");
-		String resetPasswordURL = "http://locum-env.eba-kvkzfiyv.ap-northeast-1.elasticbeanstalk.com/password_reset/admin_triggered?pwresetkey={0}&userid={1}";
+		String resetPasswordURL = env.getProperty("mail.url") + "password_reset/admin_triggered?pwresetkey={0}&userid={1}";
 		ResetPasswordChecker resetPWChecker = new ResetPasswordChecker();
 		resetPWChecker.setUserID(user.getId());
 		passwordResetCheckerService.createResetPasswordChecker(resetPWChecker);

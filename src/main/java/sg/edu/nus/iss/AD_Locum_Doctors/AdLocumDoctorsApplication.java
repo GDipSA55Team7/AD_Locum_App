@@ -42,14 +42,16 @@ public class AdLocumDoctorsApplication {
 			Environment env) {
 
 		return args -> {
-//			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-//			Connection con = DriverManager.getConnection(env.getProperty("spring.datasource.url"),
-//					env.getProperty("spring.datasource.username"),
-//					env.getProperty("spring.datasource.password"));
-//			System.out.println("Connection established......");
-//			ScriptRunner sr = new ScriptRunner(con);
-//			Reader reader = new BufferedReader(new FileReader("src/main/resources/sql/data.sql"));
-//			sr.runScript(reader);
+			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+			Connection con = DriverManager.getConnection(env.getProperty("spring.datasource.url"),
+					env.getProperty("spring.datasource.username"),
+					env.getProperty("spring.datasource.password"));
+			System.out.println("Connection established......");
+			ScriptRunner sr = new ScriptRunner(con);
+			Reader reader = new BufferedReader(new FileReader("src/main/resources/sql/data.sql"));
+			sr.runScript(reader);
+			Reader reader_avgDailyRate = new BufferedReader(new FileReader("src/main/resources/sql/average_daily_rate.sql"));
+			sr.runScript(reader_avgDailyRate);
 		};
 	}
 }
