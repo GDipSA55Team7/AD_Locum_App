@@ -19,6 +19,8 @@ public interface UserService {
     User findById(Long id);
 
     User authenticate(String username, String pwd);
+    
+    User authenticateDoc(String username, String pwd);
 
     void deleteUser(User user);
     

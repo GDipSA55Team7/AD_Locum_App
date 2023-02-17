@@ -62,6 +62,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public User authenticateDoc(String username, String pwd) {
+		return userRepo.findAll().stream()
+				.filter(u -> u.getPassword().equals(pwd)
+						&& u.getUsername().equalsIgnoreCase(username) && u.getActive())
+				.findFirst().orElse(null);
+	}
+
+	@Override
 	public void deleteUser(User user) {
 		userRepo.delete(user);
 	}
@@ -138,7 +146,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public FreeLancerDTO loginFreeLancerAndUpdateToken(FreeLancerDTO freeLancerDTO) {
 
-		User existingUser = authenticate(freeLancerDTO.getUsername(), freeLancerDTO.getPassword());
+		User existingUser = authenticateDoc(freeLancerDTO.getUsername(), freeLancerDTO.getPassword());
 
 		// Found Registered User
 		if (existingUser != null && existingUser.getRole().getName().equals("Locum_Doctor")) {
